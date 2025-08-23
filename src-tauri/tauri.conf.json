@@ -39,6 +39,18 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "windows": {
+      "webviewInstallMode": {
+        "silent": true,
+        "type": "embedBootstrapper"
+      },
+      "nsis": {
+        "languages": ["SimpChinese","English"]
+      },
+      "wix": {
+        "language": "zh-CN"
+      }
+    }
   }
 }
