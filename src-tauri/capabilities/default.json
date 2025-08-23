@@ -2,15 +2,19 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Capability for the main window",
-  "windows": ["cheese-schedule"],
+  "windows": [
+    "cheese-schedule",
+    "editor"
+  ],
   "permissions": [
     "core:default",
     "opener:default",
     "core:window:allow-current-monitor",
     "core:window:allow-set-title",
+    "core:window:allow-set-position",
     "core:window:allow-inner-size",
     "core:window:allow-outer-size",
-    "core:window:allow-set-position",
-    "core:window:allow-set-size"
+    "core:window:allow-set-size",
+    "fs:default"
   ]
 }
