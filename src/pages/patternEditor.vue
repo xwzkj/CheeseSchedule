@@ -7,21 +7,30 @@
                 </n-dropdown>
                 <span>正在编辑:“{{ scheduleStore.patterns[editingNum].name }}”</span>
             </div>
-            <n-dynamic-input v-model:value="scheduleStore.patterns[editingNum].data" :on-create="patternDefault">
-                <template #create-button-default>
-                    添加时间安排
-                </template>
-                <template #default="{ value }">
-                    <div style="display: flex; align-items: center; width: 100%">
-                        <n-checkbox v-model:checked="value.isDivider" class="w-10rem ml-0.5rem" label="是否为分割线" />
-                        <n-input v-show="!value.isDivider" v-model:value="value.time" type="text"
-                            placeholder="hh:mm-hh:mm格式的课程时间" />
-                    </div>
-                </template>
-            </n-dynamic-input>
-            <div class="flex gap-4">
-                <n-button @click="scheduleStore.save" type="primary">保存</n-button>
-                <n-button @click="scheduleStore.init">重置</n-button>
+            <div class="max-h-80%">
+                <n-scrollbar>
+                    <n-dynamic-input class="max-h-100%" v-model:value="scheduleStore.patterns[editingNum].data"
+                        :on-create="patternDefault">
+                        <template #create-button-default>
+                            添加时间安排
+                        </template>
+                        <template #default="{ value }">
+                            <div style="display: flex; align-items: center; width: 100%">
+                                <n-checkbox v-model:checked="value.isDivider" class="w-10rem ml-0.5rem"
+                                    label="是否为分割线" />
+                                <n-input v-show="!value.isDivider" v-model:value="value.time" type="text"
+                                    placeholder="hh:mm-hh:mm格式的课程时间" />
+                            </div>
+                        </template>
+                    </n-dynamic-input>
+                </n-scrollbar>
+            </div>
+            <div class="flex justify-between">
+                <n-button @click="goHome" secondary>返回到课程表编辑</n-button>
+                <div class="flex gap-4">
+                    <n-button @click="scheduleStore.save" type="primary" secondary>保存</n-button>
+                    <n-button @click="scheduleStore.init" secondary>重置</n-button>
+                </div>
             </div>
         </div>
     </div>
@@ -29,8 +38,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { NSpace, NDropdown, NDynamicInput, NCheckbox, NInput, NButton } from 'naive-ui'
+import { NScrollbar, NDropdown, NDynamicInput, NCheckbox, NInput, NButton } from 'naive-ui'
 import { useScheduleStore } from '../stores/scheduleStore'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const scheduleStore = useScheduleStore()
 const optionData = computed(() => {
     let t = []
@@ -49,6 +60,10 @@ function patternDefault() {
         isDivider: false,
         time: ""
     }
+}
+
+function goHome() {
+    router.push({ name: 'editor' })
 }
 </script>
 

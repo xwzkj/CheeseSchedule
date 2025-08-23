@@ -15,10 +15,7 @@ const router = createRouter({
         {
             name: 'patternEditor',
             path: '/pattern/editor',
-            component: () => import('../pages/patternEditor.vue'),
-            props: (route) => {
-                return route.query
-            },
+            component: () => import('../pages/patternEditor.vue')
         }
     ]
 })

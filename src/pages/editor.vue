@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <n-button @click="p1">编辑模式1</n-button>
+    <div class="p-1rem">
+        <n-button @click="toPatternEdit">去编辑“模式”</n-button>
     </div>
 </template>
 
@@ -8,8 +8,8 @@
 import { NButton } from 'naive-ui'
 import { useRouter } from 'vue-router';
 const router = useRouter();
-const p1 = () => {
-    router.push({ name: 'patternEditor', query: { patternNum: 0 } });
+const toPatternEdit = () => {
+    router.push({ name: 'patternEditor' });
 }
 </script>
 
