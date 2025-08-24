@@ -1,13 +1,21 @@
 <template>
-    <div v-if="scheduleStore.patterns.length" class="h-100% w-100% flex items-center justify-center">
-        <div class=" shadow-[0_0_7px_0_#999] rounded-2rem w-95% h-95% p-1rem flex flex-col gap-4">
+    <div v-if="scheduleStore.patterns.length" class="h-100vh w-100% flex items-center justify-center">
+        <div class=" shadow-[0_0_7px_0_#999] rounded-2rem w-95% h-95% p-1rem flex flex-col gap-4 justify-between">
             <div class="flex items-center gap-2">
-                <n-dropdown :options="optionData" @select="handleSelect">
-                    <n-button>选择一个“模式”来编辑</n-button>
+                <n-dropdown :options="scheduleStore.patternsOption" @select="handleSelect">
+                    <n-button type="primary" dashed>
+                        选择一个“模式”来编辑
+                        <template #icon>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="1.5" d="M18 9s-4.419 6-6 6s-6-6-6-6" />
+                            </svg>
+                        </template>
+                    </n-button>
                 </n-dropdown>
                 <span>正在编辑:“{{ scheduleStore.patterns[editingNum].name }}”</span>
             </div>
-            <div class="max-h-80%">
+            <div class="max-h-90% h-80% flex-1">
                 <n-scrollbar>
                     <n-dynamic-input class="max-h-100%" v-model:value="scheduleStore.patterns[editingNum].data"
                         :on-create="patternDefault">
@@ -28,7 +36,7 @@
             <div class="flex justify-between">
                 <n-button @click="goHome" secondary>返回到课程表编辑</n-button>
                 <div class="flex gap-4">
-                    <n-button @click="scheduleStore.save" type="primary" secondary>保存</n-button>
+                    <n-button @click="save" type="primary" secondary>保存</n-button>
                     <n-button @click="scheduleStore.init" secondary>重置</n-button>
                 </div>
             </div>
@@ -37,19 +45,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { NScrollbar, NDropdown, NDynamicInput, NCheckbox, NInput, NButton } from 'naive-ui'
 import { useScheduleStore } from '../stores/scheduleStore'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const scheduleStore = useScheduleStore()
-const optionData = computed(() => {
-    let t = []
-    for (let i = 0; i < scheduleStore.patterns.length; i++) {
-        t.push({ key: i, label: scheduleStore.patterns[i].name })
-    }
-    return t
-})
 let editingNum = ref(0);
 
 function handleSelect(key: number) {
@@ -64,6 +65,10 @@ function patternDefault() {
 
 function goHome() {
     router.push({ name: 'editor' })
+}
+function save() {
+    scheduleStore.refreshPatternToDay(editingNum.value)
+    scheduleStore.save()
 }
 </script>
 

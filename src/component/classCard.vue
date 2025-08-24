@@ -1,6 +1,6 @@
 <template>
-    <div class="p-0.5rem rounded-1rem m-0.1rem flex flex-col items-center w-7.5rem shadow-[0_0_3px_0_#777]"
-        :class="{ 'bg-#66ccff': props.active, 'bg-#eee': !props.active }">
+    <div class="p-0.2rem m-b-0.3rem flex flex-col items-center w-7.5rem rounded-4 border-#999 border-solid border-1"
+        :class="{ 'bg-#55efc4': props.active == 2, 'bg-#66ccff': props.active == 1, 'bg-white': props.active == 0 }">
 
         <div class="font-bold" :class="{ 'text-2.5rem': props.active, 'text-2rem': !props.active }">
             {{ props.name }}
@@ -14,7 +14,7 @@
 const props = defineProps<{
     name: string,
     time: string | null,
-    active: boolean
+    active: 0 | 1 | 2
 }>()
 </script>
 

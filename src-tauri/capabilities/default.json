@@ -15,6 +15,12 @@
     "core:window:allow-inner-size",
     "core:window:allow-outer-size",
     "core:window:allow-set-size",
-    "fs:default"
+    "core:app:allow-default-window-icon",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "fs:default",
+    "process:default",
+    "autostart:allow-enable",
+    "autostart:allow-disable"
   ]
 }
