@@ -134,7 +134,7 @@ function isActive(time: string, lastTime: string): 0 | 1 | 2 {
 <template>
     <div class="h-100vh">
         <n-scrollbar>
-            <div v-for="(item, index) in classData" :key="index" class="flex flex-col items-center">
+            <div v-for="(item, index) in classData" :key="index" class="flex flex-col items-end m-r-2">
                 <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
                     :active="item?.active as any ?? 0"></class-card>
                 <div v-else class="m-b-0.7rem"></div>
