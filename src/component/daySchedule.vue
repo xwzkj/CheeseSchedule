@@ -87,6 +87,10 @@ const lessonsOption = ref([
     {
         label: '自习',
         key: '自习'
+    },
+    {
+        label: '其他',
+        key: '其他'
     }
 ])
 
