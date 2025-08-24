@@ -17,13 +17,21 @@
         "transparent": true,
         "alwaysOnBottom": true,
         "decorations": false,
+        "skipTaskbar": true,
+        "minimizable": false,
+        "maximizable": false,
+        "closable": false,
         "width": 170,
         "height": 600
       },
       {
         "label": "editor",
         "title": "奶酪课程表编辑器",
-        "url": "/#/editor"
+        "url": "/#/editor",
+        "width": 1100,
+        "height": 800,
+        "center": true,
+        "visible": false
       }
     ],
     "security": {
@@ -46,7 +54,10 @@
         "type": "embedBootstrapper"
       },
       "nsis": {
-        "languages": ["SimpChinese","English"]
+        "languages": [
+          "SimpChinese",
+          "English"
+        ]
       },
       "wix": {
         "language": "zh-CN"
