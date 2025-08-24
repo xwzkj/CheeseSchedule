@@ -6,7 +6,7 @@ import { listen } from '@tauri-apps/api/event'
 import { enable, disable } from '@tauri-apps/plugin-autostart';
 
 export const useScheduleStore = defineStore('schedule', () => {
-    const startup = true
+    let startup = true
     const patterns = ref<Pattern[]>([])
     const schedule = ref<Schedule>({
         mon: {
@@ -59,11 +59,16 @@ export const useScheduleStore = defineStore('schedule', () => {
             if (data?.schedule) {
                 schedule.value = data?.schedule
             }
-            if(typeof data?.startup == "boolean"){
-                if(data.startup){
-                    await enable()
-                }else{
-                    await disable()
+            if (typeof data?.startup == "boolean") {
+                startup = data?.startup
+                try {
+                    if (data.startup) {
+                        await enable()
+                    } else {
+                        await disable()
+                    }
+                } catch (e) {
+                    console.log('自启动设置：', e)
                 }
             }
         } else {
@@ -77,7 +82,7 @@ export const useScheduleStore = defineStore('schedule', () => {
 
     async function save() {
         try {
-            await invoke("write_config", { data: JSON.stringify({ patterns: patterns?.value, schedule: schedule?.value, startup }) });
+            await invoke("write_config", { data: JSON.stringify({ startup, patterns: patterns?.value, schedule: schedule?.value }) });
             emit("updated");
             (window as any).$NMessageApi.success("已保存");
         } catch (e) {
