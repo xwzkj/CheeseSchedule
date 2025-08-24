@@ -1,7 +1,7 @@
-# Tauri + Vue + TypeScript
+# 奶酪课程表
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+该项目基于tauri2 + vite7 + vue3开发，提供每日不同时间安排的支持（如周五和周六的时间安排和课节数目不同）
 
-## Recommended IDE Setup
+项目体积小巧，界面简洁，但功能不算强大
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+仅针对windows进行了测试。
