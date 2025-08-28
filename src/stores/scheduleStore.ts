@@ -49,36 +49,37 @@ export const useScheduleStore = defineStore('schedule', () => {
     })
 
     async function init() {
+        let data: any
         try {
-            let data: any = await invoke("read_config")
-            console.log("config-data:", data)
-            if (data) {
-                data = JSON.parse(data)
-                if (data?.patterns) {
-                    patterns.value = data?.patterns
-                }
-                if (data?.schedule) {
-                    schedule.value = data?.schedule
-                }
-                if (typeof data?.startup == "boolean") {
-                    startup = data?.startup
-                    try {
-                        if (data.startup) {
-                            await enable()
-                        } else {
-                            await disable()
-                        }
-                    } catch (e) {
-                        console.log('自启动设置：', e)
-                    }
-                }
-            } else {
-                for (let i = 0; i < 7; i++) {
-                    patterns.value.push({ name: `模式${i + 1}`, data: [] })
-                }
-            }
+            data = await invoke("read_config")
         } catch (e) {
             console.log('读取配置失败：', e)
+        }
+        console.log("config-data:", data)
+        if (data) {
+            data = JSON.parse(data)
+            if (data?.patterns) {
+                patterns.value = data?.patterns
+            }
+            if (data?.schedule) {
+                schedule.value = data?.schedule
+            }
+            if (typeof data?.startup == "boolean") {
+                startup = data?.startup
+                try {
+                    if (data.startup) {
+                        await enable()
+                    } else {
+                        await disable()
+                    }
+                } catch (e) {
+                    console.log('自启动设置：', e)
+                }
+            }
+        } else {
+            for (let i = 0; i < 7; i++) {
+                patterns.value.push({ name: `模式${i + 1}`, data: [] })
+            }
         }
     }
     init()
