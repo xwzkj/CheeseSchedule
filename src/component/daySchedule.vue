@@ -85,6 +85,10 @@ const lessonsOption = ref([
         key: '班会'
     },
     {
+        label: '体育',
+        key: '体育'
+    },
+    {
         label: '自习',
         key: '自习'
     },
@@ -103,7 +107,7 @@ function handlePatternSelect(key: number) {
     }
     for (let i = 0; i < p.length; i++) {
         let lesson: Lesson = {
-            name: lessons?.[i]?.name ??'空',
+            name: lessons?.[i]?.name ?? '空',
             time: p[i]?.time ?? '',
             isDivider: p[i].isDivider,
         }
