@@ -1,18 +1,23 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn write_config(data: &str) -> Result<(), String> {
-    std::fs::write("config.json", data).map_err(|e| format!("Failed to write config: {}", e))
+    std::fs::write("config.json", data)
+        .map_err(|e| format!("Failed to write config: {}", e))
 }
 
 #[tauri::command]
-fn read_config() -> String {
-    let res;
-    if std::fs::exists("config.json").unwrap() {
-        res = std::fs::read_to_string("config.json").expect("");
-    } else {
-        res = "".to_string();
+fn read_config() -> Result<String, String> {
+    match std::fs::exists("config.json") {
+        Ok(exists) => {
+            if exists {
+                std::fs::read_to_string("config.json")
+                    .map_err(|e| format!("Failed to read config: {}", e))
+            } else {
+                Err("Config file does not exist".to_string())
+            }
+        }
+        Err(e) => Err(format!("Failed to check config file: {}", e)),
     }
-    return res;
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
