@@ -15,23 +15,27 @@
 </template>
 
 <script setup lang="ts">
-import { watch, useTemplateRef } from 'vue'
+import { watch, useTemplateRef, onMounted } from 'vue'
 const props = defineProps<{
     name: string,
     time: string | null,
     active: 0 | 1 | 2
 }>()
 const outerEle = useTemplateRef('outer')
-watch(() => props.active, (val) => {
-    if (outerEle.value) {
-        outerEle.value.style.setProperty('--bg-color', val == 0 ? 'white' : val == 1 ? '#66ccff' : '#55efc4');
-        // outerEle.value.style.setProperty('--bg-color', 'blue');
-    }
+onMounted(() => {
+    watch(() => props.active, () => {
+        let val = props.active
+        if (outerEle.value) {
+            outerEle.value.style.setProperty('--bg-color', val == 0 ? 'white' : val == 1 ? '#66ccff' : '#55efc4');
+            // outerEle.value.style.setProperty('--bg-color', 'blue');
+        }
+    }, { immediate: true })
 })
 </script>
 
 <style scoped>
 .outer {
+    --bg-color: rgb(248, 127, 62);
     padding: 0.2rem;
     margin-bottom: 0.3rem;
     border-radius: 1rem;
