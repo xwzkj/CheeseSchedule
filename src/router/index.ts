@@ -16,6 +16,11 @@ const router = createRouter({
             name: 'patternEditor',
             path: '/pattern/editor',
             component: () => import('../pages/patternEditor.vue')
+        },
+        {
+            name:'overrideEditor',
+            path:'/override/editor',
+            component: () => import('../pages/overrideEditor.vue')
         }
     ]
 })

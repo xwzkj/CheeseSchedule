@@ -1,7 +1,10 @@
 <template>
     <div class="p-1rem w-100%">
         <div class="flex justify-between">
-            <n-button @click="toPatternEdit">去编辑“模式”</n-button>
+            <div class="flex gap-4">
+                <n-button @click="toPatternEdit">去编辑“模式”</n-button>
+                <n-button @click="toOverrideEdit">编辑今日临时换课</n-button>
+            </div>
             <div class="flex gap-4">
                 <n-button @click="scheduleStore.save" type="primary" secondary>保存</n-button>
                 <n-button @click="scheduleStore.init" secondary>重置</n-button>
@@ -28,6 +31,9 @@ const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 const CNdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 const toPatternEdit = () => {
     router.push({ name: 'patternEditor' });
+}
+const toOverrideEdit = () => { 
+    router.push({ name: 'overrideEditor' });
 }
 </script>
 
