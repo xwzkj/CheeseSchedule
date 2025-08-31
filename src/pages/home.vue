@@ -91,7 +91,7 @@ window.addEventListener("click", async () => {
 <template>
     <div class="h-100vh">
         <n-scrollbar>
-            <div v-for="(item, index) in scheduleStore.schduleToday" :key="index" class="flex flex-col items-end m-r-2">
+            <div v-for="(item, index) in scheduleStore.scheduleToday" :key="index" class="flex flex-col items-end m-r-2">
                 <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
                     :active="item?.active as any ?? 0"></class-card>
                 <div v-else class="m-b-0.7rem"></div>
