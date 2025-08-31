@@ -39,17 +39,34 @@ export const useScheduleStore = defineStore('schedule', () => {
             lessons: []
         }
     })
-    let schduleToday = computed({
+    // 某日的临时改动
+    const scheduleOverride = ref<{
+        date: string,
+        override: string[]
+    }>({ date: '1970-01-01', override: [] })
+    let scheduleToday = computed({
         get() {
-            return schedule.value[dayjs().format("ddd").toLowerCase() as Week].lessons
+            const week = dayjs().format("ddd").toLowerCase() as Week
+            if (scheduleOverride.value.date == dayjs().format('YYYY-MM-DD')) {
+                let temp = []
+                // 遍历寻找这节课有没有被覆盖
+                for (let i = 0; i < schedule.value[week].lessons.length; i++) {
+                    temp.push({ ...schedule.value[week].lessons[i] }) // 浅拷贝,防止改变原数据
+                    if (scheduleOverride.value.override?.[i]) { // 存在覆盖
+                        temp[i].name = scheduleOverride.value.override[i] // 覆盖新的课程名
+                    }
+                }
+                return temp
+            }
+            return schedule.value[week].lessons
         },
         set(newValue) {
             schedule.value[dayjs().format("ddd").toLowerCase() as Week].lessons = newValue
         }
     })
     let lessonStatus = computed(() => {// true -> 正在上课 false -> 课间
-        for (let i = 0; i < schduleToday.value.length; i++) {
-            if ((schduleToday.value[i].active ?? 0) === 2) {
+        for (let i = 0; i < scheduleToday.value.length; i++) {
+            if ((scheduleToday.value[i].active ?? 0) === 2) {
                 return true
             }
         }
@@ -99,19 +116,19 @@ export const useScheduleStore = defineStore('schedule', () => {
     }
 
     function __refreshActive() {
-        for (let i = 0; i < schduleToday.value.length; i++) {
-            if (schduleToday.value[i].isDivider) {
+        for (let i = 0; i < scheduleToday.value.length; i++) {
+            if (scheduleToday.value[i].isDivider) {
                 continue
             }
             let lastTimeIndex = 0;
             for (let j = i - 1; j >= 0; j--) {
-                if (!schduleToday.value[j].isDivider) {
+                if (!scheduleToday.value[j].isDivider) {
                     lastTimeIndex = j;
                     break;
                 }
             }
             // console.log(i, lastTimeIndex);
-            schduleToday.value[i].active = __isActive(schduleToday.value[i]?.time, schduleToday.value[lastTimeIndex]?.time)
+            scheduleToday.value[i].active = __isActive(scheduleToday.value[i]?.time, scheduleToday.value[lastTimeIndex]?.time)
         }
     }
 
@@ -132,6 +149,11 @@ export const useScheduleStore = defineStore('schedule', () => {
             }
             if (data?.schedule) {
                 schedule.value = data?.schedule
+            }
+            if (data?.scheduleOverride) {
+                if (dayjs().format("YYYY-MM-DD") == data.scheduleOverride.date) {
+                    scheduleOverride.value = data.scheduleOverride
+                }
             }
             if (typeof data?.startup == "boolean") {
                 startup = data?.startup
@@ -157,7 +179,14 @@ export const useScheduleStore = defineStore('schedule', () => {
 
     async function save() {
         try {
-            await invoke("write_config", { data: JSON.stringify({ startup, patterns: patterns?.value, schedule: schedule?.value }) });
+            await invoke("write_config", {
+                data: JSON.stringify({
+                    startup,
+                    patterns: patterns?.value,
+                    schedule: schedule?.value,
+                    scheduleOverride: scheduleOverride?.value
+                })
+            });
             emit("updated");
             (window as any).$NMessageApi.success("已保存");
         } catch (e) {
@@ -205,7 +234,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         patterns,
         schedule,
         patternsOption,
-        schduleToday,
+        scheduleToday,
         lessonStatus,
     }
 })
