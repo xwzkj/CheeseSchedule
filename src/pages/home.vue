@@ -64,16 +64,17 @@ initWindow();
 onMounted(() => {
     watch(() => scheduleStore.lessonStatus, async () => {
         if (!scheduleStore.lessonStatus) {// 下课状态
-            await thisWindow.setAlwaysOnBottom(false)
-            thisWindow.setAlwaysOnTop(true)
-            console.log("下课了，自动窗口置顶");
             NMessage.success("下课了!")
+            await thisWindow.setAlwaysOnBottom(false)
+            await thisWindow.setAlwaysOnTop(true)
+            console.log("下课了，自动窗口置顶");
         } else {
             NMessage.success("上课了!")
-            await thisWindow.setAlwaysOnTop(false)
-            await thisWindow.setAlwaysOnBottom(true)
-            // await thisWindow.setFocus()
-            console.log("上课了，取消窗口置顶");
+            setTimeout(async () => {
+                await thisWindow.setAlwaysOnTop(false)
+                await thisWindow.setAlwaysOnBottom(true)
+                console.log("上课了，取消窗口置顶");
+            }, 1500)
         }
     }, { immediate: true })
 })
@@ -82,8 +83,13 @@ window.addEventListener("click", async () => {
     if (!scheduleStore.lessonStatus) {// 下课状态
         let isTop = await thisWindow.isAlwaysOnTop()
 
-        thisWindow.setAlwaysOnTop(!isTop)
-        thisWindow.setAlwaysOnBottom(isTop)
+        if (isTop) {
+            await thisWindow.setAlwaysOnTop(false)
+            await thisWindow.setAlwaysOnBottom(true)
+        } else {
+            await thisWindow.setAlwaysOnBottom(false)
+            await thisWindow.setAlwaysOnTop(true)
+        }
 
         NMessage.success(`窗口置顶：${!isTop}`)
         console.log(`点击切换了窗口置顶为：${!isTop}`);
