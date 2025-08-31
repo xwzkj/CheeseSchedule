@@ -24,3 +24,4 @@ type Schedule = {
     sat: Day,
     sun: Day
 }
+type Week = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
