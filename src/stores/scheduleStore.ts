@@ -8,6 +8,7 @@ import { enable, disable } from '@tauri-apps/plugin-autostart';
 
 export const useScheduleStore = defineStore('schedule', () => {
     let startup = true
+    const today = dayjs().format("ddd").toLowerCase() as Week
     const patterns = ref<Pattern[]>([])
     const schedule = ref<Schedule>({
         mon: {
@@ -44,25 +45,19 @@ export const useScheduleStore = defineStore('schedule', () => {
         date: string,
         override: string[]
     }>({ date: '1970-01-01', override: [] })
-    let scheduleToday = computed({
-        get() {
-            const week = dayjs().format("ddd").toLowerCase() as Week
-            if (scheduleOverride.value.date == dayjs().format('YYYY-MM-DD')) {
-                let temp = []
-                // 遍历寻找这节课有没有被覆盖
-                for (let i = 0; i < schedule.value[week].lessons.length; i++) {
-                    temp.push({ ...schedule.value[week].lessons[i] }) // 浅拷贝,防止改变原数据
-                    if (scheduleOverride.value.override?.[i]) { // 存在覆盖
-                        temp[i].name = scheduleOverride.value.override[i] // 覆盖新的课程名
-                    }
+    let scheduleToday = computed(() => {
+        if (scheduleOverride.value.date == dayjs().format('YYYY-MM-DD')) {
+            let temp = []
+            // 遍历寻找这节课有没有被覆盖
+            for (let i = 0; i < schedule.value[today].lessons.length; i++) {
+                temp.push({ ...schedule.value[today].lessons[i] }) // 浅拷贝,防止改变原数据
+                if (scheduleOverride.value.override?.[i]) { // 存在覆盖
+                    temp[i].name = scheduleOverride.value.override[i] // 覆盖新的课程名
                 }
-                return temp
             }
-            return schedule.value[week].lessons
-        },
-        set(newValue) {
-            schedule.value[dayjs().format("ddd").toLowerCase() as Week].lessons = newValue
+            return temp
         }
+        return schedule.value[today].lessons
     })
     let lessonStatus = computed(() => {// true -> 正在上课 false -> 课间
         for (let i = 0; i < scheduleToday.value.length; i++) {
@@ -128,7 +123,7 @@ export const useScheduleStore = defineStore('schedule', () => {
                 }
             }
             // console.log(i, lastTimeIndex);
-            scheduleToday.value[i].active = __isActive(scheduleToday.value[i]?.time, scheduleToday.value[lastTimeIndex]?.time)
+            schedule.value[today].lessons[i].active = __isActive(scheduleToday.value[i]?.time, scheduleToday.value[lastTimeIndex]?.time)
         }
     }
 
