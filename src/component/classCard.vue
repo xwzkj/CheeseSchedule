@@ -61,30 +61,30 @@ onMounted(() => {
     transform: translate(-50%, -50%);
     background-color: var(--bg-color, white);
     box-shadow: 0 0 4rem 1rem var(--bg-color, white);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     filter: blur(0.7rem);
-    animation: bg-animation 10s linear infinite;
+    animation: bg-animation 30s linear infinite;
 }
 
 @keyframes bg-animation {
     0% {
-        transform: translate(-75%, -50%) rotate(0deg) scale(1);
+        transform: translate(-80%, -50%) rotate(0deg) scale(1);
     }
 
     25% {
-        transform: translate(-50%, -50%) rotate(90deg) scale(1.2);
+        transform: translate(-50%, -50%) rotate(90deg) scale(1.5);
     }
 
     50% {
-        transform: translate(-25%, -50%) rotate(180deg) scale(1);
+        transform: translate(20%, -50%) rotate(180deg) scale(1);
     }
 
     75% {
-        transform: translate(-50%, -50%) rotate(270deg) scale(1.2);
+        transform: translate(-50%, -50%) rotate(270deg) scale(1.5);
     }
 
     100% {
-        transform: translate(-75%, -50%) rotate(360deg) scale(1);
+        transform: translate(-80%, -50%) rotate(360deg) scale(1);
     }
 }
 </style>
