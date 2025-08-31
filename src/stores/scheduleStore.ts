@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import dayjs from "dayjs";
 import { invoke } from '@tauri-apps/api/core'
 import { emit } from '@tauri-apps/api/event'
 import { listen } from '@tauri-apps/api/event'
@@ -38,7 +39,22 @@ export const useScheduleStore = defineStore('schedule', () => {
             lessons: []
         }
     })
-
+    let schduleToday = computed({
+        get() {
+            return schedule.value[dayjs().format("ddd").toLowerCase() as Week].lessons
+        },
+        set(newValue) {
+            schedule.value[dayjs().format("ddd").toLowerCase() as Week].lessons = newValue
+        }
+    })
+    let lessonStatus = computed(() => {// true -> 正在上课 false -> 课间
+        for (let i = 0; i < schduleToday.value.length; i++) {
+            if ((schduleToday.value[i].active ?? 0) === 2) {
+                return true
+            }
+        }
+        return false
+    })
     // 给n-dropdown使用的模式数据
     const patternsOption = computed(() => {
         let t = []
@@ -47,6 +63,59 @@ export const useScheduleStore = defineStore('schedule', () => {
         }
         return t
     })
+    // 时间判断,输入格式为 "hh:mm-hh:mm"
+    function __isActive(time: string, lastTime: string): 0 | 1 | 2 {
+        let now = new Date();
+        let nowTime = now.getHours() * 60 + now.getMinutes();
+
+        const rex = /^(\d{1,2})[：:](\d{1,2})[-~ ]+(\d{1,2})[：:](\d{1,2})$/;
+        let res = rex.exec(time);
+        let resLast = rex.exec(lastTime);
+        if (res) {
+            let start = parseInt(res[1]) * 60 + parseInt(res[2]);
+            let end = parseInt(res[3]) * 60 + parseInt(res[4]);
+            let flag: 0 | 1 | 2 = 0;
+            if (start < end) {// 同一天
+                flag = nowTime >= start && nowTime < end ? 2 : 0;
+            } else {
+                flag = nowTime >= start || nowTime < end ? 2 : 0;
+            }
+            if (flag == 0 && resLast) { // 如果不在该节课课上，判断是否是这节课前的课间
+                if (time == lastTime) {// 第一节课
+                    if (nowTime < end) {
+                        flag = 1; // 这节课的课间
+                    }
+                } else {
+                    let lastEnd = parseInt(resLast[3]) * 60 + parseInt(resLast[4]);
+                    if (nowTime >= lastEnd && nowTime < start) {
+                        flag = 1; // 这节课的课间
+                    }
+                }
+            }
+            return flag;
+        } else {
+            return 0;
+        }
+    }
+
+    function __refreshActive() {
+        for (let i = 0; i < schduleToday.value.length; i++) {
+            if (schduleToday.value[i].isDivider) {
+                continue
+            }
+            let lastTimeIndex = 0;
+            for (let j = i - 1; j >= 0; j--) {
+                if (!schduleToday.value[j].isDivider) {
+                    lastTimeIndex = j;
+                    break;
+                }
+            }
+            // console.log(i, lastTimeIndex);
+            schduleToday.value[i].active = __isActive(schduleToday.value[i]?.time, schduleToday.value[lastTimeIndex]?.time)
+        }
+    }
+
+    setInterval(__refreshActive, 5000);
 
     async function init() {
         let data: any
@@ -81,6 +150,7 @@ export const useScheduleStore = defineStore('schedule', () => {
                 patterns.value.push({ name: `模式${i + 1}`, data: [] })
             }
         }
+        __refreshActive()
     }
     init()
     listen("updated", init)
@@ -95,7 +165,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         }
     }
 
-    function setPatternToDay(patternId: number, day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun') {
+    function __setPatternToDay(patternId: number, day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun') {
         schedule.value[day].pattern = patternId
         let p = patterns.value[patternId].data
         let lessons = schedule.value[day].lessons
@@ -121,10 +191,21 @@ export const useScheduleStore = defineStore('schedule', () => {
     function refreshPatternToDay(patternId: number) {
         for (let key in schedule.value) {
             if (schedule.value[key as keyof Schedule].pattern == patternId) {
-                setPatternToDay(patternId, key as any)
+                __setPatternToDay(patternId, key as any)
             }
         }
     }
 
-    return { init, save, setPatternToDay, refreshPatternToDay, patterns, schedule, patternsOption }
+    return {
+        init,
+        save, refreshPatternToDay,
+        __setPatternToDay,
+        __isActive,
+        __refreshActive,
+        patterns,
+        schedule,
+        patternsOption,
+        schduleToday,
+        lessonStatus,
+    }
 })
