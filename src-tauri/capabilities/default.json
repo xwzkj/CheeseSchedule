@@ -21,6 +21,7 @@
     "fs:default",
     "process:default",
     "autostart:allow-enable",
-    "autostart:allow-disable"
+    "autostart:allow-disable",
+    "core:window:allow-set-always-on-top"
   ]
 }
