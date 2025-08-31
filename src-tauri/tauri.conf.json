@@ -15,7 +15,6 @@
         "label": "cheese-schedule",
         "title": "奶酪课程表",
         "transparent": true,
-        "alwaysOnBottom": true,
         "decorations": false,
         "shadow": false,
         "skipTaskbar": true,

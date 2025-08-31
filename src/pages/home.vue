@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
 import { useScheduleStore } from "../stores/scheduleStore";
 import classCard from "../component/classCard.vue"
-import { NScrollbar } from "naive-ui";
-import dayjs from "dayjs";
+import { NScrollbar,useMessage } from "naive-ui";
 import { getCurrentWindow, Window, currentMonitor, PhysicalPosition } from "@tauri-apps/api/window";
 import { TrayIcon, type TrayIconOptions } from '@tauri-apps/api/tray';
 import { defaultWindowIcon } from '@tauri-apps/api/app';
 import { Menu } from '@tauri-apps/api/menu';
 import { exit } from '@tauri-apps/plugin-process';
+import { onMounted, watch } from "vue";
 
-
+const NMessage = useMessage();
 const scheduleStore = useScheduleStore();
 const thisWindow = getCurrentWindow();
 async function initWindow() {
@@ -18,8 +17,8 @@ async function initWindow() {
         items: [
             {
                 id: 'quit',
-                text: 'Quit',
-                action: async() => {
+                text: '退出',
+                action: async () => {
                     await exit(0);
                 },
 
@@ -37,9 +36,9 @@ async function initWindow() {
                     `mouse ${event.button} button pressed, state: ${event.buttonState}`
                 );
                 let editWindow = await Window.getByLabel('editor');
-                if(editWindow){
+                if (editWindow) {
                     editWindow.show();
-                }else{
+                } else {
                     console.error('找不到编辑窗口')
                 }
             }
@@ -62,79 +61,37 @@ async function initWindow() {
 }
 initWindow();
 
-
-type Week = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
-let classData = computed({
-    get() {
-        return scheduleStore.schedule[dayjs().format("ddd").toLowerCase() as Week].lessons
-    },
-    set(newValue) {
-        scheduleStore.schedule[dayjs().format("ddd").toLowerCase() as Week].lessons = newValue
-    }
-})
-
-// 也能用...毕竟是引用传递
-// let classData = computed(() => {
-//     return scheduleStore.schedule[dayjs().format("ddd").toLowerCase() as Week].lessons
-// })
-
-function refreshActive() {
-    for (let i = 0; i < classData.value.length; i++) {
-        if (classData.value[i].isDivider) {
-            continue
-        }
-        let lastTimeIndex = 0;
-        for (let j = i - 1; j >= 0; j--) {
-            if (!classData.value[j].isDivider) {
-                lastTimeIndex = j;
-                break;
-            }
-        }
-        // console.log(i, lastTimeIndex);
-        classData.value[i].active = isActive(classData.value[i]?.time, classData.value[lastTimeIndex]?.time)
-    }
-}
-
 onMounted(() => {
-    setTimeout(refreshActive, 500)
-    setInterval(refreshActive, 5000);
+    watch(() => scheduleStore.lessonStatus, () => {
+        if (!scheduleStore.lessonStatus) {// 下课状态
+            thisWindow.setAlwaysOnTop(true)
+            console.log("下课了，自动窗口置顶");
+        } else {
+            thisWindow.setAlwaysOnTop(false)
+            console.log("上课了，取消窗口置顶");
+        }
+    }, { immediate: true })
 })
 
-// 时间判断,输入格式为 "hh:mm-hh:mm"
-function isActive(time: string, lastTime: string): 0 | 1 | 2 {
-    let now = new Date();
-    let nowTime = now.getHours() * 60 + now.getMinutes();
-
-    const rex = /^(\d{1,2})[：:](\d{1,2})[-~ ]+(\d{1,2})[：:](\d{1,2})$/;
-    let res = rex.exec(time);
-    let resLast = rex.exec(lastTime);
-    if (res) {
-        let start = parseInt(res[1]) * 60 + parseInt(res[2]);
-        let end = parseInt(res[3]) * 60 + parseInt(res[4]);
-        let flag: 0 | 1 | 2 = 0;
-        if (start < end) {// 同一天
-            flag = nowTime >= start && nowTime < end ? 2 : 0;
-        } else {
-            flag = nowTime >= start || nowTime < end ? 2 : 0;
-        }
-        if (flag == 0 && resLast) {
-            let lastEnd = parseInt(resLast[3]) * 60 + parseInt(resLast[4]);
-            if (nowTime >= lastEnd && nowTime < start) {
-                flag = 1; // 这节课的课间
-            }
-        }
-        return flag;
-    } else {
-        return 0;
+window.addEventListener("click", async () => {
+    if (!scheduleStore.lessonStatus) {// 下课状态
+        let isTop = await thisWindow.isAlwaysOnTop()
+        thisWindow.setAlwaysOnTop(!isTop)
+        NMessage.success(`窗口置顶：${!isTop}`)
+        console.log(`点击切换了窗口置顶为：${!isTop}`);
+    }else{
+        thisWindow.setAlwaysOnTop(false)
+        NMessage.success(`上课中，取消置顶`)
     }
-}
+})
+
 
 </script>
 
 <template>
     <div class="h-100vh">
         <n-scrollbar>
-            <div v-for="(item, index) in classData" :key="index" class="flex flex-col items-end m-r-2">
+            <div v-for="(item, index) in scheduleStore.schduleToday" :key="index" class="flex flex-col items-end m-r-2">
                 <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
                     :active="item?.active as any ?? 0"></class-card>
                 <div v-else class="m-b-0.7rem"></div>
