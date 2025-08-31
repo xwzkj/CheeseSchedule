@@ -1,5 +1,6 @@
 <template>
-    <div class="w-100%">
+    <div class="w-100% rounded-2">
+        <!-- 上方的rounded2是为了搭配overrideEditor的背景用的 -->
         <n-divider v-if="props.data.isDivider" style="margin:3px 0;"></n-divider>
         <div v-else class="p-1 rounded-2 border-#999 border-dashed border-1 flex items-center flex-col cursor-pointer">
             <n-auto-complete v-model:value="props.data.name" :options="lessonsOption" :input-props="{

@@ -236,5 +236,6 @@ export const useScheduleStore = defineStore('schedule', () => {
         patternsOption,
         scheduleToday,
         lessonStatus,
+        scheduleOverride,
     }
 })
