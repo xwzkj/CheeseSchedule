@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useScheduleStore } from "../stores/scheduleStore";
 import classCard from "../component/classCard.vue"
-import { NScrollbar,useMessage } from "naive-ui";
+import { NScrollbar, useMessage } from "naive-ui";
 import { getCurrentWindow, Window, currentMonitor, PhysicalPosition } from "@tauri-apps/api/window";
 import { TrayIcon, type TrayIconOptions } from '@tauri-apps/api/tray';
 import { defaultWindowIcon } from '@tauri-apps/api/app';
@@ -66,9 +66,11 @@ onMounted(() => {
         if (!scheduleStore.lessonStatus) {// 下课状态
             thisWindow.setAlwaysOnTop(true)
             console.log("下课了，自动窗口置顶");
+            NMessage.success("下课了!")
         } else {
             thisWindow.setAlwaysOnTop(false)
             console.log("上课了，取消窗口置顶");
+            NMessage.success("上课了!")
         }
     }, { immediate: true })
 })
@@ -79,7 +81,7 @@ window.addEventListener("click", async () => {
         thisWindow.setAlwaysOnTop(!isTop)
         NMessage.success(`窗口置顶：${!isTop}`)
         console.log(`点击切换了窗口置顶为：${!isTop}`);
-    }else{
+    } else {
         thisWindow.setAlwaysOnTop(false)
         NMessage.success(`上课中，取消置顶`)
     }
@@ -91,9 +93,10 @@ window.addEventListener("click", async () => {
 <template>
     <div class="h-100vh">
         <n-scrollbar>
-            <div v-for="(item, index) in scheduleStore.scheduleToday" :key="index" class="flex flex-col items-end m-r-2">
+            <div v-for="(item, index) in scheduleStore.scheduleToday" :key="index"
+                class="flex flex-col items-end m-r-2">
                 <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
-                    :active="item?.active as any"></class-card>
+                    :active="item?.active"></class-card>
                 <div v-else class="m-b-0.7rem"></div>
             </div>
         </n-scrollbar>

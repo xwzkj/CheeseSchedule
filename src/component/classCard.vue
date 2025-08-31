@@ -19,7 +19,7 @@ import { watch, useTemplateRef, onMounted } from 'vue'
 const props = defineProps<{
     name: string,
     time: string | null,
-    active: 0 | 1 | 2
+    active: 0 | 1 | 2 | undefined
 }>()
 const outerEle = useTemplateRef('outer')
 onMounted(() => {
