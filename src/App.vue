@@ -28,6 +28,10 @@ if (currentWindow.label == 'editor') {
         event.preventDefault(); // 阻止关闭
         currentWindow.hide(); // 隐藏窗口
     })
+}else if (currentWindow.label == 'cheese-schedule') { // 主窗口
+    currentWindow.onCloseRequested(() => {
+        currentWindow.preventDefault(); // 别关
+    })
 }
 </script>
 
