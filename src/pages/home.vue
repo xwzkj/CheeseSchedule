@@ -68,12 +68,13 @@ function sleep(ms: number) {
 async function setTop(isTop: boolean) {
     if (isTop) {
         await thisWindow.setAlwaysOnBottom(false)
-        await sleep(150)
-        await thisWindow.setAlwaysOnTop(true)
+        // await sleep(150)
+        // await thisWindow.setAlwaysOnTop(false)
         await thisWindow.setFocus()
+        await thisWindow.setAlwaysOnTop(true)
     } else {
         await thisWindow.setAlwaysOnTop(false)
-        await sleep(150)
+        // await sleep(150)
         await thisWindow.setAlwaysOnBottom(true)
     }
 }
