@@ -1,6 +1,6 @@
 <template>
     <div v-if="scheduleStore.patterns.length" class="h-100vh w-100% flex items-center justify-center">
-        <div class=" shadow-[0_0_7px_0_#999] rounded-2rem w-95% h-95% p-1rem flex flex-col gap-4 justify-between">
+        <div class="w-95% h-95% p-1rem flex flex-col gap-4 justify-between">
             <div class="flex items-center gap-2">
                 <n-dropdown :options="scheduleStore.patternsOption" @select="handleSelect">
                     <n-button type="primary" dashed>
@@ -18,7 +18,7 @@
             <div class="max-h-90% h-80% flex-1">
                 <n-scrollbar>
                     <n-dynamic-input class="max-h-100%" v-model:value="scheduleStore.patterns[editingNum].data"
-                        :on-create="patternDefault">
+                        :on-create="patternDefault" show-sort-button>
                         <template #create-button-default>
                             添加时间安排
                         </template>
