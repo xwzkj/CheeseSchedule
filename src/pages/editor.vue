@@ -10,9 +10,9 @@
                 <n-button @click="scheduleStore.init" secondary>重置</n-button>
             </div>
         </div>
-        <div class="w-100% flex gap-1 justify-between">
-            <div class="column" v-for="i in 7">
-                {{ CNdays[i - 1] }}
+        <div class="w-100% flex gap-1 justify-center">
+            <div v-for="i in 7" class="flex flex-col items-center">
+                <div class="text-1rem">{{ CNdays[i - 1] }}</div>
                 <day-schedule :day="days[i - 1]"></day-schedule>
             </div>
         </div>
@@ -32,7 +32,7 @@ const CNdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周
 const toPatternEdit = () => {
     router.push({ name: 'patternEditor' });
 }
-const toOverrideEdit = () => { 
+const toOverrideEdit = () => {
     router.push({ name: 'overrideEditor' });
 }
 </script>
