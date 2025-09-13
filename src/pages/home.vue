@@ -2,7 +2,8 @@
 import { useScheduleStore } from "../stores/scheduleStore";
 import classCard from "../component/classCard.vue"
 import { NScrollbar, useMessage } from "naive-ui";
-import { getCurrentWindow, Window, currentMonitor, PhysicalPosition } from "@tauri-apps/api/window";
+import { getCurrentWindow, currentMonitor, PhysicalPosition } from "@tauri-apps/api/window";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { TrayIcon, type TrayIconOptions } from '@tauri-apps/api/tray';
 import { defaultWindowIcon } from '@tauri-apps/api/app';
 import { Menu } from '@tauri-apps/api/menu';
@@ -32,14 +33,24 @@ async function initWindow() {
         menuOnLeftClick: false,
         action: async (event) => {
             if (event.type == 'Click' && event.button == 'Left' && event.buttonState == 'Up') {
-                console.log(
-                    `mouse ${event.button} button pressed, state: ${event.buttonState}`
-                );
-                let editWindow = await Window.getByLabel('editor');
-                if (editWindow) {
-                    editWindow.show();
+                let formerWindow = await WebviewWindow.getByLabel('editor')
+                if (formerWindow) {
+                    await formerWindow.unminimize();
+                    await formerWindow.setFocus();
+                    console.log("焦点了一个已存在的编辑窗口");
                 } else {
-                    console.error('找不到编辑窗口')
+                    let editWindow = new WebviewWindow('editor', {
+                        url: "/#/editor",
+                        title: "奶酪课程表编辑器",
+                        center: true,
+                        width: 900,
+                        height: 800,
+                        focus: true,
+                    })
+                    editWindow.once("tauri://webview-created", async () => {
+                        await editWindow.setFocus();
+                        console.log("新建并焦点了一个编辑窗口");
+                    })
                 }
             }
         }

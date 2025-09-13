@@ -23,15 +23,6 @@
         "closable": false,
         "width": 170,
         "height": 600
-      },
-      {
-        "label": "editor",
-        "title": "奶酪课程表编辑器",
-        "url": "/#/editor",
-        "width": 1100,
-        "height": 800,
-        "center": true,
-        "visible": false
       }
     ],
     "security": {

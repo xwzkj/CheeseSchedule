@@ -23,12 +23,7 @@ let themeOverrides = ref({
 
 
 let currentWindow = Window.getCurrent()
-if (currentWindow.label == 'editor') {
-    currentWindow.onCloseRequested((event) => {
-        event.preventDefault(); // 阻止关闭
-        currentWindow.hide(); // 隐藏窗口
-    })
-}else if (currentWindow.label == 'cheese-schedule') { // 主窗口
+if (currentWindow.label == 'cheese-schedule') { // 主窗口
     currentWindow.onCloseRequested(() => {
         currentWindow.preventDefault(); // 别关
     })
