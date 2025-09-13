@@ -39,10 +39,12 @@ fn write_config(data: &str) -> Result<(), String> {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-            let _ = app
+            let window = app
                 .get_webview_window("cheese-schedule")
-                .expect("no cheese-schedule window")
-                .set_focus();
+                .expect("no cheese-schedule window");
+            window.show().unwrap();
+            window.unminimize().unwrap();
+            window.set_focus().unwrap();
         }))
         .plugin(tauri_plugin_autostart::Builder::new().build())
         .plugin(tauri_plugin_process::init())
