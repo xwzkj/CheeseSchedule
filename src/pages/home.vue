@@ -2,8 +2,8 @@
 import { useScheduleStore } from "../stores/scheduleStore";
 import classCard from "../component/classCard.vue"
 import { NScrollbar, useMessage } from "naive-ui";
-import { getCurrentWindow, currentMonitor, PhysicalPosition } from "@tauri-apps/api/window";
-import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { currentMonitor, PhysicalPosition } from "@tauri-apps/api/window";
+import { getCurrentWebviewWindow, WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { TrayIcon, type TrayIconOptions } from '@tauri-apps/api/tray';
 import { defaultWindowIcon } from '@tauri-apps/api/app';
 import { Menu } from '@tauri-apps/api/menu';
@@ -12,7 +12,7 @@ import { onMounted, watch } from "vue";
 
 const NMessage = useMessage();
 const scheduleStore = useScheduleStore();
-const thisWindow = getCurrentWindow();
+const thisWindow = getCurrentWebviewWindow();
 async function initWindow() {
     const menu = await Menu.new({
         items: [
