@@ -123,7 +123,7 @@ window.addEventListener("click", async () => {
 
 <template>
     <div class="h-100vh">
-        <n-scrollbar>
+        <n-scrollbar v-if="scheduleStore.scheduleToday.length">
             <div v-for="(item, index) in scheduleStore.scheduleToday" :key="index"
                 class="flex flex-col items-end m-r-2">
                 <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
@@ -131,6 +131,19 @@ window.addEventListener("click", async () => {
                 <div v-else class="m-b-0.7rem"></div>
             </div>
         </n-scrollbar>
+        <div v-else class="flex items-center justify-center h-100% bg-#ffffff55 rounded-1rem">
+            <div class="text-center bg-white p-0.25rem rounded-1rem">
+                <p class="text-1.2rem">奶酪课程表已启动</p>
+                <br />
+                <div class="text-1.1rem text-#888">
+                    今日没有课程数据
+                    <br /><br />
+                    可前往托盘
+                    <br />
+                    唤出编辑页
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
