@@ -23,6 +23,8 @@
     "autostart:allow-disable",
     "core:window:allow-set-always-on-top",
     "core:window:allow-set-always-on-bottom",
-    "core:window:allow-set-focus"
+    "core:window:allow-set-focus",
+    "core:webview:allow-create-webview-window",
+    "core:window:allow-unminimize"
   ]
 }
