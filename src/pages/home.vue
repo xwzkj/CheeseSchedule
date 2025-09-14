@@ -69,6 +69,13 @@ async function initWindow() {
     innerSize.height = monitor.size.height * 3 / 4
     thisWindow.setSize(innerSize)
     thisWindow.setPosition(new PhysicalPosition(monitor.size.width - outerSize.width, 0))
+    // 禁用 Ctrl+P
+    window.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.key.toLowerCase() === "p") {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
 }
 initWindow();
 
