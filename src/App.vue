@@ -39,7 +39,7 @@ if (currentWindow.label == 'cheese-schedule') { // 主窗口
 <style scoped>
 .blur-enter-active,
 .blur-leave-active {
-    transition: all 0.3s ease-in;
+    transition: all 0.2s ease-in;
     overflow: hidden;
 }
 
