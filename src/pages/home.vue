@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useScheduleStore } from "../stores/scheduleStore";
 import classCard from "../component/classCard.vue"
-import { NScrollbar, useMessage } from "naive-ui";
+import { useMessage } from "naive-ui";
 import { currentMonitor, PhysicalPosition } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow, WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { TrayIcon, type TrayIconOptions } from '@tauri-apps/api/tray';
@@ -101,7 +101,6 @@ onMounted(() => {
             await sleep(1500)
             await setTop(false)
             console.log("上课了，取消窗口置顶");
-
         }
     }, { immediate: true })
 })
@@ -128,7 +127,7 @@ window.addEventListener("click", async () => {
             <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time" :active="item?.active"></class-card>
             <div v-else class="m-b-0.7rem"></div>
         </div>
-        <div v-else class="flex items-center justify-center h-100% bg-#ffffff55 rounded-1rem">
+        <div v-else class="flex items-center justify-center h-100% bg-#ffffff55 rounded-1rem h-100vh">
             <div class="text-center bg-white p-0.25rem rounded-1rem">
                 <p class="text-1.2rem">奶酪课程表已启动</p>
                 <br />

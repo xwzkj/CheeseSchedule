@@ -183,9 +183,9 @@ export const useScheduleStore = defineStore('schedule', () => {
                 })
             });
             emit("updated");
-            (window as any).$NMessageApi.success("已保存");
+            window.$NMessageApi.success("已保存");
         } catch (e) {
-            (window as any).$NMessageApi.error(`保存失败：${JSON.stringify(e)}`);
+            window.$NMessageApi.error(`保存失败：${JSON.stringify(e)}`);
         }
     }
 
