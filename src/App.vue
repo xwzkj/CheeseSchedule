@@ -1,7 +1,7 @@
 <template>
     <n-config-provider :theme-overrides="themeOverrides">
         <n-message-provider>
-            <n-scrollbar class="h-100vh">
+            <n-scrollbar class="h-100vh" ref="outerScrollbar">
                 <router-view v-slot="{ Component }">
                     <transition name="blur" mode="out-in">
                         <component :is="Component" />
@@ -17,7 +17,7 @@
 import { RouterView } from 'vue-router';
 import messageApi from './component/messageApi.vue';
 import { NMessageProvider, NConfigProvider, NScrollbar } from 'naive-ui';
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 import { Window } from "@tauri-apps/api/window"
 
 let themeOverrides = ref({
@@ -26,6 +26,7 @@ let themeOverrides = ref({
     },
 })
 
+window.$outerScrollbar = useTemplateRef('outerScrollbar')
 
 let currentWindow = Window.getCurrent()
 if (currentWindow.label == 'cheese-schedule') { // 主窗口
