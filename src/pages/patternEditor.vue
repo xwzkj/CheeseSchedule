@@ -13,7 +13,7 @@
                         </template>
                     </n-button>
                 </n-dropdown>
-                <span>正在编辑:“{{ scheduleStore.patterns[editingNum].name }}”</span>
+                <span>正在编辑:</span><n-input v-model:value="scheduleStore.patterns[editingNum].name" style="width: 7rem;"></n-input>
             </div>
             <div class="max-h-90% h-80% flex-1">
                 <n-scrollbar>
