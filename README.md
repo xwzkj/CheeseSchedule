@@ -5,3 +5,10 @@
 项目体积小巧，界面简洁，但功能不算强大
 
 仅针对windows进行了测试。
+
+## 备注
+
+tauri在构建时使用的版本号：
+
+产品版本->Cargo.toml
+文件版本->tauri.conf.json
