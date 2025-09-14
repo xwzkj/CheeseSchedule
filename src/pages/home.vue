@@ -122,15 +122,12 @@ window.addEventListener("click", async () => {
 </script>
 
 <template>
-    <div class="h-100vh">
-        <n-scrollbar v-if="scheduleStore.scheduleToday.length">
-            <div v-for="(item, index) in scheduleStore.scheduleToday" :key="index"
-                class="flex flex-col items-end m-r-2">
-                <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
-                    :active="item?.active"></class-card>
-                <div v-else class="m-b-0.7rem"></div>
-            </div>
-        </n-scrollbar>
+    <div>
+        <div v-if="scheduleStore.scheduleToday.length" v-for="(item, index) in scheduleStore.scheduleToday" :key="index"
+            class="flex flex-col items-end m-r-2">
+            <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time" :active="item?.active"></class-card>
+            <div v-else class="m-b-0.7rem"></div>
+        </div>
         <div v-else class="flex items-center justify-center h-100% bg-#ffffff55 rounded-1rem">
             <div class="text-center bg-white p-0.25rem rounded-1rem">
                 <p class="text-1.2rem">奶酪课程表已启动</p>
