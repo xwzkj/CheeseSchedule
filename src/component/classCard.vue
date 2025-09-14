@@ -27,7 +27,11 @@ onMounted(() => {
         let val = props.active
         if (outerEle.value) {
             outerEle.value.style.setProperty('--bg-color', val == 0 ? 'white' : val == 1 ? '#66ccff' : '#55efc4');
-            // outerEle.value.style.setProperty('--bg-color', 'blue');
+            if (val as any > 0) {// 切换到这节课
+                window.$outerScrollbar.value.scrollTo({ top: outerEle.value.offsetTop - 50, behavior: 'smooth' })
+                console.log('课程切换，课程列表滚动到当前课程');
+
+            }
         }
     }, { immediate: true })
 })
