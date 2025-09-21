@@ -125,6 +125,9 @@ async function initWindow() {
             }), 5)
         }
         tray.setMenu(menu)
+    } else {
+        menu.insert({ text: '未检测到新版本', enabled: false }, 4)
+        menu.insert({ item: 'Separator' }, 5)
     }
 }
 initWindow();

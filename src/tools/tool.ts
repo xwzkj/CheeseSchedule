@@ -49,15 +49,22 @@ type UpdateInfo = {
     }[],
 }
 async function checkUpdate(): Promise<UpdateInfo> {
-    let release = await request({ url: 'https://api.github.com/repos/xwzkj/cheeseschedule/releases/latest' })
     let updateInfo: UpdateInfo = { hasUpdate: false, latestVersion: await app.getVersion(), assets: [] }
-    if (release.status === 200) {
-        let latest = release.data.tag_name
-        updateInfo.latestVersion = latest;
-        updateInfo.assets = release.data.assets;
-        if (await isNewerVersion(latest)) {
-            updateInfo.hasUpdate = true;
+    try {
+        let release = await request({ url: 'https://api.github.com/repos/xwzkj/cheeseschedule/releases/latest' })
+        if (release.status === 200) {
+            let latest = release.data.tag_name
+            updateInfo.latestVersion = latest;
+            updateInfo.assets = release.data.assets;
+            if (await isNewerVersion(latest)) {
+                updateInfo.hasUpdate = true;
+            }
+        } else {
+            throw new Error(release.statusText)
         }
+    } catch (e) {
+        console.log('检查更新失败：', e)
+        window.$NMessageApi.error('检查更新失败')
     }
     return updateInfo;
 }
