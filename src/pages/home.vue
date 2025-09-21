@@ -2,13 +2,16 @@
 import { useScheduleStore } from "../stores/scheduleStore";
 import classCard from "../component/classCard.vue"
 import { useMessage } from "naive-ui";
+import { onMounted, watch } from "vue";
+import * as tool from '../tools/tool'
+
 import { currentMonitor, PhysicalPosition } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow, WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { TrayIcon, type TrayIconOptions } from '@tauri-apps/api/tray';
-import { defaultWindowIcon } from '@tauri-apps/api/app';
-import { Menu } from '@tauri-apps/api/menu';
+import * as app from '@tauri-apps/api/app';
+import { Menu, MenuItem } from '@tauri-apps/api/menu';
 import { exit } from '@tauri-apps/plugin-process';
-import { onMounted, watch } from "vue";
+import { openUrl } from "@tauri-apps/plugin-opener";
 
 const NMessage = useMessage();
 const scheduleStore = useScheduleStore();
@@ -16,6 +19,26 @@ const thisWindow = getCurrentWebviewWindow();
 async function initWindow() {
     const menu = await Menu.new({
         items: [
+            {
+                id: 'copyright',
+                text: '© 2025-至今 丸子',
+                enabled: false,
+            },
+            {
+                id: 'version',
+                text: '版本：v' + await app.getVersion(),
+                enabled: false,
+            },
+            {
+                id: 'github',
+                text: '前往GitHub项目页',
+                action: async () => {
+                    await openUrl("https://github.com/xwzkj/CheeseSchedule")
+                },
+            },
+            {
+                item: 'Separator'// 分割线
+            },
             {
                 id: 'quit',
                 text: '退出',
@@ -28,7 +51,7 @@ async function initWindow() {
     });
 
     const options: TrayIconOptions = {
-        icon: await defaultWindowIcon() as any,
+        icon: await app.defaultWindowIcon() as any,
         menu,
         menuOnLeftClick: false,
         action: async (event) => {
@@ -76,6 +99,33 @@ async function initWindow() {
             e.stopPropagation();
         }
     });
+    const updateInfo = await tool.checkUpdate()
+    if (updateInfo.hasUpdate) {
+        console.log("有新版本", updateInfo);
+        NMessage.success("有新版本，请前往托盘菜单更新", { duration: 60000, closable: true })
+
+        menu.insert({ text: '点击下载新版本：', enabled: false }, 4)
+        menu.insert({ item: 'Separator' }, 5)
+
+        // 添加下载链接
+        for (let i = 0; i < updateInfo.assets?.length; i++) {
+            menu.insert(await MenuItem.new({
+                id: 'download' + i,
+                text: "原始链接:" + updateInfo.assets[i].name,
+                action: async () => {
+                    await openUrl(updateInfo.assets[i].browser_download_url)
+                },
+            }), 5)
+            menu.insert(await MenuItem.new({
+                id: 'downloadWithProxy' + i,
+                text: "用代理下载:" + updateInfo.assets[i].name,
+                action: async () => {
+                    await openUrl(tool.proxyURI(updateInfo.assets[i].browser_download_url))
+                },
+            }), 5)
+        }
+        tray.setMenu(menu)
+    }
 }
 initWindow();
 
