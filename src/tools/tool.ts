@@ -18,18 +18,26 @@ async function request(config: AxiosRequestConfig) {
 async function isNewerVersion(ver: string) {
     let now = await app.getVersion();
 
-    const nowParts = now.split('.').map(Number);
-    const verParts = ver.split('.').map(Number);
+    const nowMatch = /(\d+)\.(\d+)\.(\d+)/.exec(now) || [0, 0, 0];
+    const verMatch = /(\d+)\.(\d+)\.(\d+)/.exec(ver) || [0, 0, 0];
 
-    // 比较每一位
-    for (let i = 0; i < Math.max(nowParts.length, verParts.length); i++) {
-        const nowNum = nowParts[i] ?? 0;
-        const verNum = verParts[i] ?? 0;
-        if (verNum > nowNum) return true;
-        if (verNum < nowNum) return false;
+    const nowParts = [
+        Number(nowMatch[1] ?? 0),
+        Number(nowMatch[2] ?? 0),
+        Number(nowMatch[3] ?? 0)
+    ];
+
+    const verParts = [
+        Number(verMatch[1] ?? 0),
+        Number(verMatch[2] ?? 0),
+        Number(verMatch[3] ?? 0)
+    ];
+
+    for (let i = 0; i < 3; i++) {
+        if (verParts[i] > nowParts[i]) return true;
+        if (verParts[i] < nowParts[i]) return false;
     }
-
-    return false; // 相等
+    return false;
 }
 
 type UpdateInfo = {
