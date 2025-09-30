@@ -157,8 +157,8 @@ onMounted(() => {
             await setTop(true)
             console.log("下课了，自动窗口置顶");
         } else {
-            NMessage.success("上课了!")
-            await sleep(1500)
+            NMessage.success("上课了!", { duration: 5000 })
+            await sleep(5000)
             await setTop(false)
             console.log("上课了，取消窗口置顶");
         }
