@@ -1,11 +1,12 @@
 <template>
     <div ref="outer" class="outer" :class="{ 'w-9rem h-5.7rem': props.active, 'w-5.5rem h-3.2rem': !props.active }">
-        <div class="relative flex flex-col items-center z-2">
-
-            <div :class="{ 'text-2.5rem font-bold': props.active, 'text-1.8rem': !props.active }"
-                class="line-height-120%">
-                {{ props.name }}
-            </div>
+        <div class="relative flex flex-col items-center z-2 max-w-100%">
+            <vue3-marquee class="max-w-100% overflow-hidden justify-center" :duration="5" :animateOnOverflowOnly="true">
+                <div :class="{ 'text-2.5rem font-bold': props.active, 'text-1.8rem': !props.active }"
+                    class="line-height-120% whitespace-nowrap">
+                    {{ props.name }}
+                </div>
+            </vue3-marquee>
             <div v-if="props.active" class="text-1.3rem font-bold whitespace-nowrap">{{ props.time }}</div>
 
         </div>
@@ -16,6 +17,7 @@
 
 <script setup lang="ts">
 import { watch, useTemplateRef, onMounted } from 'vue'
+import { Vue3Marquee } from 'vue3-marquee';
 const props = defineProps<{
     name: string,
     time: string | null,
@@ -28,7 +30,7 @@ onMounted(() => {
         if (outerEle.value) {
             outerEle.value.style.setProperty('--bg-color', val == 0 ? 'white' : val == 1 ? '#66ccff' : '#55efc4');
             if (val as any > 0) {// 切换到这节课
-                window.$outerScrollbar.value.scrollTo({ top: outerEle.value.offsetTop - 50, behavior: 'smooth' })
+                window.$outerScrollbar.value.scrollTo({ top: outerEle.value.offsetTop - 65, behavior: 'smooth' })
                 console.log('课程切换，课程列表滚动到当前课程');
 
             }
