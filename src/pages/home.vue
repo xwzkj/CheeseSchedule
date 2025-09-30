@@ -89,7 +89,7 @@ async function initWindow() {
     }
     let innerSize = await thisWindow.innerSize()
     let outerSize = await thisWindow.outerSize()
-    innerSize.height = monitor.size.height * 3 / 4
+    innerSize.height = Math.floor(monitor.size.height * 2.8 / 4)
     thisWindow.setSize(innerSize)
     thisWindow.setPosition(new PhysicalPosition(monitor.size.width - outerSize.width, 0))
     // 禁用 Ctrl+P
