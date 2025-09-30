@@ -13,6 +13,8 @@ import { Menu, MenuItem } from '@tauri-apps/api/menu';
 import { exit } from '@tauri-apps/plugin-process';
 import { openUrl } from "@tauri-apps/plugin-opener";
 
+let updateInfo: UpdateInfo;
+
 const NMessage = useMessage();
 const scheduleStore = useScheduleStore();
 const thisWindow = getCurrentWebviewWindow();
@@ -99,7 +101,9 @@ async function initWindow() {
             e.stopPropagation();
         }
     });
-    const updateInfo = await tool.checkUpdate()
+    // 检查更新
+    updateInfo = await tool.checkUpdate()
+    updateInfo.hasUpdate = true
     if (updateInfo.hasUpdate) {
         console.log("有新版本", updateInfo);
         NMessage.success("有新版本，请前往托盘菜单更新", { duration: 60000, closable: true })
@@ -184,6 +188,10 @@ window.addEventListener("click", async () => {
     <div>
         <div v-if="scheduleStore.scheduleToday.length" v-for="(item, index) in scheduleStore.scheduleToday" :key="index"
             class="flex flex-col items-end m-r-2">
+            <!-- 更新提示 -->
+            <class-card v-if="updateInfo?.hasUpdate && index == 0" :name="`有更新`" :time="`25:00-25:00`"
+                :active="0"></class-card>
+            <!-- 课程表卡片 -->
             <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time" :active="item?.active"></class-card>
             <div v-else class="m-b-0.7rem"></div>
         </div>
