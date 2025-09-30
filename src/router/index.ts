@@ -3,9 +3,9 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes: [
         {
-            name: 'home',
+            name: 'mainWindow',
             path: '/',
-            component: () => import('../pages/home.vue'),
+            component: () => import('../pages/mainWindow.vue'),
         },
         {
             name: 'editor',
