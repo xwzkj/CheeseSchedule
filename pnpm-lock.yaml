@@ -41,6 +41,9 @@ importers:
       vue-router:
         specifier: '4'
         version: 4.5.1(vue@3.5.19(typescript@5.6.3))
+      vue3-marquee:
+        specifier: ^4.2.2
+        version: 4.2.2(vue@3.5.19(typescript@5.6.3))
     devDependencies:
       '@tauri-apps/cli':
         specifier: ^2
@@ -1552,6 +1555,12 @@ packages:
     hasBin: true
     peerDependencies:
       typescript: '>=5.0.0'
+
+  vue3-marquee@4.2.2:
+    resolution: {integrity: sha512-FeFvGUVInKfFilXFcnl8sDRBJBZCZSNLlQDquJErB9db6W2xICRVqbRV/jtdzsEP0rftarLQhx9MeEAU0+TPuQ==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      vue: ^3.2
 
   vue@3.5.19:
     resolution: {integrity: sha512-ZRh0HTmw6KChRYWgN8Ox/wi7VhpuGlvMPrHjIsdRbzKNgECFLzy+dKL5z9yGaBSjCpmcfJCbh3I1tNSRmBz2tg==}
@@ -3078,6 +3087,10 @@ snapshots:
       '@volar/typescript': 2.4.15
       '@vue/language-core': 2.2.12(typescript@5.6.3)
       typescript: 5.6.3
+
+  vue3-marquee@4.2.2(vue@3.5.19(typescript@5.6.3)):
+    dependencies:
+      vue: 3.5.19(typescript@5.6.3)
 
   vue@3.5.19(typescript@5.6.3):
     dependencies:
