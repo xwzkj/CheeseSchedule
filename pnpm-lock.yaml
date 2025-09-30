@@ -30,8 +30,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       naive-ui:
-        specifier: ^2.42.0
-        version: 2.42.0(vue@3.5.19(typescript@5.6.3))
+        specifier: ^2.43.1
+        version: 2.43.1(vue@3.5.19(typescript@5.6.3))
       pinia:
         specifier: ^3.0.3
         version: 3.0.3(typescript@5.6.3)(vue@3.5.19(typescript@5.6.3))
@@ -1242,8 +1242,8 @@ packages:
   muggle-string@0.4.1:
     resolution: {integrity: sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==}
 
-  naive-ui@2.42.0:
-    resolution: {integrity: sha512-c7cXR2YgOjgtBadXHwiWL4Y0tpGLAI5W5QzzHksOi22iuHXoSGMAzdkVTGVPE/PM0MSGQ/JtUIzCx2Y0hU0vTQ==}
+  naive-ui@2.43.1:
+    resolution: {integrity: sha512-w52W0mOhdOGt4uucFSZmP0DI44PCsFyuxeLSs9aoUThfIuxms90MYjv46Qrr7xprjyJRw5RU6vYpCx4o9ind3A==}
     peerDependencies:
       vue: ^3.0.0
 
@@ -1561,8 +1561,8 @@ packages:
       typescript:
         optional: true
 
-  vueuc@0.4.64:
-    resolution: {integrity: sha512-wlJQj7fIwKK2pOEoOq4Aro8JdPOGpX8aWQhV8YkTW9OgWD2uj2O8ANzvSsIGjx7LTOc7QbS7sXdxHi6XvRnHPA==}
+  vueuc@0.4.65:
+    resolution: {integrity: sha512-lXuMl+8gsBmruudfxnMF9HW4be8rFziylXFu1VHVNbLVhRTXXV4njvpRuJapD/8q+oFEMSfQMH16E/85VoWRyQ==}
     peerDependencies:
       vue: ^3.0.11
 
@@ -2753,7 +2753,7 @@ snapshots:
 
   muggle-string@0.4.1: {}
 
-  naive-ui@2.42.0(vue@3.5.19(typescript@5.6.3)):
+  naive-ui@2.43.1(vue@3.5.19(typescript@5.6.3)):
     dependencies:
       '@css-render/plugin-bem': 0.15.14(css-render@0.15.14)
       '@css-render/vue3-ssr': 0.15.14(vue@3.5.19(typescript@5.6.3))
@@ -2774,7 +2774,7 @@ snapshots:
       vdirs: 0.1.8(vue@3.5.19(typescript@5.6.3))
       vooks: 0.2.12(vue@3.5.19(typescript@5.6.3))
       vue: 3.5.19(typescript@5.6.3)
-      vueuc: 0.4.64(vue@3.5.19(typescript@5.6.3))
+      vueuc: 0.4.65(vue@3.5.19(typescript@5.6.3))
 
   nanoid@3.3.11: {}
 
@@ -3089,7 +3089,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.6.3
 
-  vueuc@0.4.64(vue@3.5.19(typescript@5.6.3)):
+  vueuc@0.4.65(vue@3.5.19(typescript@5.6.3)):
     dependencies:
       '@css-render/vue3-ssr': 0.15.14(vue@3.5.19(typescript@5.6.3))
       '@juggle/resize-observer': 3.4.0
