@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useScheduleStore } from "../stores/scheduleStore";
 import classCard from "../component/classCard.vue"
-import { useMessage } from "naive-ui";
+import { useMessage, NScrollbar } from "naive-ui";
 import { ref, onMounted, useTemplateRef, watch } from "vue";
 import * as tool from '../tools/tool'
 
@@ -15,6 +15,7 @@ import { openUrl } from "@tauri-apps/plugin-opener";
 
 let updateInfo = ref<UpdateInfo>();
 let outerEle = useTemplateRef('outerEle')
+window.$outerScrollbar = useTemplateRef('outerScrollbar')
 
 const NMessage = useMessage();
 const scheduleStore = useScheduleStore();
@@ -198,29 +199,33 @@ onMounted(() => {
 
 <template>
     <div ref="outerEle" class="select-none">
-        <div v-if="scheduleStore.scheduleToday.length" v-for="(item, index) in scheduleStore.scheduleToday" :key="index"
-            class="flex flex-col items-end m-r-2">
-            <!-- 更新提示 -->
-            <class-card v-if="updateInfo?.hasUpdate && index == 0"
-                :name="`检测到新版本${updateInfo?.latestVersion}${updateInfo?.changeLog?.simple ? `：${updateInfo.changeLog.simple?.slice(0, 20)}...` : ''}`"
-                :time="`25:00-25:00`" :active="0"></class-card>
-            <!-- 课程表卡片 -->
-            <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time" :active="item?.active"></class-card>
-            <div v-else class="m-b-0.7rem"></div>
-        </div>
-        <div v-else class="flex items-center justify-center h-100% bg-#ffffff55 rounded-1rem h-100vh">
-            <div class="text-center bg-white p-0.25rem rounded-1rem">
-                <p class="text-1.2rem">奶酪课程表已启动</p>
-                <br />
-                <div class="text-1.1rem text-#888">
-                    今日没有课程数据
-                    <br /><br />
-                    可前往托盘
+        <n-scrollbar class="h-100vh" ref="outerScrollbar">
+
+            <div v-if="scheduleStore.scheduleToday.length" v-for="(item, index) in scheduleStore.scheduleToday"
+                :key="index" class="flex flex-col items-end m-r-2">
+                <!-- 更新提示 -->
+                <class-card v-if="updateInfo?.hasUpdate && index == 0"
+                    :name="`检测到新版本${updateInfo?.latestVersion}${updateInfo?.changeLog?.simple ? `：${updateInfo.changeLog.simple?.slice(0, 20)}...` : ''}`"
+                    :time="`25:00-25:00`" :active="0"></class-card>
+                <!-- 课程表卡片 -->
+                <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
+                    :active="item?.active"></class-card>
+                <div v-else class="m-b-0.7rem"></div>
+            </div>
+            <div v-else class="flex items-center justify-center h-100% bg-#ffffff55 rounded-1rem h-100vh">
+                <div class="text-center bg-white p-0.25rem rounded-1rem">
+                    <p class="text-1.2rem">奶酪课程表已启动</p>
                     <br />
-                    唤出编辑页
+                    <div class="text-1.1rem text-#888">
+                        今日没有课程数据
+                        <br /><br />
+                        可前往托盘
+                        <br />
+                        唤出编辑页
+                    </div>
                 </div>
             </div>
-        </div>
+        </n-scrollbar>
     </div>
 </template>
 

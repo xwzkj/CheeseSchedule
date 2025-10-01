@@ -1,14 +1,8 @@
 <template>
     <div class="p-1rem w-100%">
-        <div class="flex justify-between">
-            <div class="flex gap-4">
-                <n-button @click="toPatternEdit">去编辑“模式”</n-button>
-                <n-button @click="toOverrideEdit">编辑今日临时换课</n-button>
-            </div>
-            <div class="flex gap-4">
-                <n-button @click="scheduleStore.save" type="primary" secondary>保存</n-button>
-                <n-button @click="scheduleStore.init" secondary>重置</n-button>
-            </div>
+        <div class="flex gap-4 justify-end">
+            <n-button @click="scheduleStore.save" type="primary" secondary>保存</n-button>
+            <n-button @click="scheduleStore.init" secondary>重置</n-button>
         </div>
         <div class="w-100% flex gap-1 justify-center">
             <div v-for="i in 7" class="flex flex-col items-center">

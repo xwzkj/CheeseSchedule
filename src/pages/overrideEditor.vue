@@ -1,14 +1,17 @@
 <template>
     <div class="p-1rem flex flex-col">
-        <div class="flex gap-4">
-            <n-button @click="scheduleStore.save" type="primary" secondary>保存</n-button>
-            <n-button @click="scheduleStore.init" secondary>重置</n-button>
-            <n-button @click="() => { scheduleStore.scheduleOverride.override = [] }" secondary>清除临时换课</n-button>
-            <n-button @click="goHome" secondary>返回到课程表编辑</n-button>
+        <div class="flex justify-between">
+            <div class="flex gap-4">
+                <n-button @click="() => { scheduleStore.scheduleOverride.override = [] }" secondary>清除临时换课</n-button>
+            </div>
+            <div class="flex gap-4">
+                <n-button @click="scheduleStore.save" type="primary" secondary>保存</n-button>
+                <n-button @click="scheduleStore.init" secondary>重置</n-button>
+            </div>
         </div>
         <div class="flex flex-col items-center">
             <div>
-                <div class="font-size-1.2rem font-bold">编辑临时换课：</div>
+                <div class="font-size-1.2rem font-bold">编辑今日临时换课</div>
                 <!-- {{ scheduleStore.scheduleOverride }} -->
             </div>
             <div class="flex gap-1 flex-col">
@@ -28,8 +31,6 @@ import scheduleEditCard from "../component/scheduleEditCard.vue";
 import { useScheduleStore } from "../stores/scheduleStore";
 import { onMounted, ref, watch, WatchHandle } from "vue";
 import { NButton } from "naive-ui";
-import { useRouter } from "vue-router"
-const router = useRouter()
 const scheduleStore = useScheduleStore()
 
 let dataCopy = ref<Lesson[]>([])
@@ -55,11 +56,6 @@ onMounted(() => {
     }, { deep: true, immediate: true })
 
 })
-
-const goHome = () => {
-    router.push({ name: 'editor' })
-}
-
 </script>
 
 <style scoped></style>
