@@ -45,8 +45,6 @@
 import { ref } from 'vue'
 import { NScrollbar, NDropdown, NDynamicInput, NCheckbox, NInput, NButton } from 'naive-ui'
 import { useScheduleStore } from '../stores/scheduleStore'
-import { useRouter } from 'vue-router'
-const router = useRouter()
 const scheduleStore = useScheduleStore()
 let editingNum = ref(0);
 
@@ -58,10 +56,6 @@ function patternDefault() {
         isDivider: false,
         time: ""
     }
-}
-
-function goHome() {
-    router.push({ name: 'editor' })
 }
 function save() {
     scheduleStore.refreshPatternToDay(editingNum.value)
