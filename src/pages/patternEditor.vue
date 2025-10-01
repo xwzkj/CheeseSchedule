@@ -33,13 +33,10 @@
                     </n-dynamic-input>
                 </n-scrollbar>
             </div>
-            <div class="flex justify-between">
-                <n-button @click="goHome" secondary>返回到课程表编辑</n-button>
-                <div class="flex gap-4">
+                <div class="flex gap-4 justify-end">
                     <n-button @click="save" type="primary" secondary>保存</n-button>
                     <n-button @click="scheduleStore.init" secondary>重置</n-button>
                 </div>
-            </div>
         </div>
     </div>
 </template>

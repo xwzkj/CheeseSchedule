@@ -10,18 +10,31 @@ const router = createRouter({
         {
             name: 'editor',
             path: '/editor',
-            component: () => import('../pages/editor.vue')
+            component: () => import('../pages/editorLayout.vue'),
+            children: [
+                {
+                    name: 'editorHome',
+                    path: '',
+                    component: () => import('../pages/editorHome.vue')
+                },
+                {
+                    name: 'scheduleEditor',
+                    path: 'schedule',
+                    component: () => import('../pages/scheduleEditor.vue')
+                },
+                {
+                    name: 'patternEditor',
+                    path: 'pattern',
+                    component: () => import('../pages/patternEditor.vue')
+                },
+                {
+                    name: 'overrideEditor',
+                    path: 'override',
+                    component: () => import('../pages/overrideEditor.vue')
+                }
+            ]
         },
-        {
-            name: 'patternEditor',
-            path: '/pattern/editor',
-            component: () => import('../pages/patternEditor.vue')
-        },
-        {
-            name:'overrideEditor',
-            path:'/override/editor',
-            component: () => import('../pages/overrideEditor.vue')
-        }
+
     ]
 })
 

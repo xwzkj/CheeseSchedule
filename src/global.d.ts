@@ -4,6 +4,6 @@ import type { Ref } from 'vue'
 declare global {
     interface Window {
         $NMessageApi: MessageApiInjection
-        $outerScrollbar: Ref<ScrollbarInst>
+        $outerScrollbar: Ref<ScrollbarInst | null> // 主窗口滚动条 仅主窗口可用
     }
 }
