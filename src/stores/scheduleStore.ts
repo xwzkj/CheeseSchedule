@@ -127,7 +127,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         }
     }
 
-    setInterval(__refreshActive, 5000);
+    setInterval(__refreshActive, 500);
 
     async function init() {
         let data: any
