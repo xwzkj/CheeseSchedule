@@ -33,10 +33,6 @@ onMounted(() => {
         needMarquee.value = false // 让滚动时的左右空白padding消失
         await nextTick()
         if (nameDiv.value && outerEle.value) {
-            console.log('nameDiv.value.scrollWidth', nameDiv.value.scrollWidth)
-            console.log('outerEle.value.clientWidth', outerEle.value.clientWidth)
-            console.log('outerEle.value.offsetWidth', outerEle.value.offsetWidth)
-
             needMarquee.value = nameDiv.value.scrollWidth >= outerEle.value.clientWidth
         }
     }
