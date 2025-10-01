@@ -108,9 +108,20 @@ async function initWindow() {
     if (updateInfo.value && updateInfo.value.hasUpdate) {
         console.log("有新版本", updateInfo.value);
         NMessage.success("有新版本，请前往托盘菜单更新", { duration: 60000, closable: true })
-
-        menu.insert({ text: '点击下载新版本：', enabled: false }, 4)
-        menu.insert({ item: 'Separator' }, 5)
+        let insertPosition = 4
+        menu.insert(await MenuItem.new({
+            text: `检测到新版本${updateInfo.value.latestVersion}，点击打开更新页面`,
+            action: async () => {
+                await openUrl((updateInfo.value as UpdateInfo).html_url)
+            },
+        }), insertPosition)
+        menu.insert(await MenuItem.new({
+            text: `${updateInfo.value.changeLog.simple ? `更新日志：${updateInfo.value.changeLog.simple?.slice(0, 25)}...` : '无更新日志'}`,
+            enabled: false,
+        }), ++insertPosition)
+        menu.insert({ item: 'Separator' }, ++insertPosition)
+        menu.insert(await MenuItem.new({ text: '点击下载新版本：', enabled: false }), ++insertPosition)
+        menu.insert({ item: 'Separator' }, ++insertPosition)
 
         // 添加下载链接
         for (let i = 0; i < updateInfo.value.assets?.length; i++) {
@@ -120,18 +131,18 @@ async function initWindow() {
                 action: async () => {
                     await openUrl((updateInfo.value as UpdateInfo).assets[i].browser_download_url)
                 },
-            }), 5)
+            }), insertPosition)
             menu.insert(await MenuItem.new({
                 id: 'downloadWithProxy' + i,
                 text: "用代理下载:" + updateInfo.value.assets[i].name,
                 action: async () => {
                     await openUrl(tool.proxyURI((updateInfo.value as UpdateInfo).assets[i].browser_download_url))
                 },
-            }), 5)
+            }), insertPosition)
         }
         tray.setMenu(menu)
     } else {
-        menu.insert({ text: '未检测到新版本', enabled: false }, 4)
+        menu.insert(await MenuItem.new({ text: '未检测到新版本', enabled: false }), 4)
         menu.insert({ item: 'Separator' }, 5)
     }
 }
