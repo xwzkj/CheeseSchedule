@@ -2,7 +2,11 @@
     <div class="flex">
         <n-menu class="w-12rem grow-0 shrink-0" :options="menuOptions" v-model:value="selectedNow" />
         <n-scrollbar class="h-100vh">
-            <router-view></router-view>
+            <router-view v-slot="{ Component }">
+                <transition name="blur" mode="out-in">
+                    <component :is="Component" />
+                </transition>
+            </router-view>
         </n-scrollbar>
     </div>
 </template>
@@ -43,7 +47,16 @@ const menuOptions: MenuOption[] = [
 </script>
 
 <style scoped>
-* {
-    box-sizing: border-box;
+.blur-enter-active,
+.blur-leave-active {
+    transition: all 0.2s ease-in;
+    overflow: hidden;
+}
+
+.blur-enter-from,
+.blur-leave-to {
+    filter: blur(1.5rem);
+    opacity: 0;
+    transform: scale(1.05);
 }
 </style>
