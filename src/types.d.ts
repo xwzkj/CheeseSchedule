@@ -28,6 +28,7 @@ type Week = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
 type UpdateInfo = {
     hasUpdate: boolean,
     latestVersion: string,
+    html_url: string,
     changeLog: {
         full: string,
         simple: string

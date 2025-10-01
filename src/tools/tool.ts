@@ -41,13 +41,14 @@ async function isNewerVersion(ver: string) {
 }
 
 async function checkUpdate(): Promise<UpdateInfo> {
-    let updateInfo: UpdateInfo = { hasUpdate: false, latestVersion: await app.getVersion(), assets: [], changeLog: { full: '', simple: '' } }
+    let updateInfo: UpdateInfo = { hasUpdate: false, latestVersion: await app.getVersion(), assets: [], html_url: '', changeLog: { full: '', simple: '' } }
     try {
         let release = await request({ url: 'https://api.github.com/repos/xwzkj/cheeseschedule/releases/latest' })
         if (release.status === 200) {
             let latest = release.data.tag_name
             updateInfo.latestVersion = latest;
             updateInfo.assets = release.data.assets;
+            updateInfo.html_url = release.data.html_url;
             updateInfo.changeLog.full = release.data.body;
             updateInfo.changeLog.simple = release.data.body.replace(/(\n|\r)+/g, ' ').trim()
             if (await isNewerVersion(latest)) {
