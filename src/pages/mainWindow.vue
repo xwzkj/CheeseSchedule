@@ -105,7 +105,7 @@ async function initWindow() {
     });
     // 检查更新
     updateInfo.value = await tool.checkUpdate()
-    updateInfo.value.hasUpdate = true
+    // updateInfo.value.hasUpdate = true // 调试用
     if (updateInfo.value && updateInfo.value.hasUpdate) {
         console.log("有新版本", updateInfo.value);
         NMessage.success("有新版本，请前往托盘菜单更新", { duration: 60000, closable: true })
