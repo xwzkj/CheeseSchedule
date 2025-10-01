@@ -1,12 +1,14 @@
 <template>
     <div ref="outer" class="outer" :class="{ 'w-9rem h-5.7rem': props.active, 'w-5.5rem h-3.2rem': !props.active }">
         <div class="relative flex flex-col items-center z-2 max-w-100%">
-            <vue3-marquee class="max-w-100% overflow-hidden justify-center" :duration="5" :animateOnOverflowOnly="true">
-                <div :class="{ 'text-2.5rem font-bold': props.active, 'text-1.8rem': !props.active }"
+            <component :is="needMarquee ? Vue3Marquee : 'div'" class="max-w-100% overflow-hidden justify-center"
+                :duration="(nameDiv?.scrollWidth ?? 250) / 35" :clone="true">
+                <div ref="nameDiv"
+                    :class="{ 'text-2.5rem font-bold': props.active, 'text-1.8rem': !props.active, 'px-0.5rem': needMarquee }"
                     class="line-height-120% whitespace-nowrap">
                     {{ props.name }}
                 </div>
-            </vue3-marquee>
+            </component>
             <div v-if="props.active" class="text-1.3rem font-bold whitespace-nowrap">{{ props.time }}</div>
 
         </div>
@@ -16,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, useTemplateRef, onMounted } from 'vue'
+import { watch, useTemplateRef, onMounted, ref, nextTick } from 'vue'
 import { Vue3Marquee } from 'vue3-marquee';
 const props = defineProps<{
     name: string,
@@ -24,7 +26,20 @@ const props = defineProps<{
     active: 0 | 1 | 2 | undefined
 }>()
 const outerEle = useTemplateRef('outer')
+const nameDiv = useTemplateRef('nameDiv')
+let needMarquee = ref(false)
 onMounted(() => {
+    let freshIfNeedMarquee = async () => {
+        needMarquee.value = false // 让滚动时的左右空白padding消失
+        await nextTick()
+        if (nameDiv.value && outerEle.value) {
+            console.log('nameDiv.value.scrollWidth', nameDiv.value.scrollWidth)
+            console.log('outerEle.value.clientWidth', outerEle.value.clientWidth)
+            console.log('outerEle.value.offsetWidth', outerEle.value.offsetWidth)
+
+            needMarquee.value = nameDiv.value.scrollWidth >= outerEle.value.clientWidth
+        }
+    }
     watch(() => props.active, () => {
         let val = props.active
         if (outerEle.value) {
@@ -35,6 +50,13 @@ onMounted(() => {
 
             }
         }
+        // 在过渡动画后刷新
+        setTimeout(() => {
+            freshIfNeedMarquee()
+        }, 1500)
+    }, { immediate: true })
+    watch(() => props.name, () => {
+        freshIfNeedMarquee()
     }, { immediate: true })
 })
 </script>

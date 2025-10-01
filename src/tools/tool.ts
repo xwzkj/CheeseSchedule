@@ -41,13 +41,15 @@ async function isNewerVersion(ver: string) {
 }
 
 async function checkUpdate(): Promise<UpdateInfo> {
-    let updateInfo: UpdateInfo = { hasUpdate: false, latestVersion: await app.getVersion(), assets: [] }
+    let updateInfo: UpdateInfo = { hasUpdate: false, latestVersion: await app.getVersion(), assets: [], changeLog: { full: '', simple: '' } }
     try {
         let release = await request({ url: 'https://api.github.com/repos/xwzkj/cheeseschedule/releases/latest' })
         if (release.status === 200) {
             let latest = release.data.tag_name
             updateInfo.latestVersion = latest;
             updateInfo.assets = release.data.assets;
+            updateInfo.changeLog.full = release.data.body;
+            updateInfo.changeLog.simple = release.data.body.replace(/(\n|\r)+/g, ' ').trim()
             if (await isNewerVersion(latest)) {
                 updateInfo.hasUpdate = true;
             }
@@ -56,7 +58,7 @@ async function checkUpdate(): Promise<UpdateInfo> {
         }
     } catch (e) {
         console.log('检查更新失败：', e)
-        window.$NMessageApi.error('检查更新失败')
+        window.$NMessageApi.error('检查更新失败', { duration: 10000 })
     }
     return updateInfo;
 }

@@ -2,7 +2,7 @@
 import { useScheduleStore } from "../stores/scheduleStore";
 import classCard from "../component/classCard.vue"
 import { useMessage } from "naive-ui";
-import { onMounted, useTemplateRef, watch } from "vue";
+import { ref, onMounted, useTemplateRef, watch } from "vue";
 import * as tool from '../tools/tool'
 
 import { currentMonitor, PhysicalPosition } from "@tauri-apps/api/window";
@@ -13,7 +13,7 @@ import { Menu, MenuItem } from '@tauri-apps/api/menu';
 import { exit } from '@tauri-apps/plugin-process';
 import { openUrl } from "@tauri-apps/plugin-opener";
 
-let updateInfo: UpdateInfo;
+let updateInfo = ref<UpdateInfo>();
 let outerEle = useTemplateRef('outerEle')
 
 const NMessage = useMessage();
@@ -103,29 +103,29 @@ async function initWindow() {
         }
     });
     // 检查更新
-    updateInfo = await tool.checkUpdate()
-    updateInfo.hasUpdate = true
-    if (updateInfo.hasUpdate) {
-        console.log("有新版本", updateInfo);
+    updateInfo.value = await tool.checkUpdate()
+    updateInfo.value.hasUpdate = true
+    if (updateInfo.value && updateInfo.value.hasUpdate) {
+        console.log("有新版本", updateInfo.value);
         NMessage.success("有新版本，请前往托盘菜单更新", { duration: 60000, closable: true })
 
         menu.insert({ text: '点击下载新版本：', enabled: false }, 4)
         menu.insert({ item: 'Separator' }, 5)
 
         // 添加下载链接
-        for (let i = 0; i < updateInfo.assets?.length; i++) {
+        for (let i = 0; i < updateInfo.value.assets?.length; i++) {
             menu.insert(await MenuItem.new({
                 id: 'download' + i,
-                text: "原始链接:" + updateInfo.assets[i].name,
+                text: "原始链接:" + updateInfo.value.assets[i].name,
                 action: async () => {
-                    await openUrl(updateInfo.assets[i].browser_download_url)
+                    await openUrl((updateInfo.value as UpdateInfo).assets[i].browser_download_url)
                 },
             }), 5)
             menu.insert(await MenuItem.new({
                 id: 'downloadWithProxy' + i,
-                text: "用代理下载:" + updateInfo.assets[i].name,
+                text: "用代理下载:" + updateInfo.value.assets[i].name,
                 action: async () => {
-                    await openUrl(tool.proxyURI(updateInfo.assets[i].browser_download_url))
+                    await openUrl(tool.proxyURI((updateInfo.value as UpdateInfo).assets[i].browser_download_url))
                 },
             }), 5)
         }
@@ -190,8 +190,9 @@ onMounted(() => {
         <div v-if="scheduleStore.scheduleToday.length" v-for="(item, index) in scheduleStore.scheduleToday" :key="index"
             class="flex flex-col items-end m-r-2">
             <!-- 更新提示 -->
-            <class-card v-if="updateInfo?.hasUpdate && index == 0" :name="`检查到更新！`" :time="`25:00-25:00`"
-                :active="0"></class-card>
+            <class-card v-if="updateInfo?.hasUpdate && index == 0"
+                :name="`检测到新版本${updateInfo?.latestVersion}${updateInfo?.changeLog?.simple ? `：${updateInfo.changeLog.simple?.slice(0, 20)}...` : ''}`"
+                :time="`25:00-25:00`" :active="0"></class-card>
             <!-- 课程表卡片 -->
             <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time" :active="item?.active"></class-card>
             <div v-else class="m-b-0.7rem"></div>

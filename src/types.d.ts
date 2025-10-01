@@ -28,6 +28,10 @@ type Week = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
 type UpdateInfo = {
     hasUpdate: boolean,
     latestVersion: string,
+    changeLog: {
+        full: string,
+        simple: string
+    },
     assets: {
         name: string,
         browser_download_url: string
