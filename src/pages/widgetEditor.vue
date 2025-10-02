@@ -26,7 +26,7 @@
                         <n-collapse-item :title="item.name" name="1">
                             <!-- 每个参数 -->
                             <div v-for="(i, key) in item.param" class="m-t-0.5rem">
-                                <div>{{ i.label }}：(<span class="text-#999">{{ key }}:{{ i.value }}</span>)</div>
+                                <div>{{ i.label }}：<span class="text-#999">({{ key }}:{{ i.value }})</span></div>
                                 <div class="do-not-drag">
                                     <n-date-picker v-if="i.type == 'date'" v-model:value="i.value" type="date" />
                                     <n-input v-if="i.type == 'text'" v-model:value="i.value" type="text"
@@ -56,7 +56,7 @@ const scheduleStore = useScheduleStore()
 const availableList = ref<WidgetConfig[]>([
     {
         name: '倒计日',
-        id: 'DaysLeft',
+        id: 'daysLeft',
         key: 1,
         param: {
             name: {
