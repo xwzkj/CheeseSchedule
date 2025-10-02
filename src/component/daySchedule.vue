@@ -1,7 +1,8 @@
 <template>
     <div class="flex flex-col items-center gap-1">
         <n-dropdown :options="scheduleStore.patternsOption" @select="handlePatternSelect" trigger="click">
-            <n-el tag="div" style="color: var(--primary-color);" class="cursor-pointer border b-dashed rounded-0.5rem p-t-0.1rem p-b-0.1rem">
+            <n-el tag="div" style="color: var(--primary-color);"
+                class="cursor-pointer border b-dashed rounded-0.5rem p-t-0.1rem p-b-0.1rem">
                 <n-ellipsis class="w-5rem text-align-center text-0.8rem">{{ patternName }}</n-ellipsis>
             </n-el>
         </n-dropdown>
@@ -20,7 +21,7 @@ import { computed } from 'vue';
 import ScheduleEditCard from './scheduleEditCard.vue'
 const scheduleStore = useScheduleStore();
 const props = defineProps<{
-    day: "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun"
+    day: Week
 }>()
 let patternName = computed(() => {
     let p = scheduleStore.schedule[props.day]?.pattern
@@ -28,25 +29,7 @@ let patternName = computed(() => {
 })
 
 function handlePatternSelect(key: number) {
-    scheduleStore.schedule[props.day].pattern = key
-    let p = scheduleStore.patterns[key].data
-    let lessons = scheduleStore.schedule[props.day].lessons
-    if (lessons.length > p.length) {
-        lessons.splice(p.length)
-    }
-    for (let i = 0; i < p.length; i++) {
-        let lesson: Lesson = {
-            name: lessons?.[i]?.name ?? '空',
-            time: p[i]?.time ?? '',
-            isDivider: p[i].isDivider,
-        }
-        if (lessons.length < i + 1) {
-            lessons.push(lesson)
-        } else {
-            lessons[i] = lesson
-        }
-    }
-    scheduleStore.schedule[props.day].lessons = lessons
+    scheduleStore.setPatternToDay(key, props.day)
 }
 
 </script>

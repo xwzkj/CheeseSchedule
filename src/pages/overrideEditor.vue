@@ -1,12 +1,8 @@
 <template>
     <div class="p-1rem flex flex-col">
-        <div class="flex justify-between">
+        <div class="flex justify-start">
             <div class="flex gap-4">
                 <n-button @click="() => { scheduleStore.scheduleOverride.override = [] }" secondary>清除临时换课</n-button>
-            </div>
-            <div class="flex gap-4">
-                <n-button @click="scheduleStore.save" type="primary" secondary>保存</n-button>
-                <n-button @click="scheduleStore.init" secondary>重置</n-button>
             </div>
         </div>
         <div class="flex flex-col items-center">

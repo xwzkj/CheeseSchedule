@@ -13,7 +13,8 @@
                         </template>
                     </n-button>
                 </n-dropdown>
-                <span>正在编辑:</span><n-input v-model:value="scheduleStore.patterns[editingNum].name" style="width: 7rem;"></n-input>
+                <span>正在编辑:</span><n-input v-model:value="scheduleStore.patterns[editingNum].name"
+                    style="width: 7rem;"></n-input>
             </div>
             <div class="max-h-90% h-80% flex-1">
                 <n-scrollbar>
@@ -33,10 +34,6 @@
                     </n-dynamic-input>
                 </n-scrollbar>
             </div>
-                <div class="flex gap-4 justify-end">
-                    <n-button @click="save" type="primary" secondary>保存</n-button>
-                    <n-button @click="scheduleStore.init" secondary>重置</n-button>
-                </div>
         </div>
     </div>
 </template>
@@ -57,10 +54,7 @@ function patternDefault() {
         time: ""
     }
 }
-function save() {
-    scheduleStore.refreshPatternToDay(editingNum.value)
-    scheduleStore.save()
-}
+
 </script>
 
 <style scoped></style>
