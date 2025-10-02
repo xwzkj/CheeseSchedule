@@ -4,6 +4,7 @@ import classCard from "../component/classCard.vue"
 import { useMessage, NScrollbar } from "naive-ui";
 import { ref, onMounted, useTemplateRef, watch, computed } from "vue";
 import * as tool from '../tools/tool'
+import emitter from "../tools/mitt";
 
 // tauri api
 import { currentMonitor, PhysicalPosition } from "@tauri-apps/api/window";
@@ -175,6 +176,10 @@ function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function onScroll(e: Event) {
+    emitter.emit('outerScrollbarScrolled', e)
+}
+
 async function setTop(isTop: boolean) {
     if (isTop) {
         await thisWindow.setAlwaysOnBottom(false)
@@ -190,16 +195,8 @@ async function setTop(isTop: boolean) {
 }
 
 onMounted(() => {
-    function debounce(func: Function, delay: number) {
-        let timer: number
-        return () => {
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                func(...arguments)
-            }, delay);
-        };
-    }
-    watch(() => scheduleStore.lessonStatus, debounce(async () => {
+
+    watch(() => scheduleStore.lessonStatus, tool.debounce(async () => {
         if (!scheduleStore.lessonStatus) {// 下课状态
             NMessage.success("下课了!")
             await setTop(true)
@@ -230,10 +227,10 @@ onMounted(() => {
 
 <template>
     <div ref="outerEle" class="select-none h-100vh flex flex-col">
-        <component v-for="(item, index) in widgets" :is="item.id" :param="item.param" :key="item.key"
-            :class="{ 'm-b-0.3rem': index != widgets.length - 1 }" class="shrink-0">
+        <component v-for="item in widgets" :is="item.id" :param="item.param" :key="item.key"
+            class="shrink-0 m-b-0.3rem">
         </component>
-        <n-scrollbar class="grow-1" ref="outerScrollbar">
+        <n-scrollbar class="grow-1" ref="outerScrollbar" @scroll="onScroll">
 
             <div v-if="scheduleStore.scheduleToday.length" v-for="(item, index) in scheduleStore.scheduleToday"
                 :key="index" class="flex flex-col items-end m-r-2">

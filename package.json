@@ -16,6 +16,7 @@
     "@tauri-apps/plugin-process": "^2.3.0",
     "axios": "^1.12.2",
     "dayjs": "^1.11.13",
+    "mitt": "^3.0.1",
     "naive-ui": "^2.43.1",
     "pinia": "^3.0.3",
     "vue": "^3.5.19",
