@@ -1,6 +1,13 @@
 <template>
     <div class="flex">
-        <n-menu class="w-12rem grow-0 shrink-0" :options="menuOptions" v-model:value="selectedNow" />
+        <div class="flex flex-col justify-between">
+            <n-menu class="w-12rem grow-0 shrink-0" :options="menuOptions" v-model:value="selectedNow" />
+            <div class="flex gap-4 justify-center m-b-1rem">
+                <n-button @click="() => { scheduleStore.refreshPatternToDay(); scheduleStore.save() }" type="primary"
+                    secondary>保存</n-button>
+                <n-button @click="scheduleStore.init" secondary>重置</n-button>
+            </div>
+        </div>
         <n-scrollbar class="h-100vh">
             <router-view v-slot="{ Component }">
                 <transition name="blur" mode="out-in">
@@ -12,11 +19,13 @@
 </template>
 
 <script setup lang="ts">
-import { type MenuOption, NMenu, NScrollbar } from 'naive-ui';
+import { type MenuOption, NMenu, NScrollbar, NButton } from 'naive-ui';
 import { h, onMounted, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useRoute } from 'vue-router';
+import { useScheduleStore } from '../stores/scheduleStore';
 const route = useRoute();
+const scheduleStore = useScheduleStore();
 let selectedNow = ref('editorHome');
 function renderLink(name: string, text: string) {
     return () => h(RouterLink, { to: { name } }, () => text)
@@ -43,6 +52,11 @@ const menuOptions: MenuOption[] = [
         label: renderLink('overrideEditor', '临时换课'),
         key: 'overrideEditor',
     },
+    {
+        label: renderLink('widgetEditor', '小组件'),
+        key: 'widgetEditor',
+
+    }
 ]
 </script>
 

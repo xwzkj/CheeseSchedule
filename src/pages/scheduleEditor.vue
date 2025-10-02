@@ -1,9 +1,5 @@
 <template>
     <div class="p-1rem w-100%">
-        <div class="flex gap-4 justify-end">
-            <n-button @click="scheduleStore.save" type="primary" secondary>保存</n-button>
-            <n-button @click="scheduleStore.init" secondary>重置</n-button>
-        </div>
         <div class="w-100% flex gap-1 justify-center">
             <div v-for="i in 7" class="flex flex-col items-center">
                 <div class="text-1rem">{{ CNdays[i - 1] }}</div>
@@ -14,21 +10,10 @@
 
 </template>
 
-<script setup>
-import { NButton } from 'naive-ui'
-import { useRouter } from 'vue-router';
-import { useScheduleStore } from '../stores/scheduleStore';
+<script setup lang="ts">
 import daySchedule from '../component/daySchedule.vue';
-const router = useRouter();
-const scheduleStore = useScheduleStore();
-const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+const days: Week[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 const CNdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-const toPatternEdit = () => {
-    router.push({ name: 'patternEditor' });
-}
-const toOverrideEdit = () => {
-    router.push({ name: 'overrideEditor' });
-}
 </script>
 
 <style scoped></style>

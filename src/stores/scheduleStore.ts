@@ -189,7 +189,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         }
     }
 
-    function __setPatternToDay(patternId: number, day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun') {
+    function setPatternToDay(patternId: number, day: Week) {
         schedule.value[day].pattern = patternId
         let p = patterns.value[patternId].data
         let lessons = schedule.value[day].lessons
@@ -212,10 +212,12 @@ export const useScheduleStore = defineStore('schedule', () => {
         schedule.value[day].lessons = lessons
     }
 
-    function refreshPatternToDay(patternId: number) {
-        for (let key in schedule.value) {
-            if (schedule.value[key as keyof Schedule].pattern == patternId) {
-                __setPatternToDay(patternId, key as any)
+    function refreshPatternToDay() {
+        for (let i = 0; i < patterns.value.length; i++) {
+            for (let key in schedule.value) {
+                if (schedule.value[key as keyof Schedule].pattern == i) {
+                    setPatternToDay(i, key as any)
+                }
             }
         }
     }
@@ -223,7 +225,7 @@ export const useScheduleStore = defineStore('schedule', () => {
     return {
         init,
         save, refreshPatternToDay,
-        __setPatternToDay,
+        setPatternToDay,
         __isActive,
         __refreshActive,
         patterns,
