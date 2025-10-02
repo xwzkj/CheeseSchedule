@@ -230,7 +230,9 @@ onMounted(() => {
 
 <template>
     <div ref="outerEle" class="select-none h-100vh flex flex-col">
-        <component v-for="item in widgets" :is="item.id" :param="item.param" :key="item.key" class="m-y-0.15rem shrink-0"></component>
+        <component v-for="(item, index) in widgets" :is="item.id" :param="item.param" :key="item.key"
+            :class="{ 'm-b-0.3rem': index != widgets.length - 1 }" class="shrink-0">
+        </component>
         <n-scrollbar class="grow-1" ref="outerScrollbar">
 
             <div v-if="scheduleStore.scheduleToday.length" v-for="(item, index) in scheduleStore.scheduleToday"
