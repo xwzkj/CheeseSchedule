@@ -1,5 +1,5 @@
 <template>
-    <div class="h-5.7rem w-full bg-#e6fcf5 rounded-1rem 
+    <div class="h-5.7rem w-full bg-#fff rounded-1rem 
     border-1px border-solid border-#ccc
     flex flex-col items-center justify-center 
     overflow-hidden whitespace-nowrap">
