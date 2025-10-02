@@ -73,6 +73,7 @@ async function initWindow() {
                         width: 900,
                         height: 800,
                         focus: true,
+                        dragDropEnabled: false, // 启用html5拖拽
                     })
                     editWindow.once("tauri://webview-created", async () => {
                         await editWindow.setFocus();
@@ -168,7 +169,16 @@ async function setTop(isTop: boolean) {
 }
 
 onMounted(() => {
-    watch(() => scheduleStore.lessonStatus, async () => {
+    function debounce(func: Function, delay: number) {
+        let timer: number
+        return () => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                func(...arguments)
+            }, delay);
+        };
+    }
+    watch(() => scheduleStore.lessonStatus, debounce(async () => {
         if (!scheduleStore.lessonStatus) {// 下课状态
             NMessage.success("下课了!")
             await setTop(true)
@@ -179,7 +189,7 @@ onMounted(() => {
             await setTop(false)
             console.log("上课了，取消窗口置顶");
         }
-    }, { immediate: true })
+    }, 500), { immediate: true })
     outerEle.value?.addEventListener("click", async () => {
         if (!scheduleStore.lessonStatus) {// 下课状态
             let isTop = await thisWindow.isAlwaysOnTop()
