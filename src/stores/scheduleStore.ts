@@ -45,6 +45,9 @@ export const useScheduleStore = defineStore('schedule', () => {
         date: string,
         override: string[]
     }>({ date: '1970-01-01', override: [] })
+    // 小组件配置
+    const widgets = ref<WidgetConfig[]>([])
+
     let scheduleToday = computed(() => {
         if (scheduleOverride.value.date == dayjs().format('YYYY-MM-DD')) {
             let temp = []
@@ -133,12 +136,12 @@ export const useScheduleStore = defineStore('schedule', () => {
         let data: any
         try {
             data = await invoke("read_config")
+            data = JSON.parse(data)
         } catch (e) {
             console.log('读取配置失败：', e)
         }
         console.log("config-data:", data)
         if (data) {
-            data = JSON.parse(data)
             if (data?.patterns) {
                 patterns.value = data?.patterns
             }
@@ -149,6 +152,9 @@ export const useScheduleStore = defineStore('schedule', () => {
                 if (dayjs().format("YYYY-MM-DD") == data.scheduleOverride.date) {
                     scheduleOverride.value = data.scheduleOverride
                 }
+            }
+            if (data?.widgets) {
+                widgets.value = data?.widgets
             }
             if (typeof data?.startup == "boolean") {
                 startup = data?.startup
@@ -179,7 +185,8 @@ export const useScheduleStore = defineStore('schedule', () => {
                     startup,
                     patterns: patterns?.value,
                     schedule: schedule?.value,
-                    scheduleOverride: scheduleOverride?.value
+                    scheduleOverride: scheduleOverride?.value,
+                    widgets: widgets?.value,
                 })
             });
             emit("updated");
@@ -230,6 +237,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         __refreshActive,
         patterns,
         schedule,
+        widgets,
         patternsOption,
         scheduleToday,
         lessonStatus,

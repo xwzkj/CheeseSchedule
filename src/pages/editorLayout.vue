@@ -1,6 +1,6 @@
 <template>
     <div class="flex">
-        <div class="flex flex-col justify-between">
+        <div class="flex flex-col justify-between bg-gray-500/5">
             <n-menu class="w-12rem grow-0 shrink-0" :options="menuOptions" v-model:value="selectedNow" />
             <div class="flex gap-4 justify-center m-b-1rem">
                 <n-button @click="() => { scheduleStore.refreshPatternToDay(); scheduleStore.save() }" type="primary"
