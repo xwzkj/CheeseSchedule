@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, useTemplateRef, onMounted, ref, nextTick } from 'vue'
+import { watch, useTemplateRef, onMounted, onBeforeUnmount, ref, nextTick } from 'vue'
 import { Vue3Marquee } from 'vue3-marquee';
 import emitter from '../tools/mitt';
 import * as tool from '../tools/tool'
@@ -78,6 +78,9 @@ onMounted(() => {
     watch(() => props.name, () => {
         freshIfNeedMarquee()
     }, { immediate: true })
+})
+onBeforeUnmount(() => {
+    emitter.off('outerScrollbarScrolled')
 })
 </script>
 
