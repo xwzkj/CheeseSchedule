@@ -126,7 +126,7 @@ export const useScheduleStore = defineStore('schedule', () => {
             schedule.value[today].lessons[i].active = __isActive(scheduleToday.value[i]?.time, scheduleToday.value[lastTimeIndex]?.time)
         }
     }
-
+    __refreshActive()
     setInterval(__refreshActive, 500);
 
     async function init() {
