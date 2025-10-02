@@ -38,3 +38,9 @@ type UpdateInfo = {
         browser_download_url: string
     }[],
 }
+type WidgetConfig = {
+    name: string,
+    id: string,
+    key: number, // 用于v-for的key
+    param: any
+}
