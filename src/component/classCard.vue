@@ -37,19 +37,23 @@ onMounted(() => {
         }
     }
     watch(() => props.active, () => {
-        let val = props.active
-        if (outerEle.value) {
-            outerEle.value.style.setProperty('--bg-color', val == 0 ? 'white' : val == 1 ? '#66ccff' : '#55efc4');
-            if (val as any > 0) {// 切换到这节课
-                window?.$outerScrollbar?.value?.scrollTo({ top: outerEle.value.offsetTop - 65, behavior: 'smooth' })
-                console.log('课程切换，课程列表滚动到当前课程');
-
+        let setColorAndScroll = ()=>{
+            let val = props.active
+            if (outerEle.value) {
+                outerEle.value.style.setProperty('--bg-color', val == 0 ? 'white' : val == 1 ? '#66ccff' : '#55efc4');
+                if (val as any > 0) {// 切换到这节课
+                    window?.$outerScrollbar?.value?.scrollTo({ top: outerEle.value.offsetTop - 65, behavior: 'smooth' })
+                    console.log('课程切换，课程列表滚动到当前课程');
+                }
             }
         }
+        setColorAndScroll()
+
         // 在过渡动画后刷新
         setTimeout(() => {
             freshIfNeedMarquee()
-        }, 1500)
+            setColorAndScroll() // 可能因元素变大没滚到底部，所以再次滚动
+        }, 1000)
     }, { immediate: true })
     watch(() => props.name, () => {
         freshIfNeedMarquee()
