@@ -2,9 +2,10 @@
 import { useScheduleStore } from "../stores/scheduleStore";
 import classCard from "../component/classCard.vue"
 import { useMessage, NScrollbar } from "naive-ui";
-import { ref, onMounted, useTemplateRef, watch } from "vue";
+import { ref, onMounted, useTemplateRef, watch, computed } from "vue";
 import * as tool from '../tools/tool'
 
+// tauri api
 import { currentMonitor, PhysicalPosition } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow, WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { TrayIcon, type TrayIconOptions } from '@tauri-apps/api/tray';
@@ -13,6 +14,9 @@ import { Menu, MenuItem } from '@tauri-apps/api/menu';
 import { exit } from '@tauri-apps/plugin-process';
 import { openUrl } from "@tauri-apps/plugin-opener";
 
+// 小组件
+import daysLeft from "../component/widgets/daysLeft.vue";
+
 let updateInfo = ref<UpdateInfo>();
 let outerEle = useTemplateRef('outerEle')
 window.$outerScrollbar = useTemplateRef('outerScrollbar')
@@ -20,6 +24,23 @@ window.$outerScrollbar = useTemplateRef('outerScrollbar')
 const NMessage = useMessage();
 const scheduleStore = useScheduleStore();
 const thisWindow = getCurrentWebviewWindow();
+
+function getWidgetComponent(id: string) {
+    switch (id) {
+        case 'daysLeft':
+            return daysLeft
+        default:
+            return 'div'
+    }
+}
+const widgets = computed(() => {
+    return scheduleStore.widgets.map(i => {
+        return {
+            ...i,
+            id: getWidgetComponent(i.id)
+        }
+    })
+})
 async function initWindow() {
     const menu = await Menu.new({
         items: [
@@ -208,8 +229,9 @@ onMounted(() => {
 </script>
 
 <template>
-    <div ref="outerEle" class="select-none">
-        <n-scrollbar class="h-100vh" ref="outerScrollbar">
+    <div ref="outerEle" class="select-none h-100vh flex flex-col">
+        <component v-for="item in widgets" :is="item.id" :param="item.param" :key="item.key" class="m-y-0.15rem shrink-0"></component>
+        <n-scrollbar class="grow-1" ref="outerScrollbar">
 
             <div v-if="scheduleStore.scheduleToday.length" v-for="(item, index) in scheduleStore.scheduleToday"
                 :key="index" class="flex flex-col items-end m-r-2">
