@@ -1,5 +1,5 @@
 <template>
-    <n-config-provider :theme-overrides="themeOverrides">
+    <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
         <n-message-provider>
             <router-view>
             </router-view>
@@ -11,7 +11,7 @@
 <script setup>
 import { RouterView } from 'vue-router';
 import messageApi from './component/messageApi.vue';
-import { NMessageProvider, NConfigProvider } from 'naive-ui';
+import { NMessageProvider, NConfigProvider, zhCN, dateZhCN } from 'naive-ui';
 import { ref } from 'vue';
 import { Window } from "@tauri-apps/api/window"
 
