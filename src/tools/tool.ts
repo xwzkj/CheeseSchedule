@@ -4,6 +4,16 @@ import type { AxiosRequestConfig } from "axios";
 function proxyURI(url: string) {
     return 'https://proxy.wanzii.cn/bili114514/' + encodeURIComponent(url)
 }
+
+function debounce(func: Function, delay: number) {
+    let timer: number
+    return (...args: any) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func(...args)
+        }, delay);
+    };
+}
 async function request(config: AxiosRequestConfig) {
     try {
         return await axios({
@@ -68,5 +78,6 @@ export {
     proxyURI,
     request,
     isNewerVersion,
-    checkUpdate
+    checkUpdate,
+    debounce
 }

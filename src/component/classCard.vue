@@ -12,6 +12,7 @@
             <div v-if="props.active" class="text-1.3rem font-bold whitespace-nowrap">{{ props.time }}</div>
 
         </div>
+        <div :class="{ 'mask mask-to-bottom': needMask == 1, 'mask mask-to-top': needMask == 2 }"></div>
         <div v-if="props.active" class="bg">
         </div>
     </div>
@@ -20,6 +21,8 @@
 <script setup lang="ts">
 import { watch, useTemplateRef, onMounted, ref, nextTick } from 'vue'
 import { Vue3Marquee } from 'vue3-marquee';
+import emitter from '../tools/mitt';
+import * as tool from '../tools/tool'
 const props = defineProps<{
     name: string,
     time: string | null,
@@ -28,7 +31,24 @@ const props = defineProps<{
 const outerEle = useTemplateRef('outer')
 const nameDiv = useTemplateRef('nameDiv')
 let needMarquee = ref(false)
+let needMask = ref(0)// 0=不需要遮罩 1=从上到下 2=从下到上
 onMounted(() => {
+    emitter.on('outerScrollbarScrolled', tool.debounce((e: any) => {
+        if (outerEle.value) {
+            let h = outerEle.value.clientHeight
+            // 顶端三分之一超出滚动可视区域
+            if (outerEle.value?.offsetTop + h / 3 < e.target.scrollTop) {
+                needMask.value = 1
+                return
+            }
+            // 底端三分之一
+            if (outerEle.value?.offsetTop + h * 2 / 3 > e.target.clientHeight + e.target.scrollTop) {
+                needMask.value = 2
+                return
+            }
+            needMask.value = 0
+        }
+    }, 15))
     let freshIfNeedMarquee = async () => {
         needMarquee.value = false // 让滚动时的左右空白padding消失
         await nextTick()
@@ -37,7 +57,7 @@ onMounted(() => {
         }
     }
     watch(() => props.active, () => {
-        let setColorAndScroll = ()=>{
+        let setColorAndScroll = () => {
             let val = props.active
             if (outerEle.value) {
                 outerEle.value.style.setProperty('--bg-color', val == 0 ? 'white' : val == 1 ? '#66ccff' : '#55efc4');
@@ -77,6 +97,24 @@ onMounted(() => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.mask {
+    z-index: 3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+}
+
+.mask-to-bottom {
+    mask-image: linear-gradient(white, 70%, transparent);
+}
+
+.mask-to-top {
+    mask-image: linear-gradient(transparent, 30%, white);
 }
 
 .bg {
