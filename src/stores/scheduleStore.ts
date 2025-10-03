@@ -7,7 +7,8 @@ import { listen } from '@tauri-apps/api/event'
 import { enable, disable } from '@tauri-apps/plugin-autostart';
 
 export const useScheduleStore = defineStore('schedule', () => {
-    let startup = true
+    let startup = true // 是否开机自启
+    let zoom = ref(1) // 主窗口缩放比例
     const today = dayjs().format("ddd").toLowerCase() as Week
     const patterns = ref<Pattern[]>([])
     const schedule = ref<Schedule>({
@@ -156,6 +157,9 @@ export const useScheduleStore = defineStore('schedule', () => {
             if (data?.widgets) {
                 widgets.value = data?.widgets
             }
+            if (data?.zoom) {
+                zoom.value = data?.zoom
+            }
             if (typeof data?.startup == "boolean") {
                 startup = data?.startup
                 try {
@@ -187,6 +191,7 @@ export const useScheduleStore = defineStore('schedule', () => {
                     schedule: schedule?.value,
                     scheduleOverride: scheduleOverride?.value,
                     widgets: widgets?.value,
+                    zoom: zoom?.value,
                 })
             });
             emit("updated");
@@ -242,5 +247,6 @@ export const useScheduleStore = defineStore('schedule', () => {
         scheduleToday,
         lessonStatus,
         scheduleOverride,
+        zoom,
     }
 })
