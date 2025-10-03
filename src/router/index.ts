@@ -37,6 +37,11 @@ const router = createRouter({
                     path: 'widget',
                     component: () => import('../pages/widgetEditor.vue')
 
+                },
+                {
+                    name: 'setting',
+                    path: 'setting',
+                    component: () => import('../pages/setting.vue')
                 }
             ]
         },

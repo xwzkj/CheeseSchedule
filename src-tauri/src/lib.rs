@@ -1,6 +1,7 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 use tauri::Manager;
 // 封装获取配置文件路径的函数
+#[tauri::command]
 fn get_config_path() -> Result<std::path::PathBuf, String> {
     // 获取可执行文件路径
     let exe_path =
@@ -50,7 +51,11 @@ pub fn run() {
         .plugin(tauri_plugin_autostart::Builder::new().build())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_fs::init())
-        .invoke_handler(tauri::generate_handler![read_config, write_config])
+        .invoke_handler(tauri::generate_handler![
+            get_config_path,
+            read_config,
+            write_config
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
