@@ -70,6 +70,12 @@ const availableList = ref<WidgetConfig[]>([
                 value: 1767196800000
             }
         }
+    },
+    {
+        name: '时钟',
+        id: 'clock',
+        key: 2,
+        param: {}
     }
 ])
 function clone(item: any) {
