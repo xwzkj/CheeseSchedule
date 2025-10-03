@@ -1,5 +1,10 @@
 <template>
-    <div ref="outer" class="outer" :class="{ 'w-9rem h-5.7rem': props.active, 'w-5.5rem h-3.2rem': !props.active }">
+    <div ref="outer" class="outer" :class="{
+        'w-9rem h-5.7rem': props.active,
+        'w-5.5rem h-3.2rem': !props.active,
+        'gradient-to-bottom': needGradient == 1,
+        'gradient-to-top': needGradient == 2
+    }">
         <div class="relative flex flex-col items-center z-2 max-w-100%">
             <component :is="needMarquee ? Vue3Marquee : 'div'" class="max-w-100% overflow-hidden justify-center"
                 :duration="(nameDiv?.scrollWidth ?? 250) / 35" :clone="true">
@@ -12,7 +17,7 @@
             <div v-if="props.active" class="text-1.3rem font-bold whitespace-nowrap">{{ props.time }}</div>
 
         </div>
-        <div :class="{ 'mask mask-to-bottom': needMask == 1, 'mask mask-to-top': needMask == 2 }"></div>
+        <div :class="{}"></div>
         <div v-if="props.active" class="bg">
         </div>
     </div>
@@ -31,22 +36,26 @@ const props = defineProps<{
 const outerEle = useTemplateRef('outer')
 const nameDiv = useTemplateRef('nameDiv')
 let needMarquee = ref(false)
-let needMask = ref(0)// 0=不需要遮罩 1=从上到下 2=从下到上
+let needGradient = ref(0)// 0=不需要渐变 1=从上到下 2=从下到上
 onMounted(() => {
     emitter.on('outerScrollbarScrolled', tool.debounce((e: any) => {
         if (outerEle.value) {
-            let h = outerEle.value.clientHeight
-            // 顶端三分之一超出滚动可视区域
-            if (outerEle.value?.offsetTop + 7 < e.target.scrollTop) {
-                needMask.value = 1
+            let offsetTop = outerEle.value.offsetTop // 元素距离滚动容器顶部的距离
+            let h = outerEle.value.clientHeight // 元素高度
+            let clientHeight = e.target.clientHeight // 滚动可视区域高度
+            let scrollTop = e.target.scrollTop // 滚动容器滚动距离
+
+            // 顶端超出滚动可视区域 且 底端未超出滚动可视区域
+            if (offsetTop + 7 < scrollTop && offsetTop + h > scrollTop) {
+                needGradient.value = 1
                 return
             }
-            // 底端三分之一
-            if (outerEle.value?.offsetTop + h - 7 > e.target.clientHeight + e.target.scrollTop) {
-                needMask.value = 2
+            // 底端超出滚动可视区域 且 顶端未超出滚动可视区域
+            if (offsetTop + h - 7 > scrollTop + clientHeight && offsetTop < scrollTop + clientHeight) {
+                needGradient.value = 2
                 return
             }
-            needMask.value = 0
+            needGradient.value = 0
         }
     }, 15))
     let freshIfNeedMarquee = async () => {
@@ -102,22 +111,12 @@ onBeforeUnmount(() => {
     align-items: center;
 }
 
-.mask {
-    z-index: 3;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(255, 255, 255);
+.gradient-to-bottom {
+    mask-image: linear-gradient(rgba(255, 255, 255, 0.5), 30%, white);
 }
 
-.mask-to-bottom {
-    mask-image: linear-gradient(white, 70%, transparent);
-}
-
-.mask-to-top {
-    mask-image: linear-gradient(transparent, 30%, white);
+.gradient-to-top {
+    mask-image: linear-gradient(white, 50%, rgba(255, 255, 255, 0.5));
 }
 
 .bg {
