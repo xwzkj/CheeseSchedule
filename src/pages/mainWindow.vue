@@ -7,7 +7,7 @@ import * as tool from '../tools/tool'
 import emitter from "../tools/mitt";
 
 // tauri api
-import { currentMonitor, PhysicalPosition } from "@tauri-apps/api/window";
+import { currentMonitor, LogicalPosition } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow, WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { TrayIcon, type TrayIconOptions } from '@tauri-apps/api/tray';
 import * as app from '@tauri-apps/api/app';
@@ -45,7 +45,38 @@ const widgets = computed(() => {
         }
     })
 })
+// 根据缩放设置窗口大小
+async function initWindowSize() {
+    let monitor = await currentMonitor()
+    if (!monitor) {
+        return
+    }
+
+    // 转换为逻辑坐标
+    let monitorSize = monitor.size.toLogical(monitor.scaleFactor)
+    let innerSize = (await thisWindow.innerSize()).toLogical(monitor.scaleFactor)
+
+    // 计算窗口大小
+    innerSize.height = Math.floor(monitorSize.height * 2.8 / 4)
+    innerSize.width = Math.floor(170 * (scheduleStore?.zoom ?? 1))
+
+    await thisWindow.setZoom(scheduleStore?.zoom ?? 1)
+    await thisWindow.setSize(innerSize)
+
+    // 设置窗口位置
+    let outerSize = (await thisWindow.outerSize()).toLogical(monitor.scaleFactor)
+    await thisWindow.setPosition(new LogicalPosition(monitorSize.width - outerSize.width, 0))
+}
 async function initWindow() {
+    // 立即初始化窗口大小，并监听缩放比例变化，实时更新窗口大小
+    watch(() => scheduleStore.zoom, initWindowSize, { immediate: true })
+    // 禁用 Ctrl+P
+    window.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.key.toLowerCase() === "p") {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
     const menu = await Menu.new({
         items: [
             {
@@ -113,23 +144,7 @@ async function initWindow() {
     window.addEventListener("beforeunload", () => {
         tray.close()// 防止生成多个托盘图标
     })
-    let monitor = await currentMonitor()
-    if (!monitor) {
-        return
-    }
-    let innerSize = await thisWindow.innerSize()
-    let outerSize = await thisWindow.outerSize()
-    innerSize.height = Math.floor(monitor.size.height * 2.8 / 4)
-    thisWindow.setSize(innerSize)
-    thisWindow.setPosition(new PhysicalPosition(monitor.size.width - outerSize.width, 0))
-    // 禁用 Ctrl+P
-    window.addEventListener("keydown", (e) => {
-        if (e.ctrlKey && e.key.toLowerCase() === "p") {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    });
-    // 检查更新
+    // 检查更新=====================================================================================
     updateInfo.value = await tool.checkUpdate()
     // updateInfo.value.hasUpdate = true // 调试用
     if (updateInfo.value && updateInfo.value.hasUpdate) {
@@ -173,7 +188,6 @@ async function initWindow() {
         menu.insert({ item: 'Separator' }, 5)
     }
 }
-initWindow();
 
 function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -198,7 +212,8 @@ async function setTop(isTop: boolean) {
 }
 
 onMounted(() => {
-
+    initWindow();
+    // 上下课自动切换窗口置顶
     watch(() => scheduleStore.lessonStatus, tool.debounce(async () => {
         if (!scheduleStore.lessonStatus) {// 下课状态
             NMessage.success("下课了!")
@@ -211,6 +226,7 @@ onMounted(() => {
             console.log("上课了，取消窗口置顶");
         }
     }, 500), { immediate: true })
+    // 点击切换窗口置顶
     outerEle.value?.addEventListener("click", async () => {
         if (!scheduleStore.lessonStatus) {// 下课状态
             let isTop = await thisWindow.isAlwaysOnTop()
