@@ -245,32 +245,34 @@ onMounted(() => {
 </script>
 
 <template>
-    <div ref="outerEle" class="select-none h-100vh flex flex-col">
-        <!-- 更新提示 -->
-        <div v-if="updateInfo?.hasUpdate" class="w-full h-6rem 
-            flex flex-col items-center justify-center 
-            m-b-0.3rem p-0.25rem 
-            border-1px border-solid border-#ccc
-            bg-white rounded-1rem overflow-hidden">
+    <div ref="outerEle" class="select-none h-100vh flex flex-col p-r-0.3rem">
+        <!-- 套一层div是为了不用flex，让margin合并 -->
+        <div class="shrink-0 w-100%">
+            <!-- 更新提示 -->
+            <div v-if="updateInfo?.hasUpdate" class="w-full h-4rem 
+                flex flex-col items-center justify-center 
+                m-y-0.3rem p-0.25rem 
+                border-1px border-solid border-#ccc
+                bg-white rounded-1rem overflow-hidden">
 
-            <div class="text-1.3rem font-bold 
-            line-height-120% whitespace-nowrap text-#ff5252">
-                有新版本:{{ updateInfo?.latestVersion }}
+                <div class="text-1.3rem font-bold 
+                line-height-120% whitespace-nowrap text-#ff5252">
+                    有新版本:{{ updateInfo?.latestVersion }}
+                </div>
+                <n-ellipsis class="text-#ff6b6b">
+                    {{ updateInfo?.changeLog?.simple || '无更新日志' }}
+                </n-ellipsis>
+
             </div>
-            <n-ellipsis class="text-#ff6b6b">
-                {{ updateInfo?.changeLog?.simple || '无更新日志' }}
-            </n-ellipsis>
-
+            <!-- 小组件 -->
+            <component v-for="item in widgets" :is="item.id" :param="item.param" :key="item.key" class="m-y-0.3rem">
+            </component>
         </div>
-        <!-- 小组件 -->
-        <component v-for="item in widgets" :is="item.id" :param="item.param" :key="item.key"
-            class="shrink-0 m-b-0.3rem">
-        </component>
         <!-- 课程表区域 -->
         <n-scrollbar class="grow-1" ref="outerScrollbar" @scroll="onScroll">
             <!-- 课程表卡片 -->
             <div v-if="scheduleStore.scheduleToday.length" v-for="(item, index) in scheduleStore.scheduleToday"
-                :key="index" class="flex flex-col items-end m-r-2">
+                :key="index" class="flex flex-col items-end">
                 <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
                     :active="item?.active"></class-card>
                 <div v-else class="m-b-0.7rem"></div>
