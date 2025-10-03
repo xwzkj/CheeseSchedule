@@ -55,7 +55,10 @@ const menuOptions: MenuOption[] = [
     {
         label: renderLink('widgetEditor', '小组件'),
         key: 'widgetEditor',
-
+    },
+    {
+        label: renderLink('setting', '设置'),
+        key: 'setting',
     }
 ]
 </script>
