@@ -22,15 +22,18 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import { openUrl } from '@tauri-apps/plugin-opener';
 let timeNow = ref(dayjs().format('YYYY/MM/DD HH:mm:ss'))
-setInterval(() => {
+let timer = setInterval(() => {
     timeNow.value = dayjs().format('YYYY/MM/DD HH:mm:ss')
 }, 500);
 let openGithub = async () => {
     await openUrl('https://github.com/xwzkj/CheeseSchedule')
 }
+onUnmounted(() => {
+    clearInterval(timer);
+})
 </script>
 
 <style scoped></style>
