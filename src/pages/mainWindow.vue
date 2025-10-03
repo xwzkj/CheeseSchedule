@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useScheduleStore } from "../stores/scheduleStore";
 import classCard from "../component/classCard.vue"
-import { useMessage, NScrollbar } from "naive-ui";
+import { useMessage, NScrollbar, NEllipsis } from "naive-ui";
 import { ref, onMounted, useTemplateRef, watch, computed } from "vue";
 import * as tool from '../tools/tool'
 import emitter from "../tools/mitt";
@@ -246,22 +246,36 @@ onMounted(() => {
 
 <template>
     <div ref="outerEle" class="select-none h-100vh flex flex-col">
+        <!-- 更新提示 -->
+        <div v-if="updateInfo?.hasUpdate" class="w-full h-6rem 
+            flex flex-col items-center justify-center 
+            m-b-0.3rem p-0.25rem 
+            border-1px border-solid border-#ccc
+            bg-white rounded-1rem overflow-hidden">
+
+            <div class="text-1.3rem font-bold 
+            line-height-120% whitespace-nowrap text-#ff5252">
+                有新版本:{{ updateInfo?.latestVersion }}
+            </div>
+            <n-ellipsis class="text-#ff6b6b">
+                {{ updateInfo?.changeLog?.simple || '无更新日志' }}
+            </n-ellipsis>
+
+        </div>
+        <!-- 小组件 -->
         <component v-for="item in widgets" :is="item.id" :param="item.param" :key="item.key"
             class="shrink-0 m-b-0.3rem">
         </component>
+        <!-- 课程表区域 -->
         <n-scrollbar class="grow-1" ref="outerScrollbar" @scroll="onScroll">
-
+            <!-- 课程表卡片 -->
             <div v-if="scheduleStore.scheduleToday.length" v-for="(item, index) in scheduleStore.scheduleToday"
                 :key="index" class="flex flex-col items-end m-r-2">
-                <!-- 更新提示 -->
-                <class-card v-if="updateInfo?.hasUpdate && index == 0"
-                    :name="`检测到新版本${updateInfo?.latestVersion}${updateInfo?.changeLog?.simple ? `：${updateInfo.changeLog.simple?.slice(0, 20)}...` : ''}`"
-                    :time="`25:00-25:00`" :active="0"></class-card>
-                <!-- 课程表卡片 -->
                 <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
                     :active="item?.active"></class-card>
                 <div v-else class="m-b-0.7rem"></div>
             </div>
+            <!-- 无课程时的提示 -->
             <div v-else class="flex items-center justify-center h-100% bg-#ffffff55 rounded-1rem h-100vh">
                 <div class="text-center bg-white p-0.25rem rounded-1rem">
                     <p class="text-1.2rem">奶酪课程表已启动</p>
