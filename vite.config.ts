@@ -3,6 +3,7 @@ import vue from "@vitejs/plugin-vue";
 import UnoCSS from 'unocss/vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import Icons from 'unplugin-icons/vite'
+import autoprefixer from 'autoprefixer'
 // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
 
@@ -12,6 +13,15 @@ export default defineConfig(async () => ({
     compiler: 'vue3',
     autoInstall: true,
   })],
+  css: {
+    postcss: {
+      plugins: [autoprefixer({
+        overrideBrowserslist: [
+          'Chrome > 76', // webview2的首个版本看起来基于chrome 76
+        ],
+      })],
+    },
+  },
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
