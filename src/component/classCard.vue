@@ -37,12 +37,12 @@ onMounted(() => {
         if (outerEle.value) {
             let h = outerEle.value.clientHeight
             // 顶端三分之一超出滚动可视区域
-            if (outerEle.value?.offsetTop + h / 4 < e.target.scrollTop) {
+            if (outerEle.value?.offsetTop + 7 < e.target.scrollTop) {
                 needMask.value = 1
                 return
             }
             // 底端三分之一
-            if (outerEle.value?.offsetTop + h * 3 / 4 > e.target.clientHeight + e.target.scrollTop) {
+            if (outerEle.value?.offsetTop + h - 7 > e.target.clientHeight + e.target.scrollTop) {
                 needMask.value = 2
                 return
             }
