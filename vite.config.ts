@@ -17,7 +17,8 @@ export default defineConfig(async () => ({
     postcss: {
       plugins: [autoprefixer({
         overrideBrowserslist: [
-          'Chrome > 76', // webview2的首个版本看起来基于chrome 76
+          // 'Chrome > 76', // webview2的首个版本看起来基于chrome 76
+          'Chrome > 111', // UnoCSS presetWind4 对颜色使用的color-mix()要求111版本才支持
         ],
       })],
     },
