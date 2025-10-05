@@ -10,7 +10,9 @@
             <div class="text-1.2rem color-#444 text-align-center">
                 奶酪课程表是一个开源项目
                 <br />
-                若您首次使用，请先前往左侧“模式编辑”对时间表进行编辑，然后在“课程表编辑”中编辑课程表。
+                若您首次使用，请先前往“模式编辑”编辑时间表，再尝试编辑课程表
+                <br />
+                详细说明请点击下方的“GitHub”查看README文档
             </div>
         </div>
         <div class="flex flex-col items-center">
