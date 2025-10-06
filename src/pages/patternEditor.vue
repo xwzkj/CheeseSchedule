@@ -16,7 +16,7 @@
                 <span>正在编辑:</span><n-input v-model:value="scheduleStore.patterns[editingNum].name"
                     style="width: 7rem;"></n-input>
             </div>
-            <div class="max-h-90% h-80% flex-1">
+            <div class="h-80% flex-1">
                 <n-scrollbar>
                     <n-dynamic-input class="max-h-100%" v-model:value="scheduleStore.patterns[editingNum].data"
                         :on-create="patternDefault" show-sort-button>
