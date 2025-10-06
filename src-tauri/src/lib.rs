@@ -17,6 +17,14 @@ fn get_config_path() -> Result<std::path::PathBuf, String> {
 }
 
 #[tauri::command]
+fn check_file_exists(file_path: String) -> Result<bool, String> {
+    // 将传入的字符串转换为 PathBuf
+    let path = std::path::PathBuf::from(file_path);
+    // 检查文件是否存在
+    Ok(path.exists())
+}
+
+#[tauri::command]
 fn read_config() -> Result<String, String> {
     let config_path = get_config_path()?;
     println!("Config path: {}", config_path.display());
@@ -53,6 +61,7 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .invoke_handler(tauri::generate_handler![
             get_config_path,
+            check_file_exists,
             read_config,
             write_config
         ])

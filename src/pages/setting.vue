@@ -19,7 +19,11 @@ import settingItem from '../component/settingItem.vue'
 import { useScheduleStore } from '../stores/scheduleStore'
 const scheduleStore = useScheduleStore()
 async function openConfigDir() {
-    await revealItemInDir(await invoke('get_config_path'));
+    const filePath = await invoke('get_config_path') as string
+    if (!await invoke('check_file_exists', { filePath: filePath })) {
+        await scheduleStore.save()
+    }
+    await revealItemInDir(filePath);
 }
 </script>
 
