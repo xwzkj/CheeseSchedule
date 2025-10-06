@@ -17,7 +17,6 @@
             <div v-if="props.active" class="text-1.3rem font-bold whitespace-nowrap">{{ props.time }}</div>
 
         </div>
-        <div :class="{}"></div>
         <div v-if="props.active" class="bg">
         </div>
     </div>
