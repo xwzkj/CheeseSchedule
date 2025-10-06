@@ -52,7 +52,7 @@ function updateProgress() {
         int: Math.floor(progress).toString(),
         dec: progress.toFixed(6).replace(Math.floor(progress).toString(), ''),
     }
-    if (diff < 0) { // 目前在时间区间之前
+    if (diff <= 0) { // 目前在时间区间之前
         res.int = '0'
         res.dec = ''
     } else if (diff >= total) { // 目前在时间区间之后
