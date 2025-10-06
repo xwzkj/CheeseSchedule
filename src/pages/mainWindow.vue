@@ -245,7 +245,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div ref="outerEle" class="select-none h-100vh flex flex-col p-r-0.3rem">
+    <div ref="outerEle" class="select-none h-100vh flex flex-col p-x-0.3rem">
         <!-- 套一层div是为了不用flex，让margin合并 -->
         <div class="shrink-0 w-100%">
             <!-- 更新提示 -->
