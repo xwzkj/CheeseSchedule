@@ -45,12 +45,12 @@ onMounted(() => {
             let scrollTop = e.target.scrollTop // 滚动容器滚动距离
 
             // 顶端超出滚动可视区域 且 底端未超出滚动可视区域
-            if (offsetTop + 7 < scrollTop && offsetTop + h > scrollTop) {
+            if (offsetTop < scrollTop && offsetTop + h > scrollTop) {
                 needGradient.value = 1
                 return
             }
             // 底端超出滚动可视区域 且 顶端未超出滚动可视区域
-            if (offsetTop + h - 7 > scrollTop + clientHeight && offsetTop < scrollTop + clientHeight) {
+            if (offsetTop + h > scrollTop + clientHeight && offsetTop < scrollTop + clientHeight) {
                 needGradient.value = 2
                 return
             }
@@ -109,11 +109,11 @@ onBeforeUnmount(() => {
 }
 
 .gradient-to-bottom {
-    mask-image: linear-gradient(rgba(255, 255, 255, 0.5), 30%, white);
+    mask-image: linear-gradient(rgba(255, 255, 255, 0.5), 70%, white);
 }
 
 .gradient-to-top {
-    mask-image: linear-gradient(white, 50%, rgba(255, 255, 255, 0.5));
+    mask-image: linear-gradient(white, 30%, rgba(255, 255, 255, 0.5));
 }
 
 .bg {
