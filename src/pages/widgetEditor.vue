@@ -72,9 +72,31 @@ const availableList = ref<WidgetConfig[]>([
         }
     },
     {
+        name: '日期进度',
+        id: 'dateProgress',
+        key: 2,
+        param: {
+            name: {
+                label: '目标名称',
+                type: 'text',
+                value: '25年'
+            },
+            from: {
+                label: '开始日期',
+                type: 'date',
+                value: 1735660800000
+            },
+            to: {
+                label: '结束日期',
+                type: 'date',
+                value: 1767196800000
+            }
+        }
+    },
+    {
         name: '时钟',
         id: 'clock',
-        key: 2,
+        key: 3,
         param: {}
     }
 ])
