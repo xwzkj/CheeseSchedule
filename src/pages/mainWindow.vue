@@ -252,8 +252,7 @@ onMounted(() => {
             <div v-if="updateInfo?.hasUpdate" class="w-full h-4rem 
                 flex flex-col items-center justify-center 
                 m-y-0.3rem p-0.25rem 
-                border-1px border-solid border-#ccc
-                bg-white rounded-1rem overflow-hidden">
+                card-border bg-white overflow-hidden">
 
                 <div class="text-1.3rem font-bold 
                 line-height-120% whitespace-nowrap text-#ff5252">
@@ -295,4 +294,9 @@ onMounted(() => {
     </div>
 </template>
 
-<style scoped></style>
+<style>
+.card-border {
+    border-radius: 1rem;
+    border: 1px solid #ddd;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
-    <div class="h-3rem w-full bg-#fff rounded-1rem
+    <div class="h-3rem w-full bg-#fff 
      text-2rem font-bold text-center
-     border-1px border-solid border-#ccc
+     card-border
      flex items-center justify-center
      overflow-hidden">
         <div>{{ formattedTime }}</div>

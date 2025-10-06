@@ -1,5 +1,5 @@
 <template>
-    <div ref="outer" class="outer" :class="{
+    <div ref="outer" class="outer card-border" :class="{
         'w-9rem h-5.7rem': props.active,
         'w-5.5rem h-3.2rem': !props.active,
         'gradient-to-bottom': needGradient == 1,
@@ -98,8 +98,6 @@ onBeforeUnmount(() => {
     --bg-color: rgb(248, 127, 62);
     padding: 0.2rem;
     margin-bottom: 0.3rem;
-    border-radius: 1rem;
-    border: 1px solid #ccc;
     background-color: white;
     position: relative;
     overflow: hidden;

@@ -1,6 +1,5 @@
 <template>
-    <div class="h-5.7rem w-full bg-#fff rounded-1rem 
-    border-1px border-solid border-#ccc
+    <div class="h-5.7rem w-full bg-#fff card-border
     flex flex-col items-center justify-center 
     overflow-hidden whitespace-nowrap">
         <div class="flex items-center">
