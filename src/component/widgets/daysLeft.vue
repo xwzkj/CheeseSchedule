@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { computed } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 const props = defineProps<{
     param: {
         name: {
@@ -28,7 +28,7 @@ const props = defineProps<{
         }
     }
 }>()
-let dayData = computed(() => {
+function update() {
     let diff = dayjs(props.param?.date?.value).diff(dayjs(), 'day')
     let res = {
         passed: "还有",
@@ -38,6 +38,13 @@ let dayData = computed(() => {
         res.passed = "已过"
     }
     return res
+}
+let dayData = ref(update())
+let timer = setInterval(() => {
+    dayData.value = update()
+}, 5 * 60 * 1000)
+onBeforeUnmount(() => {
+    clearInterval(timer)
 })
 </script>
 
