@@ -85,6 +85,8 @@ async function initWindowSize() {
 async function initWindow() {
     // 立即初始化窗口大小，并监听缩放比例变化，实时更新窗口大小
     watch(() => scheduleStore.zoom, initWindowSize, { immediate: true })
+    watch(() => scheduleStore.heightFactor, initWindowSize)
+
     // 禁用 Ctrl+P
     window.addEventListener("keydown", (e) => {
         if (e.ctrlKey && e.key.toLowerCase() === "p") {
