@@ -1,12 +1,12 @@
 <template>
     <div class="p-0.5rem">
-        <setting-item t1="打开配置文件所在位置" t2="可手动导入导出" :needInput="false" :actionOnClick="openConfigDir" />
+        <setting-item t1="打开配置文件所在位置" t2="可手动导入导出 / 若文件不存在会先保存再打开" :needInput="false" :actionOnClick="openConfigDir" />
         <setting-item t1="缩放比例" t2="设置主窗口缩放">
             <div class="w-7rem">
                 <n-slider v-model:value="scheduleStore.zoom" :min="0.5" :max="2" :step="0.1" />
             </div>
         </setting-item>
-        <setting-item t1="主窗口高度乘数" t2="高度=屏幕高度（不含任务栏）*乘数 | 默认值：0.7">
+        <setting-item t1="主窗口高度乘数" t2="高度=屏幕高度(不含任务栏)*乘数 | 默认值：0.7">
             <div class="w-7rem">
                 <n-slider v-model:value="scheduleStore.heightFactor" :min="0.3" :max="1" :step="0.01" />
             </div>
