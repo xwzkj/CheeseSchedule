@@ -27,7 +27,7 @@ window.$outerScrollbar = useTemplateRef('outerScrollbar')
 const NMessage = useMessage();
 const scheduleStore = useScheduleStore();
 let thisWindow: WebviewWindow;
-try{
+try {
     thisWindow = getCurrentWebviewWindow()
 } catch (error) {
     console.error("获取当前窗口失败:", error);
@@ -65,6 +65,8 @@ async function initWindowSize() {
         const innerSize = await thisWindow.innerSize()
         const workAreaSize = monitor.workArea.size
         const workAreaPosition = monitor.workArea.position
+        console.log('工作区大小:', workAreaSize)
+        console.log('工作区位置:', workAreaPosition)
 
         // 计算窗口大小
         innerSize.height = Math.floor(workAreaSize.height * 2.8 / 4)
