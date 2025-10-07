@@ -1,7 +1,7 @@
 <template>
     <div class="p-0.5rem">
         <setting-item t1="打开配置文件所在位置" t2="可手动导入导出 / 若文件不存在会先保存再打开" :needInput="false" :actionOnClick="openConfigDir" />
-        <setting-item t1="缩放比例" t2="设置主窗口缩放">
+        <setting-item t1="主窗口缩放比例" t2="默认为1，与系统缩放乘算">
             <div class="w-7rem">
                 <n-slider v-model:value="scheduleStore.zoom" :min="0.5" :max="2" :step="0.1" />
             </div>
