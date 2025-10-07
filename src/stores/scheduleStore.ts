@@ -9,7 +9,8 @@ import { enable, disable } from '@tauri-apps/plugin-autostart';
 export const useScheduleStore = defineStore('schedule', () => {
     let startup = true // 是否开机自启
     let zoom = ref(1) // 主窗口缩放比例
-    const today = dayjs().format("ddd").toLowerCase() as Week
+    let heightFactor = ref(0.7) // 主窗口高度乘数
+    const today = ref(updateToday())
     const patterns = ref<Pattern[]>([])
     const schedule = ref<Schedule>({
         mon: {
@@ -49,19 +50,26 @@ export const useScheduleStore = defineStore('schedule', () => {
     // 小组件配置
     const widgets = ref<WidgetConfig[]>([])
 
+    function updateToday() {
+        return dayjs().format("ddd").toLowerCase() as Week
+    }
+    setInterval(() => {
+        today.value = updateToday()
+    }, 1000 * 60 * 5) // 每5分钟更新一次
+
     let scheduleToday = computed(() => {
         if (scheduleOverride.value.date == dayjs().format('YYYY-MM-DD')) {
             let temp = []
             // 遍历寻找这节课有没有被覆盖
-            for (let i = 0; i < schedule.value[today].lessons.length; i++) {
-                temp.push({ ...schedule.value[today].lessons[i] }) // 浅拷贝,防止改变原数据
+            for (let i = 0; i < schedule.value[today.value].lessons.length; i++) {
+                temp.push({ ...schedule.value[today.value].lessons[i] }) // 浅拷贝,防止改变原数据
                 if (scheduleOverride.value.override?.[i]) { // 存在覆盖
                     temp[i].name = scheduleOverride.value.override[i] // 覆盖新的课程名
                 }
             }
             return temp
         }
-        return schedule.value[today].lessons
+        return schedule.value[today.value].lessons
     })
     let lessonStatus = computed(() => {// true -> 正在上课 false -> 课间
         for (let i = 0; i < scheduleToday.value.length; i++) {
@@ -80,6 +88,78 @@ export const useScheduleStore = defineStore('schedule', () => {
         return t
     })
     // 时间判断,输入格式为 "hh:mm-hh:mm"
+    async function init() {
+        let data: any
+        try {
+            data = await invoke("read_config")
+            data = JSON.parse(data)
+        } catch (e) {
+            console.log('读取配置失败：', e)
+        }
+        console.log("config-data:", data)
+        if (data) {
+            if (data?.patterns) {
+                patterns.value = data?.patterns
+            }
+            if (data?.schedule) {
+                schedule.value = data?.schedule
+            }
+            if (data?.scheduleOverride) {
+                if (dayjs().format("YYYY-MM-DD") == data.scheduleOverride.date) {
+                    scheduleOverride.value = data.scheduleOverride
+                }
+            }
+            if (data?.widgets) {
+                widgets.value = data?.widgets
+            }
+            if (data?.zoom) {
+                zoom.value = data?.zoom
+            }
+            if (data?.heightFactor) {
+                heightFactor.value = data?.heightFactor
+            }
+            if (typeof data?.startup == "boolean") {
+                startup = data?.startup
+                try {
+                    if (data.startup) {
+                        await enable()
+                    } else {
+                        await disable()
+                    }
+                } catch (e) {
+                    console.log('自启动设置：', e)
+                }
+            }
+        } else {
+            for (let i = 0; i < 7; i++) {
+                patterns.value.push({ name: `模式${i + 1}`, data: [] })
+            }
+        }
+        __refreshActive()
+    }
+    init()
+    listen("updated", init)
+    
+    async function save() {
+        try {
+            await invoke("write_config", {
+                data: JSON.stringify({
+                    startup,
+                    patterns: patterns?.value,
+                    schedule: schedule?.value,
+                    scheduleOverride: scheduleOverride?.value,
+                    widgets: widgets?.value,
+                    zoom: zoom?.value,
+                    heightFactor: heightFactor?.value,
+                })
+            });
+            emit("updated");
+            window.$NMessageApi.success("已保存");
+        } catch (e) {
+            window.$NMessageApi.error(`保存失败：${JSON.stringify(e)}`);
+        }
+    }
+    
     function __isActive(time: string, lastTime: string): 0 | 1 | 2 {
         let now = new Date();
         let nowTime = now.getHours() * 60 + now.getMinutes();
@@ -127,79 +207,11 @@ export const useScheduleStore = defineStore('schedule', () => {
                 }
             }
             // console.log(i, lastTimeIndex);
-            schedule.value[today].lessons[i].active = __isActive(scheduleToday.value[i]?.time, scheduleToday.value[lastTimeIndex]?.time)
+            schedule.value[today.value].lessons[i].active = __isActive(scheduleToday.value[i]?.time, scheduleToday.value[lastTimeIndex]?.time)
         }
     }
     __refreshActive()
     setInterval(__refreshActive, 500);
-
-    async function init() {
-        let data: any
-        try {
-            data = await invoke("read_config")
-            data = JSON.parse(data)
-        } catch (e) {
-            console.log('读取配置失败：', e)
-        }
-        console.log("config-data:", data)
-        if (data) {
-            if (data?.patterns) {
-                patterns.value = data?.patterns
-            }
-            if (data?.schedule) {
-                schedule.value = data?.schedule
-            }
-            if (data?.scheduleOverride) {
-                if (dayjs().format("YYYY-MM-DD") == data.scheduleOverride.date) {
-                    scheduleOverride.value = data.scheduleOverride
-                }
-            }
-            if (data?.widgets) {
-                widgets.value = data?.widgets
-            }
-            if (data?.zoom) {
-                zoom.value = data?.zoom
-            }
-            if (typeof data?.startup == "boolean") {
-                startup = data?.startup
-                try {
-                    if (data.startup) {
-                        await enable()
-                    } else {
-                        await disable()
-                    }
-                } catch (e) {
-                    console.log('自启动设置：', e)
-                }
-            }
-        } else {
-            for (let i = 0; i < 7; i++) {
-                patterns.value.push({ name: `模式${i + 1}`, data: [] })
-            }
-        }
-        __refreshActive()
-    }
-    init()
-    listen("updated", init)
-
-    async function save() {
-        try {
-            await invoke("write_config", {
-                data: JSON.stringify({
-                    startup,
-                    patterns: patterns?.value,
-                    schedule: schedule?.value,
-                    scheduleOverride: scheduleOverride?.value,
-                    widgets: widgets?.value,
-                    zoom: zoom?.value,
-                })
-            });
-            emit("updated");
-            window.$NMessageApi.success("已保存");
-        } catch (e) {
-            window.$NMessageApi.error(`保存失败：${JSON.stringify(e)}`);
-        }
-    }
 
     function setPatternToDay(patternId: number, day: Week) {
         schedule.value[day].pattern = patternId
@@ -248,5 +260,6 @@ export const useScheduleStore = defineStore('schedule', () => {
         lessonStatus,
         scheduleOverride,
         zoom,
+        heightFactor,
     }
 })

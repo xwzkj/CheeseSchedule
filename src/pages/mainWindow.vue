@@ -69,10 +69,10 @@ async function initWindowSize() {
         console.log('工作区位置:', workAreaPosition)
 
         // 计算窗口大小
-        innerSize.height = Math.floor(workAreaSize.height * 2.8 / 4)
-        innerSize.width = Math.floor(170 * monitor.scaleFactor * (scheduleStore?.zoom ?? 1))
+        innerSize.height = Math.floor(workAreaSize.height * scheduleStore?.heightFactor)
+        innerSize.width = Math.floor(170 * monitor.scaleFactor * scheduleStore?.zoom)
 
-        await thisWindow.setZoom(scheduleStore?.zoom ?? 1)
+        await thisWindow.setZoom(scheduleStore?.zoom)
         await thisWindow.setSize(innerSize)
 
         // 设置窗口位置
