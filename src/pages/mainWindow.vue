@@ -7,7 +7,7 @@ import * as tool from '../tools/tool'
 import emitter from "../tools/mitt";
 
 // tauri api
-import { currentMonitor, LogicalPosition } from "@tauri-apps/api/window";
+import { primaryMonitor, PhysicalPosition } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow, WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { TrayIcon, type TrayIconOptions } from '@tauri-apps/api/tray';
 import * as app from '@tauri-apps/api/app';
@@ -26,7 +26,12 @@ window.$outerScrollbar = useTemplateRef('outerScrollbar')
 
 const NMessage = useMessage();
 const scheduleStore = useScheduleStore();
-const thisWindow = getCurrentWebviewWindow();
+let thisWindow: WebviewWindow;
+try{
+    thisWindow = getCurrentWebviewWindow()
+} catch (error) {
+    console.error("获取当前窗口失败:", error);
+}
 
 function getWidgetComponent(id: string) {
     switch (id) {
@@ -50,25 +55,30 @@ const widgets = computed(() => {
 })
 // 根据缩放设置窗口大小
 async function initWindowSize() {
-    let monitor = await currentMonitor()
-    if (!monitor) {
-        return
+    try {
+
+        const monitor = await primaryMonitor()
+        if (!monitor) {
+            return
+        }
+
+        const innerSize = await thisWindow.innerSize()
+        const workAreaSize = monitor.workArea.size
+        const workAreaPosition = monitor.workArea.position
+
+        // 计算窗口大小
+        innerSize.height = Math.floor(workAreaSize.height * 2.8 / 4)
+        innerSize.width = Math.floor(170 * monitor.scaleFactor * (scheduleStore?.zoom ?? 1))
+
+        await thisWindow.setZoom(scheduleStore?.zoom ?? 1)
+        await thisWindow.setSize(innerSize)
+
+        // 设置窗口位置
+        const outerSize = await thisWindow.outerSize()
+        await thisWindow.setPosition(new PhysicalPosition(workAreaPosition.x + workAreaSize.width - outerSize.width, workAreaPosition.y))
+    } catch (error) {
+        console.error("设置窗口位置失败:", error);
     }
-
-    // 转换为逻辑坐标
-    let monitorSize = monitor.size.toLogical(monitor.scaleFactor)
-    let innerSize = (await thisWindow.innerSize()).toLogical(monitor.scaleFactor)
-
-    // 计算窗口大小
-    innerSize.height = Math.floor(monitorSize.height * 2.8 / 4)
-    innerSize.width = Math.floor(170 * (scheduleStore?.zoom ?? 1))
-
-    await thisWindow.setZoom(scheduleStore?.zoom ?? 1)
-    await thisWindow.setSize(innerSize)
-
-    // 设置窗口位置
-    let outerSize = (await thisWindow.outerSize()).toLogical(monitor.scaleFactor)
-    await thisWindow.setPosition(new LogicalPosition(monitorSize.width - outerSize.width, 0))
 }
 async function initWindow() {
     // 立即初始化窗口大小，并监听缩放比例变化，实时更新窗口大小

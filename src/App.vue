@@ -20,12 +20,15 @@ let themeOverrides = ref({
         borderRadius: '0.5rem'
     },
 })
-
-let currentWindow = Window.getCurrent()
-if (currentWindow.label == 'cheese-schedule') { // 主窗口
-    currentWindow.onCloseRequested(() => {
-        currentWindow.preventDefault(); // 别关
-    })
+try {
+    let currentWindow = Window.getCurrent()
+    if (currentWindow.label == 'cheese-schedule') { // 主窗口
+        currentWindow.onCloseRequested(() => {
+            currentWindow.preventDefault(); // 别关
+        })
+    }
+} catch (error) {
+    console.error("获取当前窗口失败:", error);
 }
 </script>
 
