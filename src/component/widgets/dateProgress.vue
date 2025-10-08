@@ -1,19 +1,17 @@
 <template>
-    <div class="h-5.7rem w-full bg-#fff card-border
-    flex flex-col items-center justify-center 
-    overflow-hidden whitespace-nowrap">
-        <div class="flex items-center">
-            <span class="text-1.8rem line-height-120%">{{ props.param?.name?.value }}</span>
-            <span class="text-1rem">已过</span>
+    <div class="h-5.7rem w-full p-3 bg-#fff card-border
+    flex flex-col items-end justify-center 
+    overflow-hidden whitespace-nowrap relative">
+        <div class="flex items-center gap-1 relative z-2">
+            <span class="text-1.7rem line-height-120%">{{ props.param?.name?.value }}</span>
+            <span class="text-1.2rem">已过</span>
         </div>
-        <div class="w-[90%] p-x-2 flex justify-center relative">
-            <div class="font-bold relative z-2 flex items-end">
-                <div class="text-2.2rem line-height-120%">{{ dayData.int }}</div>
-                <div class="text-1rem">{{ dayData.dec }}%</div>
-            </div>
-            <div class="progress-box">
-                <div class="progress-bar"></div>
-            </div>
+        <div class="font-bold flex items-end relative z-2 top-1.5">
+            <div class="text-2.2rem line-height-120%">{{ dayData.int }}</div>
+            <div class="text-1.2rem">{{ dayData.dec }}%</div>
+        </div>
+        <div class="progress-box">
+            <div class="progress-bar"></div>
         </div>
     </div>
 </template>
@@ -74,12 +72,11 @@ onBeforeUnmount(() => {
 <style scoped>
 .progress-box {
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 50%;
     z-index: 1;
-    border-radius: 0.8rem;
     background-color: #eaeaea;
 }
 

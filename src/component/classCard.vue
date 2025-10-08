@@ -1,12 +1,12 @@
 <template>
     <div ref="outer" class="outer card-border" :class="{
-        'w-9rem h-5.7rem': props.active,
-        'w-5.5rem h-3.2rem': !props.active,
+        'w-full h-5.7rem p-r-3': props.active,
+        'w-5.5rem h-3.2rem center': !props.active,
         'gradient-to-bottom': needGradient == 1,
         'gradient-to-top': needGradient == 2
     }">
-        <div class="relative flex flex-col items-center z-2 max-w-100%">
-            <component :is="needMarquee ? Vue3Marquee : 'div'" class="max-w-100% overflow-hidden justify-center"
+        <div class="relative flex flex-col items-end z-2 max-w-100%">
+            <component :is="needMarquee ? Vue3Marquee : 'div'" class="max-w-100% overflow-hidden justify-end"
                 :duration="(nameDiv?.scrollWidth ?? 250) / 35" :clone="true">
                 <div ref="nameDiv"
                     :class="{ 'text-2.5rem font-bold': props.active, 'text-1.8rem': !props.active, 'px-0.5rem': needMarquee }"
@@ -95,7 +95,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .outer {
     --bg-color: rgb(248, 127, 62);
-    padding: 0.2rem;
+    /* padding: 0.2rem; */
     margin-bottom: 0.3rem;
     background-color: white;
     position: relative;
@@ -105,6 +105,9 @@ onBeforeUnmount(() => {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.center {
     align-items: center;
 }
 
@@ -122,16 +125,16 @@ onBeforeUnmount(() => {
     aspect-ratio: 1 / 1;
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 65%;
     transform: translate(-50%, -50%);
     background-color: var(--bg-color, white);
     box-shadow: 0 0 4rem 1rem var(--bg-color, white);
     border-radius: 0.5rem;
     filter: blur(0.7rem);
-    animation: bg-animation 30s linear infinite;
+    /* animation: bg-animation 30s linear infinite; */
 }
 
-@keyframes bg-animation {
+/* @keyframes bg-animation {
     0% {
         transform: translate(-80%, -50%) rotate(0deg) scale(1);
     }
@@ -151,5 +154,5 @@ onBeforeUnmount(() => {
     100% {
         transform: translate(-80%, -50%) rotate(360deg) scale(1);
     }
-}
+} */
 </style>
