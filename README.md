@@ -4,19 +4,27 @@
 
 > 体积小巧，界面简洁
 
-仅针对windows10/11进行了测试，windows7等系统无法正常使用。
+仅针对windows10/11进行了测试，windows7等系统[无法正常使用](#why-not-win7)。
 
 ![screenshot1](./readme-assets/screenshot1.png)
 
 ## 功能
 
+不算强大，但一般够用
+
 包括但不限于：
 
 - [x] 时间模式编辑
 - [x] 课程表编辑
+- [ ] 多周轮换课表（计划开发中）
 - [x] 课程表显示（自动每日轮换）
 - [x] 当日临时换课
-- [x] 小组件（如：时钟、倒计日）
+- [x] 小组件（如：时钟、倒计日、日期进度）
+
+自定义项：
+
+- [x] 缩放调节（主窗口）
+- [x] 高度调节（主窗口）
 
 ## 使用说明
 
@@ -31,6 +39,22 @@
 - 程序默认为开机自启，若要关闭，请更改配置文件的`startup`字段为`false`，设置将在重启程序后生效
 
 ## 备注
+
+### 为何win7等旧系统用不了 <span id="why-not-win7"></span>
+
+1. 旧系统不支持新版本rust
+2. 旧系统不支持新版webview2
+3. 在win7使用拓展内核([VxKex](https://github.com/YuZhouRen86/VxKex-NEXT/releases/tag/1.1.3.1584))和webview2 109后可以正常启动，但主窗口透明效果失效，且该版本webview2无法正常渲染UnoCSS presetWind4预设的颜色
+
+### 添加小组件（对于开发者）
+
+需改动三处：
+
+- 添加小组件本体：位于`src/component/widgets`目录下，是一个vue单文件组件
+- 在小组件编辑页添加配置项：在`src/pages/widgetEditor.vue`中的列表中添加新的配置对象
+- 在主窗口添加解析：在`src/pages/mainWindow.vue`导入小组件本体，并在`getWidgetComponent`函数添加新的分支
+
+### 构建
 
 tauri在构建时使用的版本号：
 
