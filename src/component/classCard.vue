@@ -1,22 +1,16 @@
 <template>
     <div ref="outer" class="outer card-border" :class="{
-        'w-full h-5.7rem p-r-3': props.active,
+        'w-full h-5.7rem p-r-3 items-end': props.active,
         'w-5.5rem h-3.2rem center': !props.active,
         'gradient-to-bottom': needGradient == 1,
         'gradient-to-top': needGradient == 2
     }">
-        <div class="relative flex flex-col items-end z-2 max-w-100%">
-            <component :is="needMarquee ? Vue3Marquee : 'div'" class="max-w-100% overflow-hidden justify-end"
-                :duration="(nameDiv?.scrollWidth ?? 250) / 35" :clone="true">
-                <div ref="nameDiv"
-                    :class="{ 'text-2.5rem font-bold': props.active, 'text-1.8rem': !props.active, 'px-0.5rem': needMarquee }"
-                    class="line-height-120% whitespace-nowrap">
-                    {{ props.name }}
-                </div>
-            </component>
-            <div v-if="props.active" class="text-1.3rem font-bold whitespace-nowrap">{{ props.time }}</div>
-
+        <div ref="nameDiv"
+            :class="{ 'text-2.5rem font-bold': props.active, 'text-1.8rem': !props.active, 'px-0.5rem': needMarquee }"
+            class="line-height-120% whitespace-nowrap z-2">
+            {{ props.name }}
         </div>
+        <div v-if="props.active" class="text-1.3rem font-bold whitespace-nowrap z-2">{{ props.time }}</div>
         <div v-if="props.active" class="bg">
         </div>
     </div>
@@ -24,7 +18,6 @@
 
 <script setup lang="ts">
 import { watch, useTemplateRef, onMounted, onBeforeUnmount, ref, nextTick } from 'vue'
-import { Vue3Marquee } from 'vue3-marquee';
 import emitter from '../tools/mitt';
 import * as tool from '../tools/tool'
 const props = defineProps<{
