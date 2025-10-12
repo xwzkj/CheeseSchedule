@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
     aspect-ratio: 1 / 1;
     position: absolute;
     top: 50%;
-    left: 65%;
+    right: 0.5rem;
     transform: translate(-50%, -50%);
     background-color: var(--bg-color, white);
     box-shadow: 0 0 4rem 1rem var(--bg-color, white);
