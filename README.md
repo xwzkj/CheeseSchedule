@@ -61,7 +61,3 @@ tauri在构建时使用的版本号：
 产品版本->Cargo.toml
 
 文件版本->tauri.conf.json
-
-## 感谢
-
-[@Etern](https://github.com/Etern-34520)：提供外观建议
