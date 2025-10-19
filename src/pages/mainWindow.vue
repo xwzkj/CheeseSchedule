@@ -285,29 +285,28 @@ onMounted(() => {
             </component>
         </div>
         <!-- 课程表区域 -->
-        <n-scrollbar class="grow-1" ref="outerScrollbar" @scroll="onScroll">
+        <n-scrollbar class="grow-1" ref="outerScrollbar" v-if="scheduleStore.scheduleToday.length" @scroll="onScroll">
             <!-- 课程表卡片 -->
-            <div v-if="scheduleStore.scheduleToday.length" v-for="(item, index) in scheduleStore.scheduleToday"
-                :key="index" class="flex flex-col items-end">
+            <div v-for="(item, index) in scheduleStore.scheduleToday" :key="index" class="flex flex-col items-end">
                 <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
                     :active="item?.active"></class-card>
                 <div v-else class="m-b-0.7rem"></div>
             </div>
-            <!-- 无课程时的提示 -->
-            <div v-else class="flex items-center justify-center h-100% bg-#ffffff55 rounded-1rem h-100vh">
-                <div class="text-center bg-white p-0.25rem rounded-1rem">
-                    <p class="text-1.2rem">奶酪课程表已启动</p>
+        </n-scrollbar>
+        <!-- 无课程时的提示 -->
+        <div v-else class="flex items-center justify-center h-100% bg-#ffffff55 rounded-1rem">
+            <div class="text-center bg-white p-0.25rem rounded-1rem">
+                <p class="text-1.2rem">奶酪课程表已启动</p>
+                <br />
+                <div class="text-1.1rem text-#888">
+                    今日没有课程数据
+                    <br /><br />
+                    可前往托盘
                     <br />
-                    <div class="text-1.1rem text-#888">
-                        今日没有课程数据
-                        <br /><br />
-                        可前往托盘
-                        <br />
-                        唤出编辑页
-                    </div>
+                    唤出编辑页
                 </div>
             </div>
-        </n-scrollbar>
+        </div>
     </div>
 </template>
 
