@@ -284,6 +284,11 @@ onMounted(() => {
                 </div>
                 <n-ellipsis class="text-#ff6b6b">
                     {{ updateInfo?.changeLog?.simple || '无更新日志' }}
+                    <template #tooltip>
+                        <div class="whitespace-pre-line max-w-80vw">
+                            {{ updateInfo?.changeLog?.full || '无更新日志' }}
+                        </div>
+                    </template>
                 </n-ellipsis>
 
             </div>
