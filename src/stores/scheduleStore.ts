@@ -17,6 +17,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         startup: true, // 是否开机自启
         zoom: 1, // 主窗口缩放比例
         heightFactor: 0.7, // 主窗口高度乘数
+        timeOffset: 0, // 时间偏移量 单位：秒
     })
     const today = ref(updateToday())
     const patterns = ref<Pattern[]>([]) // 时间模式
@@ -199,8 +200,8 @@ export const useScheduleStore = defineStore('schedule', () => {
     }
 
     function __isActive(time: string, lastTime: string): 0 | 1 | 2 {
-        let now = new Date();
-        let nowTime = now.getHours() * 60 + now.getMinutes();
+        let nowDayjs = dayjs().subtract(setting.value.timeOffset, 'second');
+        let nowTime = nowDayjs.hour() * 60 + nowDayjs.minute();
 
         const rex = /^(\d{1,2})[：:](\d{1,2})[-~ ]+(\d{1,2})[：:](\d{1,2})$/;
         let res = rex.exec(time);

@@ -37,6 +37,11 @@
                 </n-dropdown>
             </div>
         </setting-item>
+        <setting-item t1="时间偏移" t2="适用于铃声不准的场景 | 单位：秒 | 正值将延后课程切换，负值则会提前">
+            <div class="w-7rem">
+                <n-input-number v-model:value="scheduleStore.setting.timeOffset" />
+            </div>
+        </setting-item>
     </div>
 </template>
 
