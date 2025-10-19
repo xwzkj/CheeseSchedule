@@ -39,7 +39,7 @@
         </setting-item>
         <setting-item t1="时间偏移" t2="适用于铃声不准的场景 | 单位：秒 | 正值将延后课程切换，负值则会提前">
             <div class="w-7rem">
-                <n-input-number v-model:value="scheduleStore.setting.timeOffset" />
+                <n-input-number v-model:value="scheduleStore.setting.timeOffset" :update-value-on-input="false" />
             </div>
         </setting-item>
     </div>
@@ -58,9 +58,16 @@ const NMessage = useMessage()
 
 let scheduleCount = ref(scheduleStore.schedule.length)
 onMounted(() => {
-    watch(scheduleStore.schedule, () => {
-        scheduleCount.value = scheduleStore.schedule.length
-    }, { deep: true, immediate: true })
+    watch(() => scheduleStore.setting.timeOffset, (value) => {
+        if (typeof value !== 'number') {
+            scheduleStore.setting.timeOffset = 0
+        }
+    },)
+    watch(scheduleCount, (value) => {
+        if (typeof value !== 'number') {
+            scheduleCount.value = 1
+        }
+    })
 })
 function setScheduleCount() {
     scheduleStore.setScheduleCount(scheduleCount.value)
