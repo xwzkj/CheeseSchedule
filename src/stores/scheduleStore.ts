@@ -281,12 +281,14 @@ export const useScheduleStore = defineStore('schedule', () => {
 
     // 获取本周是第几周 从0开始
     function getCurrentScheduleId(): number {
-        const diff = dayjs().diff(firstWeekMonday.value, "week")
+        const diff = dayjs().startOf("week").diff(firstWeekMonday.value, "week")
         let len = schedule.value.length
         len = Math.max(len, 1) // 如果为0 会返回NaN
 
         // JS 的 % 对负数会返回负数，所以要手动修正
-        return ((diff % len) + len) % len
+        let res = ((diff % len) + len) % len
+        console.log('距离第一周：', diff, '当前使用课表：', res);
+        return res
     }
 
     function __refreshActive() {
