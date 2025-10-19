@@ -7,7 +7,7 @@ import * as tool from '../tools/tool'
 import emitter from "../tools/mitt";
 
 // tauri api
-import { primaryMonitor, PhysicalPosition } from "@tauri-apps/api/window";
+import { primaryMonitor, PhysicalPosition, LogicalSize } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow, WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { TrayIcon, type TrayIconOptions } from '@tauri-apps/api/tray';
 import * as app from '@tauri-apps/api/app';
@@ -139,12 +139,19 @@ async function initWindow() {
                     await formerWindow.setFocus();
                     console.log("焦点了一个已存在的编辑窗口");
                 } else {
+                    let screenSize: LogicalSize = new LogicalSize(99999, 99999)
+                    const monitor = await primaryMonitor()
+                    if (monitor) {
+                        screenSize = monitor.workArea.size.toLogical(monitor.scaleFactor);
+                        console.log("屏幕工作区逻辑分辨率为：", screenSize);
+
+                    }
                     let editWindow = new WebviewWindow('editor', {
                         url: "/#/editor",
                         title: "奶酪课程表编辑器",
                         center: true,
-                        width: 900,
-                        height: 800,
+                        width: Math.min(900, screenSize.width - 40),
+                        height: Math.min(800, screenSize.height - 40),
                         focus: true,
                         dragDropEnabled: false, // 启用html5拖拽
                     })
