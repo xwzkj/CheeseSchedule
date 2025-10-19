@@ -2,7 +2,7 @@
     <div v-if="scheduleStore.patterns.length" class="h-100vh w-100% flex items-center justify-center">
         <div class="w-95% h-95% p-1rem flex flex-col gap-4 justify-between">
             <div class="flex items-center gap-2">
-                <n-dropdown :options="scheduleStore.patternsOption" @select="handleSelect">
+                <n-dropdown :options="scheduleStore.patternsOption" @select="handleSelect" trigger="click">
                     <n-button type="primary" dashed>
                         选择一个“模式”来编辑
                         <template #icon>

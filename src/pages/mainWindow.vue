@@ -69,10 +69,10 @@ async function initWindowSize() {
         console.log('工作区位置:', workAreaPosition)
 
         // 计算窗口大小
-        innerSize.height = Math.floor(workAreaSize.height * scheduleStore?.heightFactor)
-        innerSize.width = Math.floor(170 * monitor.scaleFactor * scheduleStore?.zoom)
+        innerSize.height = Math.floor(workAreaSize.height * scheduleStore.setting?.heightFactor)
+        innerSize.width = Math.floor(170 * monitor.scaleFactor * scheduleStore.setting?.zoom)
 
-        await thisWindow.setZoom(scheduleStore?.zoom)
+        await thisWindow.setZoom(scheduleStore.setting?.zoom)
         await thisWindow.setSize(innerSize)
 
         // 设置窗口位置
@@ -84,8 +84,8 @@ async function initWindowSize() {
 }
 async function initWindow() {
     // 立即初始化窗口大小，并监听缩放比例变化，实时更新窗口大小
-    watch(() => scheduleStore.zoom, initWindowSize, { immediate: true })
-    watch(() => scheduleStore.heightFactor, initWindowSize)
+    watch(() => scheduleStore.setting.zoom, initWindowSize, { immediate: true })
+    watch(() => scheduleStore.setting.heightFactor, initWindowSize)
 
     // 禁用 Ctrl+P
     window.addEventListener("keydown", (e) => {

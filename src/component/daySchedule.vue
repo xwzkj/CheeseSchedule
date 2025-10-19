@@ -6,8 +6,8 @@
                 <n-ellipsis class="w-5rem text-align-center text-0.8rem">{{ patternName }}</n-ellipsis>
             </n-el>
         </n-dropdown>
-        <div class="flex flex-col items-center gap-1" v-if="scheduleStore.schedule[props.day]?.pattern != -1">
-            <div v-for="item in scheduleStore.schedule[props.day].lessons" class="w-100%">
+        <div class="flex flex-col items-center gap-1" v-if="scheduleStore.schedule?.[props.scheduleId][props.day]?.pattern != -1">
+            <div v-for="item in scheduleStore.schedule[props.scheduleId][props.day].lessons" class="w-100%">
                 <schedule-edit-card :data="item"></schedule-edit-card>
             </div>
         </div>
@@ -21,15 +21,16 @@ import { computed } from 'vue';
 import ScheduleEditCard from './scheduleEditCard.vue'
 const scheduleStore = useScheduleStore();
 const props = defineProps<{
+    scheduleId: number
     day: Week
 }>()
 let patternName = computed(() => {
-    let p = scheduleStore.schedule[props.day]?.pattern
+    let p = scheduleStore.schedule[props.scheduleId][props.day]?.pattern
     return p != -1 ? scheduleStore.patterns?.[p]?.name : "选择本日模式"
 })
 
 function handlePatternSelect(key: number) {
-    scheduleStore.setPatternToDay(key, props.day)
+    scheduleStore.setPatternToDay(key, props.scheduleId, props.day)
 }
 
 </script>
