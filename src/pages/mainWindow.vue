@@ -4,7 +4,6 @@ import classCard from "../component/classCard.vue"
 import { useMessage, NScrollbar, NEllipsis } from "naive-ui";
 import { ref, onMounted, useTemplateRef, watch, computed } from "vue";
 import * as tool from '../tools/tool'
-import emitter from "../tools/mitt";
 
 // tauri api
 import { primaryMonitor, PhysicalPosition, LogicalSize } from "@tauri-apps/api/window";
@@ -223,10 +222,6 @@ async function initWindow() {
     }
 }
 
-function onScroll(e: Event) {
-    emitter.emit('outerScrollbarScrolled', e)
-}
-
 async function setTop(isTop: boolean) {
     if (isTop) {
         await thisWindow.setAlwaysOnBottom(false)
@@ -300,14 +295,15 @@ onMounted(() => {
             </component>
         </div>
         <!-- 课程表区域 -->
-        <n-scrollbar class="grow-1 overflow-x-visible" ref="outerScrollbar" v-if="scheduleStore.scheduleToday.length"
-            @scroll="onScroll">
+        <n-scrollbar class="grow-1 overflow-x-visible" v-if="scheduleStore.scheduleToday.length" ref="outerScrollbar"
+            content-style="overflow: hidden;">
+            <!-- overflow: hidden;是用于解决鼠标无法拖拽滚挡条到底部的问题 -->
             <!-- 课程表卡片 -->
             <div v-for="(item, index) in scheduleStore.scheduleToday" :key="index"
                 class="flex flex-col items-end m-0.3rem">
                 <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
                     :active="item?.active"></class-card>
-                <div v-else class="m-b-0.7rem"></div>
+                <div v-else class="m-b-0.4rem"></div>
             </div>
         </n-scrollbar>
         <!-- 无课程时的提示 -->
