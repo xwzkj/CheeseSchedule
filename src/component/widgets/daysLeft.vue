@@ -29,7 +29,7 @@ const props = defineProps<{
     }
 }>()
 function update() {
-    let diff = dayjs(props.param?.date?.value).diff(dayjs(), 'day')
+    let diff = dayjs(props.param?.date?.value).diff(dayjs().startOf('day'), 'day')
     let res = {
         passed: "还有",
         days: Math.abs(diff)
