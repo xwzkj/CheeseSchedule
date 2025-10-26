@@ -213,10 +213,6 @@ async function initWindow() {
     }
 }
 
-function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 function onScroll(e: Event) {
     emitter.emit('outerScrollbarScrolled', e)
 }
@@ -224,13 +220,10 @@ function onScroll(e: Event) {
 async function setTop(isTop: boolean) {
     if (isTop) {
         await thisWindow.setAlwaysOnBottom(false)
-        // await sleep(150)
-        // await thisWindow.setAlwaysOnTop(false)
         await thisWindow.setFocus()
         await thisWindow.setAlwaysOnTop(true)
     } else {
         await thisWindow.setAlwaysOnTop(false)
-        // await sleep(150)
         await thisWindow.setAlwaysOnBottom(true)
     }
 }
@@ -245,7 +238,7 @@ onMounted(() => {
             console.log("下课了，自动窗口置顶");
         } else {
             NMessage.success("上课了!", { duration: 5000 })
-            await sleep(5000)
+            await tool.sleep(5000)
             await setTop(false)
             console.log("上课了，取消窗口置顶");
         }
@@ -269,9 +262,9 @@ onMounted(() => {
 </script>
 
 <template>
-    <div ref="outerEle" class="select-none h-100vh flex flex-col p-x-0.3rem">
+    <div ref="outerEle" class="select-none h-100vh flex flex-col">
         <!-- 套一层div是为了不用flex，让margin合并 -->
-        <div class="shrink-0 w-100%">
+        <div class="shrink-0 w-100% p-x-0.3rem">
             <!-- 更新提示 -->
             <div v-if="updateInfo?.hasUpdate" class="w-full h-4rem 
                 flex flex-col items-center justify-center 
@@ -297,9 +290,10 @@ onMounted(() => {
             </component>
         </div>
         <!-- 课程表区域 -->
-        <n-scrollbar class="grow-1" ref="outerScrollbar" v-if="scheduleStore.scheduleToday.length" @scroll="onScroll">
+        <n-scrollbar class="grow-1 overflow-x-visible" ref="outerScrollbar" v-if="scheduleStore.scheduleToday.length"
+            @scroll="onScroll">
             <!-- 课程表卡片 -->
-            <div v-for="(item, index) in scheduleStore.scheduleToday" :key="index" class="flex flex-col items-end">
+            <div v-for="(item, index) in scheduleStore.scheduleToday" :key="index" class="flex flex-col items-end m-0.3rem">
                 <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
                     :active="item?.active"></class-card>
                 <div v-else class="m-b-0.7rem"></div>
@@ -325,6 +319,7 @@ onMounted(() => {
 <style>
 .card-border {
     border-radius: 1rem;
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
+    box-shadow: 0 1.5px 5px 0 rgba(0, 0, 0, 0.35);
 }
 </style>

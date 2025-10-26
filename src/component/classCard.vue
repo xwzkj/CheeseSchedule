@@ -88,12 +88,12 @@ onBeforeUnmount(() => {
 <style scoped>
 .outer {
     --bg-color: rgb(248, 127, 62);
-    /* padding: 0.2rem; */
-    margin-bottom: 0.3rem;
     background-color: white;
     position: relative;
     overflow: hidden;
-    transition: all 0.7s ease-in-out;
+    transition:
+        height 0.7s ease-in-out,
+        width 0.7s ease-in-out;
     /* 居中 */
     display: flex;
     flex-direction: column;
