@@ -82,6 +82,35 @@ async function initWindowSize() {
         console.error("设置窗口位置失败:", error);
     }
 }
+async function openEditorWindow() {
+    let formerWindow = await WebviewWindow.getByLabel('editor')
+    if (formerWindow) {
+        await formerWindow.unminimize();
+        await formerWindow.setFocus();
+        console.log("焦点了一个已存在的编辑窗口");
+    } else {
+        let screenSize: LogicalSize = new LogicalSize(99999, 99999)
+        const monitor = await primaryMonitor()
+        if (monitor) {
+            screenSize = monitor.workArea.size.toLogical(monitor.scaleFactor);
+            console.log("屏幕工作区逻辑分辨率为：", screenSize);
+
+        }
+        let editWindow = new WebviewWindow('editor', {
+            url: "/#/editor",
+            title: "奶酪课程表编辑器",
+            center: true,
+            width: Math.min(900, screenSize.width - 40),
+            height: Math.min(800, screenSize.height - 40),
+            focus: true,
+            dragDropEnabled: false, // 启用html5拖拽
+        })
+        editWindow.once("tauri://webview-created", async () => {
+            await editWindow.setFocus();
+            console.log("新建并焦点了一个编辑窗口");
+        })
+    }
+}
 async function initWindow() {
     // 立即初始化窗口大小，并监听缩放比例变化，实时更新窗口大小
     watch(() => scheduleStore.setting.zoom, initWindowSize, { immediate: true })
@@ -96,6 +125,14 @@ async function initWindow() {
     });
     const menu = await Menu.new({
         items: [
+            {
+                id: 'openEditor',
+                text: '打开编辑器',
+                action: openEditorWindow,
+            },
+            {
+                item: 'Separator'
+            },
             {
                 id: 'copyright',
                 text: '© 2025-至今 丸子',
@@ -114,7 +151,7 @@ async function initWindow() {
                 },
             },
             {
-                item: 'Separator'// 分割线
+                item: 'Separator'
             },
             {
                 id: 'quit',
@@ -133,33 +170,7 @@ async function initWindow() {
         menuOnLeftClick: false,
         action: async (event) => {
             if (event.type == 'Click' && event.button == 'Left' && event.buttonState == 'Up') {
-                let formerWindow = await WebviewWindow.getByLabel('editor')
-                if (formerWindow) {
-                    await formerWindow.unminimize();
-                    await formerWindow.setFocus();
-                    console.log("焦点了一个已存在的编辑窗口");
-                } else {
-                    let screenSize: LogicalSize = new LogicalSize(99999, 99999)
-                    const monitor = await primaryMonitor()
-                    if (monitor) {
-                        screenSize = monitor.workArea.size.toLogical(monitor.scaleFactor);
-                        console.log("屏幕工作区逻辑分辨率为：", screenSize);
-
-                    }
-                    let editWindow = new WebviewWindow('editor', {
-                        url: "/#/editor",
-                        title: "奶酪课程表编辑器",
-                        center: true,
-                        width: Math.min(900, screenSize.width - 40),
-                        height: Math.min(800, screenSize.height - 40),
-                        focus: true,
-                        dragDropEnabled: false, // 启用html5拖拽
-                    })
-                    editWindow.once("tauri://webview-created", async () => {
-                        await editWindow.setFocus();
-                        console.log("新建并焦点了一个编辑窗口");
-                    })
-                }
+                openEditorWindow()
             }
         }
     };
@@ -171,23 +182,23 @@ async function initWindow() {
     // 检查更新=====================================================================================
     updateInfo.value = await tool.checkUpdate()
     // updateInfo.value.hasUpdate = true // 调试用
+    let insertPosition = 6
     if (updateInfo.value && updateInfo.value.hasUpdate) {
         console.log("有新版本", updateInfo.value);
         NMessage.success("有新版本，请前往托盘菜单更新", { duration: 60000, closable: true })
-        let insertPosition = 4
         menu.insert(await MenuItem.new({
             text: `检测到新版本${updateInfo.value.latestVersion}，点击打开更新页面`,
             action: async () => {
                 await openUrl((updateInfo.value as UpdateInfo).html_url)
             },
-        }), insertPosition)
+        }), insertPosition++)
         menu.insert(await MenuItem.new({
             text: `${updateInfo.value.changeLog.simple ? `更新日志：${updateInfo.value.changeLog.simple?.slice(0, 25)}...` : '无更新日志'}`,
             enabled: false,
-        }), ++insertPosition)
-        menu.insert({ item: 'Separator' }, ++insertPosition)
-        menu.insert(await MenuItem.new({ text: '点击下载新版本：', enabled: false }), ++insertPosition)
-        menu.insert({ item: 'Separator' }, ++insertPosition)
+        }), insertPosition++)
+        menu.insert({ item: 'Separator' }, insertPosition++)
+        menu.insert(await MenuItem.new({ text: '点击下载新版本：', enabled: false }), insertPosition++)
+        menu.insert({ item: 'Separator' }, insertPosition)
 
         // 添加下载链接
         for (let i = 0; i < updateInfo.value.assets?.length; i++) {
@@ -206,10 +217,9 @@ async function initWindow() {
                 },
             }), insertPosition)
         }
-        tray.setMenu(menu)
     } else {
-        menu.insert(await MenuItem.new({ text: '未检测到新版本', enabled: false }), 4)
-        menu.insert({ item: 'Separator' }, 5)
+        menu.insert(await MenuItem.new({ text: '未检测到新版本', enabled: false }), insertPosition++)
+        menu.insert({ item: 'Separator' }, insertPosition++)
     }
 }
 
@@ -293,7 +303,8 @@ onMounted(() => {
         <n-scrollbar class="grow-1 overflow-x-visible" ref="outerScrollbar" v-if="scheduleStore.scheduleToday.length"
             @scroll="onScroll">
             <!-- 课程表卡片 -->
-            <div v-for="(item, index) in scheduleStore.scheduleToday" :key="index" class="flex flex-col items-end m-0.3rem">
+            <div v-for="(item, index) in scheduleStore.scheduleToday" :key="index"
+                class="flex flex-col items-end m-0.3rem">
                 <class-card v-if="!item?.isDivider" :name="item.name" :time="item.time"
                     :active="item?.active"></class-card>
                 <div v-else class="m-b-0.7rem"></div>
