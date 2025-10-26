@@ -21,6 +21,7 @@
         "minimizable": false,
         "maximizable": false,
         "closable": false,
+        "resizable": false,
         "width": 170,
         "height": 600
       }
