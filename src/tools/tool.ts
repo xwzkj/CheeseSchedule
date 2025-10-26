@@ -14,6 +14,11 @@ function debounce(func: Function, delay: number) {
         }, delay);
     };
 }
+
+function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function request(config: AxiosRequestConfig) {
     try {
         return await axios({
@@ -53,6 +58,13 @@ async function isNewerVersion(ver: string) {
 async function checkUpdate(): Promise<UpdateInfo> {
     let updateInfo: UpdateInfo = { hasUpdate: false, latestVersion: await app.getVersion(), assets: [], html_url: '', changeLog: { full: '', simple: '' } }
     try {
+        for (let i = 0; i < 15; i++) { // 如果未联网，等待网络连接
+            if (navigator.onLine) {
+                break;
+            }
+            window.$NMessageApi.loading('等待网络...', { duration: 1000 })
+            await sleep(1000)
+        }
         let release = await request({ url: 'https://api.github.com/repos/xwzkj/cheeseschedule/releases/latest' })
         if (release.status === 200) {
             let latest = release.data.tag_name
@@ -79,5 +91,6 @@ export {
     request,
     isNewerVersion,
     checkUpdate,
-    debounce
+    debounce,
+    sleep
 }
