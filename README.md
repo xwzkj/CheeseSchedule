@@ -4,13 +4,19 @@
 
 > 体积小巧，界面简洁
 
-仅针对windows10/11进行了测试，windows7等系统[无法正常使用](#why-not-win7)。
+仅针对windows10/11进行了测试，windows7等旧系统[无法正常使用](#why-not-win7)。
 
 ![screenshot1](./readme-assets/screenshot1.png)
 
-## 功能
+得益于tauri2的跨平台特性，程序大部分功能支持linux系统（如需体验，请自行使用源代码构建）
 
-不算强大，但一般够用
+> 图为直接在无需高权限的目录运行可执行文件的效果
+>
+> 若构建为deb包后安装，由于配置文件的保存位置与可执行文件是同一目录，在无root权限的情况下无法编辑生成/修改配置文件
+
+![screenshot_ubuntu](./readme-assets/screenshot_ubuntu.png)
+
+## 功能
 
 包括但不限于：
 
