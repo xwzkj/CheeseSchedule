@@ -18,7 +18,11 @@ export const useScheduleStore = defineStore('schedule', () => {
         zoom: 1, // 主窗口缩放比例
         heightFactor: 0.7, // 主窗口高度乘数
         timeOffset: 0, // 时间偏移量 单位：秒
+        drawDynamicProbability: true, // 是否启用动态概率
+        drawPreventDuplicate: true, // 是否阻止在同一轮中重复抽中某人
     })
+    let drawCandidates = ref<candidate[]>([]) // 抽签候选人 在该此处由init统一从配置文件中读取，在drawStore中使用
+
     const today = ref(updateToday())
     const patterns = ref<Pattern[]>([]) // 时间模式
     const schedule = ref<Schedule[]>([]) // 所有的课程表
@@ -83,7 +87,6 @@ export const useScheduleStore = defineStore('schedule', () => {
         }
         return d
     })
-    // 时间判断,输入格式为 "hh:mm-hh:mm"
     async function init() {
         let data: any
         try {
@@ -143,6 +146,9 @@ export const useScheduleStore = defineStore('schedule', () => {
                         (setting.value as any)[i] = d?.setting[i]
                     }
                 }
+                if (d?.drawCandidates) {
+                    drawCandidates.value = d?.drawCandidates
+                }
             }
 
 
@@ -185,6 +191,7 @@ export const useScheduleStore = defineStore('schedule', () => {
                 data: JSON.stringify({
                     version: 1,
                     setting: setting?.value,
+                    drawCandidates: drawCandidates?.value,
                     patterns: patterns?.value,
                     schedule: schedule?.value,
                     scheduleOverride: scheduleOverride?.value,
@@ -368,5 +375,6 @@ export const useScheduleStore = defineStore('schedule', () => {
         lessonStatus,
         scheduleOverride,
         setting,
+        drawCandidates,
     }
 })

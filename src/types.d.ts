@@ -51,3 +51,10 @@ type WidgetConfig = {
         [key: string]: WidgetParam
     },
 }
+
+type candidate = { // 抽签候选人
+    name: string,
+    historyCount: number, // 历史抽中次数，用于计算权重
+    isEnabled: boolean,
+    isDrawnThisRound: boolean, // 本轮是否已经抽中过，可用于防止多次抽中
+}

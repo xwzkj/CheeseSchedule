@@ -1,6 +1,6 @@
 <template>
     <div class="flex">
-        <div class="flex flex-col justify-between bg-gray-500/5">
+        <div class="flex flex-col justify-between bg-#f7f8f9">
             <n-menu class="w-12rem grow-0 shrink-0" :options="menuOptions" v-model:value="selectedNow" />
             <div class="flex gap-4 justify-center m-b-1rem">
                 <n-button @click="() => { scheduleStore.refreshPatternToDay(); scheduleStore.save() }" type="primary"
@@ -51,6 +51,10 @@ const menuOptions: MenuOption[] = [
     {
         label: renderLink('overrideEditor', '临时换课'),
         key: 'overrideEditor',
+    },
+    {
+        label: renderLink('drawEditor', '抽签'),
+        key: 'drawEditor',
     },
     {
         label: renderLink('widgetEditor', '小组件'),

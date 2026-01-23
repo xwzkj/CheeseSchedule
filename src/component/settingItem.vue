@@ -1,6 +1,6 @@
 <template>
     <div class="w-full m-b-0.5rem">
-        <div class="flex justify-between bg-gray-500/5 
+        <div class="flex justify-between bg-#f7f8f9 
             rounded-0.5rem p-1rem">
             <div class="flex flex-col justify-center">
                 <div class="text-1rem font-500">

@@ -33,6 +33,11 @@ const router = createRouter({
                     component: () => import('../pages/overrideEditor.vue')
                 },
                 {
+                    name: 'drawEditor',
+                    path: 'draw',
+                    component: () => import('../pages/drawEditor.vue')
+                },
+                {
                     name: 'widgetEditor',
                     path: 'widget',
                     component: () => import('../pages/widgetEditor.vue')
