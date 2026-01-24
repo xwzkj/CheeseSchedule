@@ -1,16 +1,7 @@
 <template>
     <div class="p-0.5rem">
         <setting-item t1="打开配置文件所在位置" t2="可手动导入导出 / 若文件不存在会先保存再打开" :needInput="false" :actionOnClick="openConfigDir" />
-        <setting-item t1="主窗口缩放比例" t2="默认为1，与系统缩放乘算">
-            <div class="w-7rem">
-                <n-slider v-model:value="scheduleStore.setting.zoom" :min="0.5" :max="2" :step="0.1" />
-            </div>
-        </setting-item>
-        <setting-item t1="主窗口高度乘数" t2="高度=屏幕高度(不含任务栏)*乘数 | 默认值：0.7">
-            <div class="w-7rem">
-                <n-slider v-model:value="scheduleStore.setting.heightFactor" :min="0.3" :max="1" :step="0.01" />
-            </div>
-        </setting-item>
+        <n-divider title-placement="left" class="m-y-0.5rem!">课程表</n-divider>
         <setting-item t1="多周轮换" :t2="`设置循环使用的课程表数量 | 当前：${scheduleStore.schedule.length}`">
             <div class="w-7rem flex gap-1">
                 <n-input-number v-model:value="scheduleCount" :precision="0" :min="1" :max="8" :show-button="false" />
@@ -42,6 +33,28 @@
                 <n-input-number v-model:value="scheduleStore.setting.timeOffset" :update-value-on-input="false" />
             </div>
         </setting-item>
+        <n-divider title-placement="left" class="m-y-0.5rem!">抽签</n-divider>
+        <setting-item t1="动态概率" t2="抽中越多，概率越低，使每人的总抽取次数更平均">
+            <div>
+                <n-switch v-model:value="scheduleStore.setting.drawDynamicProbability" />
+            </div>
+        </setting-item>
+        <setting-item t1="防止重复" t2="抽中后，本轮内将不会再抽取该候选人">
+            <div>
+                <n-switch v-model:value="scheduleStore.setting.drawPreventDuplicate" />
+            </div>
+        </setting-item>
+        <n-divider title-placement="left" class="m-y-0.5rem!">个性化</n-divider>
+        <setting-item t1="主窗口缩放比例" t2="默认为1，与系统缩放乘算">
+            <div class="w-7rem">
+                <n-slider v-model:value="scheduleStore.setting.zoom" :min="0.5" :max="2" :step="0.1" />
+            </div>
+        </setting-item>
+        <setting-item t1="主窗口高度乘数" t2="高度=屏幕高度(不含任务栏)*乘数 | 默认值：0.7">
+            <div class="w-7rem">
+                <n-slider v-model:value="scheduleStore.setting.heightFactor" :min="0.3" :max="1" :step="0.01" />
+            </div>
+        </setting-item>
     </div>
 </template>
 
@@ -49,7 +62,7 @@
 import { revealItemInDir } from '@tauri-apps/plugin-opener';
 import { invoke } from '@tauri-apps/api/core';
 
-import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown } from 'naive-ui'
+import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown, NDivider, NSwitch } from 'naive-ui'
 import settingItem from '../component/settingItem.vue'
 import { useScheduleStore } from '../stores/scheduleStore'
 import { onMounted, ref, watch } from 'vue';
