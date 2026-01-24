@@ -37,7 +37,7 @@
         </div>
         <n-modal v-model:show="showModalAddCandidate">
             <n-card style="width: 600px" title="添加候选人" :bordered="false" size="huge" role="dialog" aria-modal="true">
-                <div class="m-b-0.5rem">请在下方输入候选人姓名 每行一个</div>
+                <div class="m-b-0.5rem">请在下方输入候选人姓名 每行一个<br />不支持重名，若出现重名将只会添加一个</div>
                 <n-input v-model:value="newCandidates" type="textarea" :placeholder="`请输入候选人姓名,如：\n刘华强\n李田所\n侯国玉`"
                     rows="10" />
                 <template #footer>
