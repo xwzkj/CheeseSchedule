@@ -28,6 +28,7 @@
                     <n-button type="error" secondary @click="removeCandidate(index)">删除</n-button>
                 </div>
             </div>
+            <div v-if="scheduleStore.drawCandidates.length == 0" class="w-full text-center text-#999 text-1.2rem">无候选人，请在下方添加</div>
         </n-scrollbar>
         <div class="h-4rem w-full bg-#f7f8f9">
             <n-flex class="w-full h-full p-r-2rem" :justify="'end'" :align="'center'">
@@ -37,7 +38,7 @@
         </div>
         <n-modal v-model:show="showModalAddCandidate">
             <n-card style="width: 600px" title="添加候选人" :bordered="false" size="huge" role="dialog" aria-modal="true">
-                <div class="m-b-0.5rem">请在下方输入候选人姓名 每行一个<br />不支持重名，若出现重名将只会添加一个</div>
+                <div class="m-b-0.5rem">请在下方输入候选人姓名 每行一个<br />可直接从成绩单等包含姓名列的excel表格中复制粘贴<br />不支持重名，若出现重名将只会添加一个</div>
                 <n-input v-model:value="newCandidates" type="textarea" :placeholder="`请输入候选人姓名,如：\n刘华强\n李田所\n侯国玉`"
                     rows="10" />
                 <template #footer>
