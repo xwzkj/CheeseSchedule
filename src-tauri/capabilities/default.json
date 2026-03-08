@@ -4,7 +4,8 @@
   "description": "Capability for the main window",
   "windows": [
     "cheese-schedule",
-    "editor"
+    "editor",
+    "draw"
   ],
   "permissions": [
     "core:default",
@@ -18,6 +19,7 @@
     "core:app:allow-default-window-icon",
     "core:window:allow-show",
     "core:window:allow-hide",
+    "core:window:allow-center",
     "fs:default",
     "opener:default",
     "process:default",

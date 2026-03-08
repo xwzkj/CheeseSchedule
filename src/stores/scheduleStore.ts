@@ -185,7 +185,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         currentScheduleId.value = getCurrentScheduleId()
     }, 1000 * 60 * 5) // 每5分钟更新一次
 
-    async function save() {
+    async function save(doNotShowSuccessMessage: boolean = false) {
         try {
             await invoke("write_config", {
                 data: JSON.stringify({
@@ -200,7 +200,9 @@ export const useScheduleStore = defineStore('schedule', () => {
                 })
             });
             emit("updated");
-            window.$NMessageApi.success("已保存");
+            if (!doNotShowSuccessMessage) {
+                window.$NMessageApi.success("已保存");
+            }
         } catch (e) {
             window.$NMessageApi.error(`保存失败：${JSON.stringify(e)}`);
         }

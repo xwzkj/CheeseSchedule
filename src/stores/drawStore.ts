@@ -8,7 +8,8 @@ const scheduleStore = useScheduleStore()
 export const useDrawStore = defineStore('draw', () => {
     // 可供抽选的候选人
     const availableCandidates = computed(() => scheduleStore.drawCandidates.filter(i => (i.isEnabled && !(i.isDrawnThisRound && scheduleStore.setting.drawPreventDuplicate))))
-
+    // 已启用的候选人
+    const enabledCandidates = computed(() => scheduleStore.drawCandidates.filter(i => i.isEnabled))
     function addCandidate(c: candidate): boolean {
         // 如果已存在同名 返回false
         if (scheduleStore.drawCandidates.find(i => i.name == c.name)) {
@@ -26,17 +27,20 @@ export const useDrawStore = defineStore('draw', () => {
     /**
      * 抽签
      * @param dynamicProbability 启用动态概率
+     * @param justTry 是否仅尝试，不计入抽选历史，默认false
      * @returns 抽中的候选人 如果可用候选人为空则返回undefined
      */
-    function draw(dynamicProbability: boolean = false): candidate | undefined {
+    function draw(dynamicProbability: boolean = false , justTry: boolean = false): candidate | undefined {
         if (availableCandidates.value.length === 0) {
             return
         }
         if (dynamicProbability == false) { // 每个人概率相同
             let index = Math.floor(Math.random() * availableCandidates.value.length)
             let drown = availableCandidates.value[index]
-            drown.isDrawnThisRound = true
-            drown.historyCount++
+            if(justTry == false){
+                drown.isDrawnThisRound = true
+                drown.historyCount++
+            }
             return drown
         } else { // 根据历史抽签数据调整抽中概率
             let weights: number[] = [] // 每个人的权重
@@ -58,7 +62,7 @@ export const useDrawStore = defineStore('draw', () => {
                 random -= weights[i]
             }
 
-            if (drown) {
+            if (drown && justTry == false) {
                 drown.isDrawnThisRound = true
                 drown.historyCount++
             }
@@ -69,6 +73,7 @@ export const useDrawStore = defineStore('draw', () => {
 
     return {
         availableCandidates,
+        enabledCandidates,
         draw,
         addCandidate,
         newRound,

@@ -24,6 +24,22 @@
         "resizable": false,
         "width": 170,
         "height": 600
+      },
+      {
+        "label": "draw",
+        "title": "奶酪课程表-抽签",
+        "url": "/#/draw",
+        "alwaysOnTop": true,
+        "transparent": true,
+        "decorations": false,
+        "shadow": false,
+        "skipTaskbar": true,
+        "minimizable": false,
+        "maximizable": false,
+        "closable": false,
+        "resizable": true,
+        "width": 60,
+        "height": 60
       }
     ],
     "security": {
