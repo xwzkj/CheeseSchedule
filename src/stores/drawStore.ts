@@ -3,9 +3,9 @@ import { computed } from 'vue'
 
 import { useScheduleStore } from './scheduleStore'
 
-const scheduleStore = useScheduleStore()
 
 export const useDrawStore = defineStore('draw', () => {
+    const scheduleStore = useScheduleStore()
     // 可供抽选的候选人
     const availableCandidates = computed(() => scheduleStore.drawCandidates.filter(i => (i.isEnabled && !(i.isDrawnThisRound && scheduleStore.setting.drawPreventDuplicate))))
     // 已启用的候选人
