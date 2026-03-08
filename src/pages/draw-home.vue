@@ -46,6 +46,7 @@ onMounted(async () => {
     await webviewWindow.setSize(new LogicalSize(800, 600))
     await webviewWindow.center()
     await webviewWindow.setFocus()
+    webviewWindow.show()
     listen('draw', draw)
     await sleep(50)
     draw()

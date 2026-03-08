@@ -33,7 +33,12 @@
                 <n-input-number v-model:value="scheduleStore.setting.timeOffset" :update-value-on-input="false" />
             </div>
         </setting-item>
-        <n-divider title-placement="left" class="m-y-0.5rem!">抽签</n-divider>
+        <n-divider title-placement="left" class="m-y-0.5rem!">抽签 (Ctrl+Alt+D)</n-divider>
+        <setting-item t1="启用悬浮按钮" t2="关闭后将不显示抽签悬浮按钮，但仍可通过快捷键触发">
+            <div>
+                <n-switch v-model:value="scheduleStore.setting.drawSmallWindowEnabled" />
+            </div>
+        </setting-item>
         <setting-item t1="动态概率" t2="抽中越多，概率越低，使每人的总抽取次数更平均">
             <div>
                 <n-switch v-model:value="scheduleStore.setting.drawDynamicProbability" />
