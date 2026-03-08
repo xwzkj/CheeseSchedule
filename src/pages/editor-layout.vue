@@ -37,32 +37,32 @@ onMounted(() => {
 });
 const menuOptions: MenuOption[] = [
     {
-        label: renderLink('editorHome', '主页'),
-        key: 'editorHome',
+        label: renderLink('editor-home', '主页'),
+        key: 'editor-home',
     },
     {
-        label: renderLink('patternEditor', '模式编辑'),
-        key: 'patternEditor',
+        label: renderLink('editor-pattern', '模式编辑'),
+        key: 'editor-pattern',
     },
     {
-        label: renderLink('scheduleEditor', '课程表编辑'),
-        key: 'scheduleEditor',
+        label: renderLink('editor-schedule', '课程表编辑'),
+        key: 'editor-schedule',
     },
     {
-        label: renderLink('overrideEditor', '临时换课'),
-        key: 'overrideEditor',
+        label: renderLink('editor-override', '临时换课'),
+        key: 'editor-override',
     },
     {
-        label: renderLink('drawEditor', '抽签'),
-        key: 'drawEditor',
+        label: renderLink('editor-draw', '抽签'),
+        key: 'editor-draw',
     },
     {
-        label: renderLink('widgetEditor', '小组件'),
-        key: 'widgetEditor',
+        label: renderLink('editor-widget', '小组件'),
+        key: 'editor-widget',
     },
     {
-        label: renderLink('setting', '设置'),
-        key: 'setting',
+        label: renderLink('editor-setting', '设置'),
+        key: 'editor-setting',
     }
 ]
 </script>

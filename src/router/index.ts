@@ -13,43 +13,59 @@ const router = createRouter({
             component: () => import('../pages/editor-layout.vue'),
             children: [
                 {
-                    name: 'editorHome',
+                    name: 'editor-home',
                     path: '',
                     component: () => import('../pages/editor-home.vue')
                 },
                 {
-                    name: 'scheduleEditor',
+                    name: 'editor-schedule',
                     path: 'schedule',
                     component: () => import('../pages/editor-schedule.vue')
                 },
                 {
-                    name: 'patternEditor',
+                    name: 'editor-pattern',
                     path: 'pattern',
                     component: () => import('../pages/editor-pattern.vue')
                 },
                 {
-                    name: 'overrideEditor',
+                    name: 'editor-override',
                     path: 'override',
                     component: () => import('../pages/editor-override.vue')
                 },
                 {
-                    name: 'drawEditor',
+                    name: 'editor-draw',
                     path: 'draw',
                     component: () => import('../pages/editor-draw.vue')
                 },
                 {
-                    name: 'widgetEditor',
+                    name: 'editor-widget',
                     path: 'widget',
                     component: () => import('../pages/editor-widget.vue')
 
                 },
                 {
-                    name: 'setting',
+                    name: 'editor-setting',
                     path: 'setting',
                     component: () => import('../pages/editor-setting.vue')
                 }
             ]
         },
+        {
+            name: 'draw',
+            path: '/draw',
+            children:[
+                {
+                    name: 'draw-home',
+                    path: '',
+                    component: () => import('../pages/draw-home.vue')
+                },
+                {
+                    name: 'draw-float',
+                    path: 'float',
+                    component: () => import('../pages/draw-float.vue')
+                }
+            ]
+        }
 
     ]
 })
