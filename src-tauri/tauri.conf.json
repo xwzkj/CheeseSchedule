@@ -28,7 +28,7 @@
       {
         "label": "draw",
         "title": "奶酪课程表-抽签",
-        "url": "/#/draw",
+        "url": "/#/draw/float",
         "alwaysOnTop": true,
         "transparent": true,
         "decorations": false,

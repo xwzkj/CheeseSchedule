@@ -1,23 +1,23 @@
 <template>
     <div class="h-100vh w-100vw flex justify-center items-center">
-        <div class="h-90% w-90% bg-white rounded-1rem p-1rem 
+        <div class="h-90% w-90% bg-white rounded-1rem p-2rem 
     flex flex-col justify-center outer">
-            <div class="text-3rem color-#777">
+            <div class="text-3rem color-#555">
                 从{{ drawStore.enabledCandidates.length }}人中随机抽选：
             </div>
-            <div class="text-6rem text-align-center">
+            <div class="text-6rem text-align-center result" ref="result">
                 {{ drawResult }}
             </div>
             <div class="text-1.5rem color-#777">
-                动态概率{{ scheduleStore.setting.drawDynamicProbability ? "已" : "未" }}启用
-                防止重复{{ scheduleStore.setting.drawPreventDuplicate ? "已" : "未" }}启用
+                {{ scheduleStore.setting.drawDynamicProbability ? "✅" : "❌" }}动态概率<br/>
+                {{ scheduleStore.setting.drawPreventDuplicate ? "✅" : "❌" }}防止重复<br/>
                 <span v-if="scheduleStore.setting.drawPreventDuplicate">
                     本轮还剩：{{ drawStore.availableCandidates.length }}人
                 </span>
             </div>
-            <div class="flex gap-2">
-                <n-button @click="draw" type="primary" secondary>重新抽选</n-button>
-                <n-button @click="router.push({ name: 'draw-float' })" secondary>关闭窗口</n-button>
+            <div class="flex gap-2 m-t-1rem">
+                <n-button @click="draw" type="primary" size="large" secondary>重新抽选</n-button>
+                <n-button @click="router.push({ name: 'draw-float' })" size="large" secondary>关闭窗口</n-button>
             </div>
         </div>
     </div>
@@ -27,26 +27,30 @@
 import { LogicalSize } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
-import { onMounted, ref } from "vue";
+import { onMounted, ref, useTemplateRef } from "vue";
 import { NButton } from "naive-ui";
 
 import router from "../router";
 import { useDrawStore } from "../stores/drawStore";
 import { useScheduleStore } from "../stores/scheduleStore";
+import { sleep } from "../tools/tool";
 
 const drawStore = useDrawStore();
 const scheduleStore = useScheduleStore();
-let drawResult = ref("-");
+let drawResult = ref("刘华强");
+const result = useTemplateRef('result')
 
 onMounted(async () => {
     const webviewWindow = getCurrentWebviewWindow();
     await webviewWindow.setSize(new LogicalSize(800, 600));
-    webviewWindow.center();
-    webviewWindow.setAlwaysOnTop(false);
+    await webviewWindow.center();
+    await sleep(50)
     draw()
 });
 
 async function draw() {
+    result.value!.style.transform = 'scale(0.85)'
+
     if (drawStore.availableCandidates.length === 0) {
         drawStore.newRound()
     }
@@ -57,17 +61,22 @@ async function draw() {
             if (drawResult.value == "") { // 抽选出现问题
                 break
             }
-            await new Promise(resolve => setTimeout(resolve, delay))
+            await sleep(delay)
             delay += 50
         }
     }
     drawResult.value = drawStore.draw(scheduleStore.setting.drawDynamicProbability)?.name ?? "抽选失败"
     scheduleStore.save(true)
+    result.value!.style.transform = 'scale(1)'
 }
 </script>
 
 <style scoped>
 .outer {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.result {
+  transition: transform 0.5s ease;
 }
 </style>

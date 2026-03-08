@@ -3,7 +3,7 @@
     flex justify-center items-center">
         <div ref="button"
         class="w-90% h-90% rounded-0.5rem
-        flex justify-center items-center" @click="() => router.push({ name: 'draw-home' })">
+        flex justify-center items-center cursor-pointer" @click="() => router.push({ name: 'draw-home' })">
             <div class="text-0.8rem select-none">抽签</div>
         </div>
     </div>
@@ -19,7 +19,6 @@ onMounted(async () => {
     const webviewWindow = getCurrentWebviewWindow();
     const monitor = await primaryMonitor();
     await webviewWindow.setSize(new LogicalSize(35, 35));
-    await webviewWindow.setAlwaysOnTop(true);
     await webviewWindow.setPosition(new PhysicalPosition(2, monitor?.workArea.size.height as number / 3 * 2));
     button.value!.style.backgroundColor = '#dda300ee' // 防止切换页面时出现闪烁
 });
