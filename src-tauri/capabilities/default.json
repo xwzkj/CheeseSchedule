@@ -21,6 +21,7 @@
     "core:window:allow-hide",
     "core:window:allow-center",
     "fs:default",
+    "fs:write-all",
     "opener:default",
     "process:default",
     "autostart:default",
@@ -32,6 +33,7 @@
     "global-shortcut:allow-is-registered",
     "global-shortcut:allow-register",
     "global-shortcut:allow-unregister",
-    "global-shortcut:allow-unregister-all"
+    "global-shortcut:allow-unregister-all",
+    "dialog:default"
   ]
 }

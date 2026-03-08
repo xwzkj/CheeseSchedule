@@ -20,9 +20,11 @@ export const useScheduleStore = defineStore('schedule', () => {
         timeOffset: 0, // 时间偏移量 单位：秒
         drawDynamicProbability: true, // 是否启用动态概率
         drawPreventDuplicate: true, // 是否阻止在同一轮中重复抽中某人
+        password: '', // 密码 以sha256存储
     })
     let drawCandidates = ref<candidate[]>([]) // 抽签候选人 在该此处由init统一从配置文件中读取，在drawStore中使用
 
+    const inited = ref(false) // 是否初始化完成
     const today = ref(updateToday())
     const patterns = ref<Pattern[]>([]) // 时间模式
     const schedule = ref<Schedule[]>([]) // 所有的课程表
@@ -178,6 +180,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         }
         currentScheduleId.value = getCurrentScheduleId()
         __refreshActive()
+        inited.value = true
     }
     init()
     listen("updated", init)
@@ -378,5 +381,6 @@ export const useScheduleStore = defineStore('schedule', () => {
         scheduleOverride,
         setting,
         drawCandidates,
+        inited
     }
 })

@@ -55,20 +55,46 @@
                 <n-slider v-model:value="scheduleStore.setting.heightFactor" :min="0.3" :max="1" :step="0.01" />
             </div>
         </setting-item>
+        <n-divider title-placement="left" class="m-y-0.5rem!">身份验证</n-divider>
+        <setting-item t1="设置密码" t2="用于锁定编辑器" :actionOnClick="() => showPasswordEditor = true"></setting-item>
+
+        <n-modal v-model:show="showPasswordEditor">
+            <n-card style="width: 600px" title="密码设置" :bordered="false" size="huge" role="dialog" aria-modal="true">
+                <div v-if="scheduleStore.setting.password">已启用锁定，设置密码为空以关闭</div>
+                <div v-else>未启用锁定，设置密码以开启</div>
+                <div class="m-b-0.5rem">请在下方输入新密码：</div>
+                <div class="flex">
+                    <n-input v-model:value="password" type="password" show-password-on="click" placeholder="请输入新密码" />
+                    <n-button type="primary" @click="setPassword" secondary>确认</n-button>
+                </div>
+                <n-divider />
+                <div class="m-b-0.5rem">你可以选择生成密钥文件，保存在可移动设备（如U盘）的根目录以快速解锁编辑器</div>
+                <n-button type="primary" @click="saveKeyFile" secondary>生成密钥文件</n-button>
+                <template #footer>
+
+                </template>
+            </n-card>
+        </n-modal>
     </div>
 </template>
 
 <script setup lang="ts">
 import { revealItemInDir } from '@tauri-apps/plugin-opener';
 import { invoke } from '@tauri-apps/api/core';
+import { save } from '@tauri-apps/plugin-dialog'
+import { writeTextFile } from '@tauri-apps/plugin-fs'
 
-import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown, NDivider, NSwitch } from 'naive-ui'
+
+import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown, NDivider, NSwitch, NModal, NCard, NInput } from 'naive-ui'
 import settingItem from '../component/settingItem.vue'
 import { useScheduleStore } from '../stores/scheduleStore'
 import { onMounted, ref, watch } from 'vue';
+import CryptoJS from 'crypto-js'
 const scheduleStore = useScheduleStore()
 const NMessage = useMessage()
 
+let showPasswordEditor = ref(false)
+let password = ref('')
 let scheduleCount = ref(scheduleStore.schedule.length)
 onMounted(() => {
     watch(() => scheduleStore.setting.timeOffset, (value) => {
@@ -96,6 +122,30 @@ async function openConfigDir() {
         await scheduleStore.save()
     }
     await revealItemInDir(filePath);
+}
+
+async function setPassword() {
+    if (password.value) {
+        scheduleStore.setting.password = CryptoJS.SHA256(password.value).toString()
+    } else {
+        scheduleStore.setting.password = ''
+    }
+    console.log(scheduleStore.setting.password)
+    await scheduleStore.save()
+}
+
+// 保存解锁编辑器用的密钥文件
+async function saveKeyFile() {
+    try {
+        const filePath = await save({
+            defaultPath: "cheese-schedule.key"
+        })
+        if (!filePath) return
+        await writeTextFile(filePath, scheduleStore.setting.password)
+        NMessage.success('已生成密钥文件')
+    } catch (error) {
+        NMessage.error('生成密钥文件失败')
+    }
 }
 </script>
 
