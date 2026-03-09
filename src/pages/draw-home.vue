@@ -1,6 +1,6 @@
 <template>
     <div class="h-100vh w-100vw flex justify-center items-center">
-        <div class="h-90% w-90% bg-white rounded-1rem p-2rem 
+        <div class="h-95% w-95% bg-white rounded-1rem p-2rem 
     flex flex-col justify-center outer">
             <div class="text-3rem color-#555">
                 从{{ drawStore.enabledCandidates.length }}人中随机抽选：
@@ -42,11 +42,15 @@ let drawResult = ref("刘华强");
 const result = useTemplateRef('result')
 
 onMounted(async () => {
-    const webviewWindow = getCurrentWebviewWindow()
-    await webviewWindow.setSize(new LogicalSize(800, 600))
-    await webviewWindow.center()
-    await webviewWindow.setFocus()
-    webviewWindow.show()
+    try {
+        const webviewWindow = getCurrentWebviewWindow()
+        await webviewWindow.setSize(new LogicalSize(730, 550))
+        await webviewWindow.center()
+        await webviewWindow.setFocus()
+        await webviewWindow.show()
+    } catch (e) {
+        console.error(e)
+    }
     listen('draw', draw)
     await sleep(50)
     draw()

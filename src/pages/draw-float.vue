@@ -19,20 +19,22 @@ import { listen } from "@tauri-apps/api/event";
 const button = useTemplateRef('button')
 const scheduleStore = useScheduleStore()
 onMounted(async () => {
-    const webviewWindow = getCurrentWebviewWindow();
-    const monitor = await primaryMonitor();
-    await webviewWindow.setSize(new LogicalSize(35, 35));
-    await webviewWindow.setPosition(new PhysicalPosition(2, monitor?.workArea.size.height as number / 3 * 2));
+    try {
+        const webviewWindow = getCurrentWebviewWindow();
+        const monitor = await primaryMonitor();
+        await webviewWindow.setSize(new LogicalSize(35, 35));
+        await webviewWindow.setPosition(new PhysicalPosition(2, Math.floor(monitor?.workArea.size.height as number / 3 * 2)));
+        watch(() => scheduleStore.setting.drawSmallWindowEnabled, (enabled) => {
+            if (enabled) {
+                webviewWindow.show()
+            } else {
+                webviewWindow.hide()
+            }
+        }, { immediate: true })
+    } catch (e) {
+        console.error(e)
+    }
     listen('draw', () => router.push({ name: 'draw-home' }))
-
-    watch(() => scheduleStore.setting.drawSmallWindowEnabled, (enabled) => {
-        if (enabled) {
-            webviewWindow.show()
-        } else {
-            webviewWindow.hide()
-        }
-    }, { immediate: true })
-
     button.value!.style.backgroundColor = '#dda300ee' // 防止切换页面时出现闪烁
 });
 </script>
