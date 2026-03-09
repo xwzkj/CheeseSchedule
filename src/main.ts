@@ -18,8 +18,10 @@ createApp(App)
 async function initShortcut() {
     try {
         if (getCurrentWebviewWindow().label == 'draw') {
+            // Ctrl+Alt+D 抽签快捷键  Ctrl+Alt+E 关闭抽签窗口快捷键
             if(!(await isRegistered('CommandOrControl+Alt+D'))){
                 await register('CommandOrControl+Alt+D', () => emit('draw'))
+                await register('CommandOrControl+Alt+E', () => emit('close-draw-window'))
             }
             window.addEventListener('beforeunload', () => unregisterAll())
         }

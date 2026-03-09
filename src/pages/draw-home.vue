@@ -17,7 +17,7 @@
             </div>
             <div class="flex gap-2 m-t-1rem">
                 <n-button @click="draw" type="primary" size="large" secondary>重新抽选</n-button>
-                <n-button @click="router.push({ name: 'draw-float' })" size="large" secondary>关闭窗口</n-button>
+                <n-button @click="closeWindow" size="large" secondary>关闭窗口</n-button>
             </div>
         </div>
     </div>
@@ -46,19 +46,24 @@ onMounted(async () => {
         const webviewWindow = getCurrentWebviewWindow()
         await webviewWindow.setSize(new LogicalSize(730, 550))
         await webviewWindow.center()
-        await webviewWindow.setFocus()
         await webviewWindow.show()
+        // await webviewWindow.setFocus()
     } catch (e) {
         console.error(e)
     }
     listen('draw', draw)
+    listen('close-draw-window', closeWindow)
     await sleep(50)
     draw()
 });
 
+function closeWindow(){
+    router.push({ name: 'draw-float' })
+}
+
 window.addEventListener('keydown', function (e) {
     if (e.key == 'Escape') {
-        router.push({ name: 'draw-float' })
+        closeWindow()
     }
 })
 
@@ -89,6 +94,7 @@ async function draw() {
         scheduleStore.save(true)
         result.value!.style.transform = 'scale(1)'
     } finally { // 防止死锁
+        await sleep(500)
         drawLock = false
     }
 }
