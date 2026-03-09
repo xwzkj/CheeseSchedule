@@ -30,14 +30,14 @@ export const useDrawStore = defineStore('draw', () => {
      * @param justTry 是否仅尝试，不计入抽选历史，默认false
      * @returns 抽中的候选人 如果可用候选人为空则返回undefined
      */
-    function draw(dynamicProbability: boolean = false , justTry: boolean = false): candidate | undefined {
+    function draw(dynamicProbability: boolean = false, justTry: boolean = false): candidate | undefined {
         if (availableCandidates.value.length === 0) {
             return
         }
         if (dynamicProbability == false) { // 每个人概率相同
             let index = Math.floor(Math.random() * availableCandidates.value.length)
             let drown = availableCandidates.value[index]
-            if(justTry == false){
+            if (justTry == false) {
                 drown.isDrawnThisRound = true
                 drown.historyCount++
             }
@@ -46,7 +46,7 @@ export const useDrawStore = defineStore('draw', () => {
             let weights: number[] = [] // 每个人的权重
             let totalWeight = 0 // 总权重
             for (let i = 0; i < availableCandidates.value.length; i++) {
-                weights.push(1 / ((availableCandidates.value[i].historyCount + 1) ** 2))
+                weights.push(1 / (availableCandidates.value[i].historyCount + 1))
                 totalWeight += weights[i]
             }
 
