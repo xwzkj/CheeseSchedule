@@ -37,7 +37,7 @@
         "minimizable": false,
         "maximizable": false,
         "closable": false,
-        "resizable": true,
+        "resizable": false,
         "width": 60,
         "height": 60
       }
