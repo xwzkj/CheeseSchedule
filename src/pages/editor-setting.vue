@@ -52,6 +52,11 @@
                 <n-switch v-model:value="scheduleStore.setting.drawPreventDuplicate" />
             </div>
         </setting-item>
+        <setting-item t1="课间防作弊" t2="开启后，课间时的抽选将不被计入历史记录">
+            <div>
+                <n-switch v-model:value="scheduleStore.setting.drawPreventCheating" />
+            </div>
+        </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">个性化</n-divider>
         <setting-item t1="主窗口缩放比例" t2="默认为1，与系统缩放乘算">
             <div class="w-7rem">

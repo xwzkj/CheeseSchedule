@@ -11,9 +11,12 @@
             <div class="text-1.5rem color-#777">
                 {{ scheduleStore.setting.drawDynamicProbability ? "✅" : "❌" }}动态概率<br />
                 {{ scheduleStore.setting.drawPreventDuplicate ? "✅" : "❌" }}防止重复<br />
-                <span v-if="scheduleStore.setting.drawPreventDuplicate">
+                <div v-if="scheduleStore.setting.drawPreventDuplicate">
                     本轮还剩：{{ drawStore.availableCandidates.length }}人
-                </span>
+                </div>
+                <div v-if="isFake">
+                    课间防作弊已开启，本次抽选处于课间，未被计入历史
+                </div>
             </div>
             <div class="flex gap-2 m-t-1rem">
                 <n-button @click="draw" type="primary" size="large" secondary>重新抽选</n-button>
@@ -57,7 +60,7 @@ onMounted(async () => {
     draw()
 });
 
-function closeWindow(){
+function closeWindow() {
     router.push({ name: 'draw-float' })
 }
 
@@ -68,6 +71,7 @@ window.addEventListener('keydown', function (e) {
 })
 
 let drawLock = false // 互斥锁
+let isFake = false // 是否为虚假抽选，如课间抽着玩
 async function draw() {
     if (drawLock) {
         return
@@ -90,7 +94,8 @@ async function draw() {
                 delay += 50
             }
         }
-        drawResult.value = drawStore.draw(scheduleStore.setting.drawDynamicProbability)?.name ?? "抽选失败"
+        isFake = scheduleStore.setting.drawPreventCheating && !scheduleStore.lessonStatus
+        drawResult.value = drawStore.draw(scheduleStore.setting.drawDynamicProbability, isFake)?.name ?? "抽选失败"
         scheduleStore.save(true)
         result.value!.style.transform = 'scale(1)'
     } finally { // 防止死锁
