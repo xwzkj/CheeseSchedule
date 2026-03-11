@@ -25,6 +25,13 @@ export const useDrawStore = defineStore('draw', () => {
         scheduleStore.drawCandidates.forEach(i => i.isDrawnThisRound = false)
     }
     /**
+     * 重置抽签历史，将所有候选人的historyCount设为0
+     */
+    function resetHistory() {
+        scheduleStore.drawCandidates.forEach(i => i.historyCount = 0)
+    }
+
+    /**
      * 抽签
      * @param dynamicProbability 启用动态概率
      * @param justTry 是否仅尝试，不计入抽选历史，默认false
@@ -77,5 +84,6 @@ export const useDrawStore = defineStore('draw', () => {
         draw,
         addCandidate,
         newRound,
+        resetHistory,
     }
 })

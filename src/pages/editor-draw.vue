@@ -28,10 +28,17 @@
                     <n-button type="error" secondary @click="removeCandidate(index)">删除</n-button>
                 </div>
             </div>
-            <div v-if="scheduleStore.drawCandidates.length == 0" class="w-full text-center text-#999 text-1.2rem">无候选人，请在下方添加</div>
+            <div v-if="scheduleStore.drawCandidates.length == 0" class="w-full text-center text-#999 text-1.2rem">
+                无候选人，请在下方添加</div>
         </n-scrollbar>
         <div class="h-4rem w-full bg-#f7f8f9">
             <n-flex class="w-full h-full p-r-2rem" :justify="'end'" :align="'center'">
+                <n-popconfirm @positive-click="resetHistory()">
+                    <template #trigger>
+                        <n-button secondary>重置抽签历史</n-button>
+                    </template>
+                    该操作会将所有候选人的历史抽中次数设为0，将重置动态概率，无法恢复，是否继续？
+                </n-popconfirm>
                 <n-button secondary @click="newRound()">开启新一轮次</n-button>
                 <n-button secondary type="primary" @click="() => showModalAddCandidate = true">添加候选人</n-button>
             </n-flex>
@@ -54,7 +61,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { NScrollbar, NButton, NSwitch, NCheckbox, NFlex, NModal, NCard, NInput } from 'naive-ui'
+import { NScrollbar, NButton, NSwitch, NCheckbox, NFlex, NModal, NCard, NInput, NPopconfirm } from 'naive-ui'
 import { useDrawStore } from '../stores/drawStore'
 import { useScheduleStore } from '../stores/scheduleStore'
 const drawStore = useDrawStore()
@@ -70,6 +77,10 @@ function removeCandidate(index: number) {
 function newRound() {
     drawStore.newRound()
     window.$NMessageApi.success('已开启新一轮抽签')
+}
+function resetHistory() {
+    drawStore.resetHistory()
+    window.$NMessageApi.success('已重置抽签历史')
 }
 
 function addCandidates() {
