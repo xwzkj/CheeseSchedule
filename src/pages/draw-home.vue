@@ -79,7 +79,8 @@ async function draw() {
     drawLock = true
     try {
         result.value!.style.transform = 'scale(0.85)'
-
+        
+        isFake = scheduleStore.setting.drawPreventCheating && !scheduleStore.lessonStatus
         if (drawStore.availableCandidates.length === 0) {
             drawStore.newRound()
         }
@@ -94,7 +95,6 @@ async function draw() {
                 delay += 50
             }
         }
-        isFake = scheduleStore.setting.drawPreventCheating && !scheduleStore.lessonStatus
         drawResult.value = drawStore.draw(scheduleStore.setting.drawDynamicProbability, isFake)?.name ?? "抽选失败"
         scheduleStore.save(true)
         result.value!.style.transform = 'scale(1)'
