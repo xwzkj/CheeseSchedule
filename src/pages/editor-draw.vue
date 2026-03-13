@@ -84,18 +84,18 @@ function resetHistory() {
 }
 
 function addCandidates() {
-    if (newCandidates.value == '') {
+    if (newCandidates.value.trim() == '') {
         window.$NMessageApi.error('请输入文本')
         return
     }
     let candidates = newCandidates.value.split('\n')
     let trueCount = 0, falseCount = 0
     for (let i = 0; i < candidates.length; i++) {
-        if (candidates[i] == '') {
+        if (candidates[i].trim() == '') {
             continue
         }
         if (drawStore.addCandidate({
-            name: candidates[i],
+            name: candidates[i].trim(),
             isEnabled: true,
             historyCount: 0,
             isDrawnThisRound: false,
