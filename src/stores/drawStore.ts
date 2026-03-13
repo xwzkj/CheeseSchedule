@@ -25,10 +25,11 @@ export const useDrawStore = defineStore('draw', () => {
         scheduleStore.drawCandidates.forEach(i => i.isDrawnThisRound = false)
     }
     /**
-     * 重置抽签历史，将所有候选人的historyCount设为0
+     * 重置抽签历史，将所有候选人的historyCount设为0，并开启新一轮
      */
     function resetHistory() {
         scheduleStore.drawCandidates.forEach(i => i.historyCount = 0)
+        newRound()
     }
 
     /**
