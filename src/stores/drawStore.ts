@@ -69,6 +69,10 @@ export const useDrawStore = defineStore('draw', () => {
                 }
                 random -= weights[i]
             }
+            // 处理可能存在的浮点数精度问题导致的无法抽中最后一人的问题
+            if (!drown && availableCandidates.value.length > 0) {
+                drown = availableCandidates.value[availableCandidates.value.length - 1];
+            }
 
             if (drown && justTry == false) {
                 drown.isDrawnThisRound = true
