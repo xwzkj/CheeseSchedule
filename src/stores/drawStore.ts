@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
-import { computed } from 'vue'
-
+import { computed, watch } from 'vue'
+import { sleep } from '../tools/tool'
 import { useScheduleStore } from './scheduleStore'
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
 
 
 export const useDrawStore = defineStore('draw', () => {
@@ -10,6 +11,20 @@ export const useDrawStore = defineStore('draw', () => {
     const availableCandidates = computed(() => scheduleStore.drawCandidates.filter(i => (i.isEnabled && !(i.isDrawnThisRound && scheduleStore.setting.drawPreventDuplicate))))
     // 已启用的候选人
     const enabledCandidates = computed(() => scheduleStore.drawCandidates.filter(i => i.isEnabled))
+
+    // 处理课前自动开启新轮次的逻辑
+    if (getCurrentWebviewWindow().label == 'draw') {
+        watch(() => scheduleStore.lessonStatus, async () => {
+            if (scheduleStore.lessonStatus && scheduleStore.setting.drawAutoNewRound) { // 当前是上课状态，且已开启自动新轮次
+                // 确保store处于稳定状态而不是刚读取配置时的不稳定状态
+                if (Date.now() - scheduleStore.initedTime > 1000) {
+                    newRound()
+                    await sleep(1000) // 防止导致其他读取lessonStatus的地方永远判定为不稳定状态
+                    scheduleStore.save(true)
+                }
+            }
+        })
+    }
     function addCandidate(c: candidate): boolean {
         // 如果已存在同名 返回false
         if (scheduleStore.drawCandidates.find(i => i.name == c.name)) {

@@ -52,6 +52,11 @@
                 <n-switch v-model:value="scheduleStore.setting.drawPreventDuplicate" />
             </div>
         </setting-item>
+        <setting-item t1="自动开启新轮次" t2="在每节课开始时自动开启新一轮抽选">
+            <div>
+                <n-switch v-model:value="scheduleStore.setting.drawAutoNewRound" />
+            </div>
+        </setting-item>
         <setting-item t1="课间防作弊" t2="开启后，课间时的抽选将不被计入历史记录">
             <div>
                 <n-switch v-model:value="scheduleStore.setting.drawPreventCheating" />
