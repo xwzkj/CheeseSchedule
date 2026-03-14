@@ -237,15 +237,17 @@ onMounted(() => {
     initWindow();
     // 上下课自动切换窗口置顶
     watch(() => scheduleStore.lessonStatus, tool.debounce(async () => {
-        if (!scheduleStore.lessonStatus) {// 下课状态
-            NMessage.success("下课了!")
-            await setTop(true)
-            console.log("下课了，自动窗口置顶");
-        } else {
-            NMessage.success("上课了!", { duration: 5000 })
-            await tool.sleep(5000)
-            await setTop(false)
-            console.log("上课了，取消窗口置顶");
+        if (Date.now() - scheduleStore.initedTime > 1000) {
+            if (!scheduleStore.lessonStatus) {// 下课状态
+                NMessage.success("下课了!")
+                await setTop(true)
+                console.log("下课了，自动窗口置顶");
+            } else {
+                NMessage.success("上课了!", { duration: 5000 })
+                await tool.sleep(5000)
+                await setTop(false)
+                console.log("上课了，取消窗口置顶");
+            }
         }
     }, 500), { immediate: true })
     // 点击切换窗口置顶
