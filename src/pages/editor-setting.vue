@@ -73,6 +73,11 @@
                 <n-slider v-model:value="scheduleStore.setting.heightFactor" :min="0.3" :max="1" :step="0.01" />
             </div>
         </setting-item>
+        <setting-item t1="主题色" t2="选择一个主题色，将生成配色方案 | 默认值：#ce9e04">
+            <div class="w-7rem">
+                <n-color-picker v-model:value="scheduleStore.setting.themeColor" :show-alpha="false" :modes="['hex']" />
+            </div>
+        </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">身份验证</n-divider>
         <setting-item t1="设置密码" t2="用于锁定编辑器" :actionOnClick="() => showPasswordEditor = true"></setting-item>
 
@@ -103,7 +108,7 @@ import { save } from '@tauri-apps/plugin-dialog'
 import { writeTextFile } from '@tauri-apps/plugin-fs'
 
 
-import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown, NDivider, NSwitch, NModal, NCard, NInput } from 'naive-ui'
+import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown, NDivider, NSwitch, NModal, NCard, NInput, NColorPicker } from 'naive-ui'
 import settingItem from '../component/settingItem.vue'
 import { useScheduleStore } from '../stores/scheduleStore'
 import { onMounted, ref, watch } from 'vue';

@@ -11,6 +11,7 @@
     "tauri:build": "tauri build --verbose"
   },
   "dependencies": {
+    "@ant-design/colors": "^8.0.1",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-autostart": "~2",
     "@tauri-apps/plugin-dialog": "~2.6.0",

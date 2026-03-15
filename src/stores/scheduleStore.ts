@@ -24,6 +24,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         drawPreventCheating: true, // 是否开启课间防作弊模式
         drawSmallWindowEnabled: true, // 是否启用悬浮按钮
         password: '', // 密码 以sha256存储
+        themeColor: '#ce9e04',// 主题色
     })
     let drawCandidates = ref<candidate[]>([]) // 抽签候选人 在该此处由init统一从配置文件中读取，在drawStore中使用
 

@@ -15,18 +15,20 @@
 
 <script setup lang="ts">
 import { watch, useTemplateRef, onMounted } from 'vue'
+import { useThemeVars } from 'naive-ui';
 const props = defineProps<{
     name: string,
     time: string | null,
     active: 0 | 1 | 2 | undefined
 }>()
+const themeVars = useThemeVars()
 const outerEle = useTemplateRef('outer')
 onMounted(() => {
     watch(() => props.active, () => {
         let setColorAndScroll = () => {
             let val = props.active
             if (outerEle.value) {
-                outerEle.value.style.setProperty('--bg-color', val == 0 ? 'white' : val == 1 ? '#66ccff' : '#55efc4');
+                outerEle.value.style.setProperty('--bg-color', val == 0 ? 'white' : val == 1 ? 'var(--color-1)' : 'var(--color-3)');
                 if (val as any > 0) {// 切换到这节课
                     window?.$outerScrollbar?.value?.scrollTo({ top: outerEle.value.offsetTop - 57, behavior: 'smooth' })
                     console.log('课程切换，课程列表滚动到当前课程');

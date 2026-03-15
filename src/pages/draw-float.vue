@@ -35,7 +35,7 @@ onMounted(async () => {
         console.error(e)
     }
     listen('draw', () => router.push({ name: 'draw-home' }))
-    button.value!.style.backgroundColor = '#dda300ee' // 防止切换页面时出现闪烁
+    button.value!.style.backgroundColor = 'var(--color-4)' // 防止切换页面时出现闪烁
 });
 </script>
 
