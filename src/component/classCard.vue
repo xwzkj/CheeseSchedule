@@ -15,13 +15,11 @@
 
 <script setup lang="ts">
 import { watch, useTemplateRef, onMounted } from 'vue'
-import { useThemeVars } from 'naive-ui';
 const props = defineProps<{
     name: string,
     time: string | null,
     active: 0 | 1 | 2 | undefined
 }>()
-const themeVars = useThemeVars()
 const outerEle = useTemplateRef('outer')
 onMounted(() => {
     watch(() => props.active, () => {
