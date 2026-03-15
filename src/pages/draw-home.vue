@@ -9,8 +9,16 @@
                 {{ drawResult }}
             </div>
             <div class="text-1.5rem color-#777">
-                {{ scheduleStore.setting.drawDynamicProbability ? "✅" : "❌" }}动态概率<br />
-                {{ scheduleStore.setting.drawPreventDuplicate ? "✅" : "❌" }}防止重复<br />
+                <div class="flex-center">
+                    <HugeiconsCheckmarkSquare02 class="icon" v-if="scheduleStore.setting.drawDynamicProbability" />
+                    <HugeiconsCancelSquare class="icon" v-else />
+                    <div>动态概率</div>
+                </div>
+                <div class="flex-center">
+                    <HugeiconsCheckmarkSquare02 class="icon" v-if="scheduleStore.setting.drawPreventDuplicate" />
+                    <HugeiconsCancelSquare class="icon" v-else />
+                    <div>防止重复</div>
+                </div>
                 <div v-if="scheduleStore.setting.drawPreventDuplicate">
                     本轮还剩：{{ drawStore.availableCandidates.length }}人
                 </div>
@@ -29,6 +37,7 @@
 <script setup lang="ts">
 import { LogicalSize } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { listen } from "@tauri-apps/api/event";
 
 import { onMounted, ref, useTemplateRef } from "vue";
 import { NButton } from "naive-ui";
@@ -37,7 +46,9 @@ import router from "../router";
 import { useDrawStore } from "../stores/drawStore";
 import { useScheduleStore } from "../stores/scheduleStore";
 import { sleep } from "../tools/tool";
-import { listen } from "@tauri-apps/api/event";
+
+import HugeiconsCancelSquare from '~icons/hugeicons/cancel-square';
+import HugeiconsCheckmarkSquare02 from '~icons/hugeicons/checkmark-square-02';
 
 const drawStore = useDrawStore();
 const scheduleStore = useScheduleStore();
@@ -79,7 +90,7 @@ async function draw() {
     drawLock = true
     try {
         result.value!.style.transform = 'scale(0.85)'
-        
+
         isFake = scheduleStore.setting.drawPreventCheating && !scheduleStore.lessonStatus
         if (drawStore.availableCandidates.length === 0) {
             drawStore.newRound()
@@ -107,10 +118,19 @@ async function draw() {
 
 <style scoped>
 .outer {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .result {
     transition: transform 0.5s ease;
+}
+
+.icon {
+    color: var(--color-6);
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
 }
 </style>
