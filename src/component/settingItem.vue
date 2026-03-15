@@ -13,11 +13,19 @@
             <div class="flex items-center">
                 <slot>
                     <n-input v-model:value="inputValue" v-if="props.needInput" placeholder="请输入" />
-                    <n-button class="button" secondary circle type="primary">
+                    <n-button class="button" secondary circle type="primary" @click="props.actionOnClick"
+                        v-if="!props.needInput">
                         <template #icon>
                             <n-icon>
-                                <HugeiconsLinkSquare01 @click="props.actionOnClick" v-if="!props.needInput" />
-                                <HugeiconsCheckmarkSquare01 @click="() => props.actionOnClick?.(inputValue)" v-else />
+                                <HugeiconsLinkSquare01 />
+                            </n-icon>
+                        </template>
+                    </n-button>
+                    <n-button class="button" secondary circle type="primary"
+                        @click="() => props.actionOnClick?.(inputValue)" v-else>
+                        <template #icon>
+                            <n-icon>
+                                <HugeiconsCheckmarkSquare01 />
                             </n-icon>
                         </template>
                     </n-button>
