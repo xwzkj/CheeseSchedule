@@ -23,8 +23,9 @@ export const useScheduleStore = defineStore('schedule', () => {
         drawAutoNewRound: true, // 是否在每节课开始时自动开启新轮次
         drawPreventCheating: true, // 是否开启课间防作弊模式
         drawSmallWindowEnabled: true, // 是否启用悬浮按钮
-        password: '', // 密码 以sha256存储
         themeColor: '#ce9e04',// 主题色
+        password: '', // 密码 以sha256存储
+        passwordScope: ['editor-password'], // 密码作用域
     })
     let drawCandidates = ref<candidate[]>([]) // 抽签候选人 在该此处由init统一从配置文件中读取，在drawStore中使用
 

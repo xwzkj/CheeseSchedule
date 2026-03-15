@@ -18,14 +18,14 @@ const router = createRouter({
                     component: () => import('../pages/editor-home.vue')
                 },
                 {
-                    name: 'editor-schedule',
-                    path: 'schedule',
-                    component: () => import('../pages/editor-schedule.vue')
-                },
-                {
                     name: 'editor-pattern',
                     path: 'pattern',
                     component: () => import('../pages/editor-pattern.vue')
+                },
+                {
+                    name: 'editor-schedule',
+                    path: 'schedule',
+                    component: () => import('../pages/editor-schedule.vue')
                 },
                 {
                     name: 'editor-override',
@@ -47,6 +47,11 @@ const router = createRouter({
                     name: 'editor-setting',
                     path: 'setting',
                     component: () => import('../pages/editor-setting.vue')
+                },
+                {
+                    name: 'editor-password',
+                    path: 'password',
+                    component: () => import('../pages/editor-password.vue')
                 }
             ]
         },

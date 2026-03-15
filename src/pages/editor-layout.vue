@@ -17,10 +17,10 @@
         </n-scrollbar>
 
         <!-- 编辑器锁定 -->
-        <div v-else class="fixed left-0 top-0 bottom-0 right-0 z-100 
+        <div v-else class="flex-1 h-100vh z-100 
         bg-white p-1rem justify-center items-center flex flex-col gap-0.5rem">
-            <HugeiconsLock class="text-5rem"/>
-            <div class="text-3rem">编辑器已锁定</div>
+            <HugeiconsLock class="text-5rem" />
+            <div class="text-3rem">该页面被锁定</div>
             <div class="w-15rem flex">
                 <n-input v-model:value="password" type="password" show-password-on="click" placeholder="请输入密码" />
                 <n-button type="primary" @click="checkPassword" secondary>解锁</n-button>
@@ -44,23 +44,35 @@ import CryptoJS from 'crypto-js'
 import HugeiconsLock from '~icons/hugeicons/lock';
 const route = useRoute();
 const scheduleStore = useScheduleStore();
-let selectedNow = ref('editorHome');
+let selectedNow = ref('editor-home');
 let locked = ref(false);
+let unlocked = ref(false);// 是否已经解锁过
 let password = ref('');
 function renderLink(name: string, text: string) {
     return () => h(RouterLink, { to: { name } }, () => text)
 }
-onMounted(async () => {
-    watch(() => route, (val) => {
+onMounted(() => {
+    // 路由切换
+    watch(() => route, async (val) => {
+        // 更新左侧导航栏选中项
         selectedNow.value = val.name as string;
+
+        // 密码锁定逻辑
+        while (!scheduleStore.inited) {
+            await sleep(100)
+        }
+        if (scheduleStore.setting.password) {// 是否设置了密码
+            // 如果没解锁过 并且当前页面在锁定作用域中
+            if (!unlocked.value && scheduleStore.setting.passwordScope.includes(selectedNow.value)) {
+                locked.value = true
+                checkKeyFile() // 尝试使用密钥解锁
+            } else {
+                locked.value = false
+            }
+        } else {
+            unlocked.value = true
+        }
     }, { deep: true, immediate: true });
-    while (!scheduleStore.inited) {
-        await sleep(100)
-    }
-    if (scheduleStore.setting.password) {
-        locked.value = true;
-        checkKeyFile(); // 尝试使用密钥解锁
-    }
 });
 const menuOptions: MenuOption[] = [
     {
@@ -95,7 +107,8 @@ const menuOptions: MenuOption[] = [
 
 function checkPassword() {
     if (CryptoJS.SHA256(password.value).toString() === scheduleStore.setting.password) {
-        locked.value = false;
+        locked.value = false
+        unlocked.value = true
         window.$NMessageApi.success('解锁成功');
     } else {
         window.$NMessageApi.error('密码错误');
@@ -105,7 +118,8 @@ async function checkKeyFile() {
     try {
         let hash = await invoke('read_key_from_removable')
         if (hash === scheduleStore.setting.password) {
-            locked.value = false;
+            locked.value = false
+            unlocked.value = true
             window.$NMessageApi.success('使用密钥解锁成功');
         } else {
             window.$NMessageApi.error('密钥错误');
