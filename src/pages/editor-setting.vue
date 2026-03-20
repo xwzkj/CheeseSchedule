@@ -1,6 +1,11 @@
 <template>
     <div class="p-0.5rem">
         <setting-item t1="打开配置文件所在位置" t2="可手动导入导出 / 若文件不存在会先保存再打开" :needInput="false" :actionOnClick="openConfigDir" />
+        <setting-item t1="AI API密钥" t2="若想使用AI功能，请先设置您的阿里百炼apiKey">
+            <div class="w-7rem">
+                <n-input v-model:value="scheduleStore.setting.AIapiKey" type="password" :show-password-toggle="true" />
+            </div>
+        </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">课程表</n-divider>
         <setting-item t1="多周轮换" :t2="`设置循环使用的课程表数量 | 当前：${scheduleStore.schedule.length}`">
             <div class="w-7rem flex gap-1">
@@ -79,7 +84,8 @@
             </div>
         </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">身份验证</n-divider>
-        <setting-item t1="设置密码" t2="用于锁定编辑器" :actionOnClick="() => router.push({ name: 'editor-password' })"></setting-item>
+        <setting-item t1="设置密码" t2="用于锁定编辑器"
+            :actionOnClick="() => router.push({ name: 'editor-password' })"></setting-item>
     </div>
 </template>
 
@@ -87,7 +93,7 @@
 import { revealItemInDir } from '@tauri-apps/plugin-opener';
 import { invoke } from '@tauri-apps/api/core';
 
-import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown, NDivider, NSwitch, NColorPicker } from 'naive-ui'
+import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown, NDivider, NSwitch, NColorPicker, NInput } from 'naive-ui'
 import settingItem from '../component/settingItem.vue'
 import { useScheduleStore } from '../stores/scheduleStore'
 import { onMounted, ref, watch } from 'vue';
