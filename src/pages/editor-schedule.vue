@@ -22,18 +22,21 @@
             </div>
         </div>
         <n-modal :show="showModalImportFromImage">
-            <n-card style="width: 600px" title="AI-从课程表图片导入" :bordered="false" size="huge" role="dialog"
+            <n-card style="width: 600px" title="从课程表图片导入" :bordered="false" size="huge" role="dialog"
                 aria-modal="true">
                 <div v-if="!processing" class="flex flex-col gap-1">
                     <n-upload list-type="image-card" :default-upload="false" :max="1" accept=".jpg,.jpeg,.png,.bmp"
                         @update:file-list="handleFileListChange">
                     </n-upload>
-                    <n-input v-model:value="userPrompt" placeholder="请添加您的额外要求，如：提取六班的课程表" />
+                    <n-input v-model:value="userPrompt" placeholder="请添加您的额外要求" />
                 </div>
                 <div v-else>
                     <div class="flex gap-1 items-center m-b-1rem">
                         <n-spin></n-spin>
-                        <div class="text-1rem">AI生成中...</div>
+                        <div class="text-1rem">
+                            AI生成中...
+                            <div class="color-#888">时间可能较长 您可以去喝杯咖啡</div>
+                        </div>
                     </div>
                     <n-scrollbar class="max-h-10rem" ref="modalImportFromImageScrollbar">
                         <div>
@@ -206,6 +209,7 @@ ${JSON.stringify(schedule)}
         window.$NMessageApi.error('发生错误：' + error)
     } finally {
         processing.value = false
+        showModalImportFromImage.value = false
     }
 }
 
