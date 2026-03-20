@@ -38,7 +38,7 @@
                             <div class="color-#888">时间可能较长 您可以去喝杯咖啡</div>
                         </div>
                     </div>
-                    <n-scrollbar class="max-h-10rem" ref="modalImportFromImageScrollbar">
+                    <n-scrollbar class="max-h-10rem h-10rem" ref="modalImportFromImageScrollbar">
                         <div>
                             {{ reasoningRes }}
                             <br />
