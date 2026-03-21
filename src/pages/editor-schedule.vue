@@ -1,18 +1,20 @@
 <template>
     <div class="p-1rem w-100%">
-        <div class="flex gap-2 items-center">
-            <n-dropdown :options="scheduleStore.scheduleIdOption" @select="handleSelect" trigger="click">
-                <n-button type="primary" dashed>
-                    选择课程表
-                    <template #icon>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="1.5" d="M18 9s-4.419 6-6 6s-6-6-6-6" />
-                        </svg>
-                    </template>
-                </n-button>
-            </n-dropdown>
-            当前编辑：{{ scheduleStore.scheduleIdOption[scheduleId]?.label }}
+        <div class="flex justify-between items-center">
+            <div class="flex gap-2 items-center">
+                <n-dropdown :options="scheduleStore.scheduleIdOption" @select="handleSelect" trigger="click">
+                    <n-button type="primary" dashed>
+                        选择课程表
+                        <template #icon>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="1.5" d="M18 9s-4.419 6-6 6s-6-6-6-6" />
+                            </svg>
+                        </template>
+                    </n-button>
+                </n-dropdown>
+                当前编辑：{{ scheduleStore.scheduleIdOption[scheduleId]?.label }}
+            </div>
             <n-button type="primary" @click="showModalImportFromImage = true">从课程表图片导入</n-button>
         </div>
         <div class="w-100% flex gap-1 justify-center">
@@ -22,13 +24,20 @@
             </div>
         </div>
         <n-modal :show="showModalImportFromImage">
-            <n-card style="width: 600px" title="从课程表图片导入" :bordered="false" size="huge" role="dialog"
-                aria-modal="true">
+            <n-card style="width: 600px" title="从课程表图片导入" :bordered="false" size="huge" role="dialog" aria-modal="true">
                 <div v-if="!processing" class="flex flex-col gap-1">
                     <n-upload list-type="image-card" :default-upload="false" :max="1" accept=".jpg,.jpeg,.png,.bmp"
                         @update:file-list="handleFileListChange">
                     </n-upload>
-                    <n-input v-model:value="userPrompt" placeholder="请添加您的额外要求" />
+                    <div class="flex gap-1">
+                        <div class="flex-1">
+                            <n-input v-model:value="userPrompt" placeholder="请添加您的额外要求" />
+                        </div>
+                        <div class="flex gap-1 items-center">
+                            <div>节省tokens</div>
+                            <n-switch v-model:value="saveTokens" />
+                        </div>
+                    </div>
                 </div>
                 <div v-else>
                     <div class="flex gap-1 items-center m-b-1rem">
@@ -39,9 +48,10 @@
                         </div>
                     </div>
                     <n-scrollbar class="max-h-10rem h-10rem" ref="modalImportFromImageScrollbar">
-                        <div>
+                        <div class="color-#888">
                             {{ reasoningRes }}
-                            <br />
+                        </div>
+                        <div>
                             {{ res }}
                         </div>
                     </n-scrollbar>
@@ -61,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { NDropdown, NButton, NModal, NCard, NFlex, NUpload, NScrollbar, NSpin, NInput } from 'naive-ui'
+import { NDropdown, NButton, NModal, NCard, NFlex, NUpload, NScrollbar, NSpin, NInput, NSwitch } from 'naive-ui'
 import { ref, useTemplateRef } from 'vue';
 import { OpenAI } from 'openai';
 import { useScheduleStore } from '../stores/scheduleStore';
@@ -83,6 +93,7 @@ const scheduleId = ref(scheduleStore.currentScheduleId)
 let showModalImportFromImage = ref(false)
 let modalImportFromImageScrollbar = useTemplateRef('modalImportFromImageScrollbar')
 let userPrompt = ref('')
+let saveTokens = ref(false)// 是否节省tokens
 let processing = ref(false)
 let res = ref('');
 let reasoningRes = ref(``);
@@ -123,7 +134,7 @@ async function importFromImage() {
             model: "qwen3.5-plus",
             stream: true,
             enable_thinking: true,
-            // thinking_budget: 7500,
+            ...(saveTokens.value ? { thinking_budget: 2000 } : {}),
             messages: [
                 {
                     role: "system",
@@ -166,7 +177,7 @@ ${JSON.stringify(schedule)}
 返回规则：
 先返回<true/>或<false/>来代表用户输入是否合法（如以上数据是否符合图片中的课程表，或图片是否为课程表）然后加个换行符，
 如果输入合法，返回这段json，不要返回任何额外内容，并确保json格式合法，否则程序将无法解析返回内容;
-如果输入不合法（比如图片不是课程表，图片中的课程信息多于给出的数据或给出的数据是空），返回失败原因，要求格式为30字内的纯文本
+如果输入不合法（比如图片不是课程表，图片中的课程信息多于给出的数据或给出的数据是空），返回失败原因，要求格式为100字内的纯文本
             `},
                 {
                     role: "user",
@@ -200,13 +211,15 @@ ${JSON.stringify(schedule)}
         if (res.value.startsWith('<true/>')) {
             scheduleStore.schedule[scheduleId.value] = JSON.parse(res.value.slice(7))
             window.$NMessageApi.success('导入成功，请检查后再保存')
+        } else if (res.value.startsWith('<false/>')) {
+            window.$NMessageApi.error('导入失败：' + res.value.slice(8), { duration: 60 * 1000, closable: true })
         } else {
-            window.$NMessageApi.error('导入失败：' + res.value.slice(8))
+            window.$NMessageApi.error('AI返回格式错误：' + res.value, { duration: 60 * 1000, closable: true })
         }
         console.log(reasoningRes.value)
         console.log(res.value)
     } catch (error) {
-        window.$NMessageApi.error('发生错误：' + error)
+        window.$NMessageApi.error('发生错误：' + error, { duration: 60 * 1000, closable: true })
     } finally {
         processing.value = false
         showModalImportFromImage.value = false
