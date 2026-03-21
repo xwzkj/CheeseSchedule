@@ -18,6 +18,7 @@ import { openUrl } from "@tauri-apps/plugin-opener";
 import daysLeft from "../component/widgets/daysLeft.vue";
 import clock from "../component/widgets/clock.vue";
 import dateProgress from "../component/widgets/dateProgress.vue";
+import wordCard from "../component/widgets/wordCard.vue";
 
 let updateInfo = ref<UpdateInfo>();
 let outerEle = useTemplateRef('outerEle')
@@ -40,6 +41,8 @@ function getWidgetComponent(id: string) {
             return dateProgress
         case 'clock':
             return clock
+        case 'wordCard':
+            return wordCard
         default:
             return 'div'
     }
