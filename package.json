@@ -20,6 +20,7 @@
     "@tauri-apps/plugin-opener": "~2",
     "@tauri-apps/plugin-process": "^2.3.0",
     "axios": "^1.12.2",
+    "compressorjs": "^1.2.1",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "mitt": "^3.0.1",

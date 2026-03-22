@@ -74,6 +74,7 @@
 import { NDropdown, NButton, NModal, NCard, NFlex, NUpload, NScrollbar, NSpin, NInput, NSwitch } from 'naive-ui'
 import { ref, useTemplateRef } from 'vue';
 import { OpenAI } from 'openai';
+import Compressor from 'compressorjs';
 import { useScheduleStore } from '../stores/scheduleStore';
 import daySchedule from '../component/daySchedule.vue';
 
@@ -167,10 +168,12 @@ type Schedule = {
     sun: Day
 }
 按照以上规则，补全以下数据的name字段，如与图片产生冲突以所给数据为主，返回Schedule类型的完整课程表
+
 ${JSON.stringify(schedule)}
 
 重要：
 请务必仔细核对图片中的表格结构以防错误
+如果图片缺少某些课节，请在数据的name字段中填写“空”，而不是保持空白
 如果图片中的课程是单字，请补全为两个字（如“文”=>“语文”等），但对于不确定的课程，不要补全
 只需读取图片中每天的课程名称和顺序进行填充，并忽略图片中的其他信息，如时间等
 你只可以改动name字段，不能改动其他字段，否则会导致程序崩溃
@@ -228,16 +231,34 @@ ${JSON.stringify(schedule)}
 
 const base64Result = ref('')
 
+function compressImage(file: File, options = {}): Promise<File | Blob> {
+    return new Promise((resolve, reject) => {
+        new Compressor(file, {
+            ...options,
+            success(result) {
+                resolve(result);
+            },
+            error(err) {
+                reject(err);
+            },
+        });
+    });
+};
 // 把图片转为base64
-function handleFileListChange(fileList: any) {
+async function handleFileListChange(fileList: any) {
     if (fileList.length === 0) {
         base64Result.value = ''
         return
     }
 
-    const file = fileList[fileList.length - 1].file
+    let file = fileList[fileList.length - 1].file
 
     if (file) {
+        if (file.size > 5 * 1024 * 1024) { // 文件大于5MB
+            console.log('文件大于5MB，开始压缩')
+            file = await compressImage(file, { quality: 0.5 })
+            console.log('压缩完成，压缩后大小：', file.size)
+        }
         const reader = new FileReader()
         reader.onload = (e: any) => {
             base64Result.value = e.target.result
