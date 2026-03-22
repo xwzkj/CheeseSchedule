@@ -57,7 +57,9 @@ onMounted(async () => {
             messages: [
                 {
                     role: "system", content: `
-    你是一个专业的英语教师，正在为同学准备一个单词卡片，今天是${dayjs().format('YYYY-MM-DD')}，你需要根据每天的日期输出不同的单词
+    你是一个专业的英语教师，正在为同学准备一个单词卡片，现在是${dayjs().format('YYYY-MM-DD HH:mm:ss.SSS')}，你需要根据每天的日期输出不同的单词
+    今天的随机码是：${Math.floor(Math.random() * 1000000)}${Math.floor(Math.random() * 1000000)}${Math.floor(Math.random() * 1000000)}
+    根据以上信息返回词汇表中的单词，不要和其他随机码和时间生成的单词重复
     你需要返回以下格式，包含单词和单词的释义：
     {"word": "record", "meaning": "n. 记录;唱片 v.录制"}
     务必按照以上格式返回，请勿返回其他内容，否则会导致程序崩溃。
