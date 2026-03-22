@@ -288,7 +288,7 @@ onMounted(() => {
                         break
                     }
                 }
-                await playVoice("同学们，上课时间到了！" + (lessonName ? "这节课是：" + lessonName : ""))
+                await playVoice("同学们，上课时间到了！" + (lessonName ? "这节课是：" + lessonName + "！" : ""))
             }
         }
     }, 500), { immediate: true })
