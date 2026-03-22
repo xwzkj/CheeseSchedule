@@ -79,7 +79,7 @@ onMounted(async () => {
 function closeWindow() {
     router.push({ name: 'draw-float' })
 }
-function imageToBase64(image: Uint8Array<ArrayBuffer>): Promise<string> {
+function imageToBase64(image: any): Promise<string> {
     return new Promise((resolve, reject) => {
         const reader = new FileReader()
         reader.onload = (e: any) => {
