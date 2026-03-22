@@ -1,6 +1,6 @@
 <template>
     <div class="w-100vw h-100vh
-    flex flex-col justify-center items-center gap-1" v-if="inited">
+    flex flex-col justify-center items-center gap-0.5" v-if="inited">
         <div class="w-90% h-90% rounded-0.5rem
         flex justify-center items-center cursor-pointer bg" @click="() => router.push({ name: 'draw-home' })">
             <div class="text-0.8rem select-none">抽签</div>

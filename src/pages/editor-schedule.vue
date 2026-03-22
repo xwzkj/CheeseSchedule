@@ -72,7 +72,7 @@
 
 <script setup lang="ts">
 import { NDropdown, NButton, NModal, NCard, NFlex, NUpload, NScrollbar, NSpin, NInput, NSwitch } from 'naive-ui'
-import { ref, useTemplateRef } from 'vue';
+import { onBeforeUnmount, ref, useTemplateRef } from 'vue';
 import { OpenAI } from 'openai';
 import Compressor from 'compressorjs';
 import { useScheduleStore } from '../stores/scheduleStore';
@@ -102,6 +102,14 @@ let reasoningRes = ref(``);
 function handleSelect(key: number) {
     scheduleId.value = key
 }
+
+const controller = new AbortController();
+onBeforeUnmount(() => {
+    controller.abort()
+})
+window.addEventListener('beforeunload', () => {
+    controller.abort()
+})
 async function importFromImage() {
     try {
         if (!scheduleStore.setting.AIapiKey) {
@@ -198,7 +206,9 @@ ${JSON.stringify(schedule)}
                         }
                     ]
                 }]
-        });
+        }, {
+            signal: controller.signal
+        })
         for await (const chunk of stream) {
             if (chunk.choices && chunk.choices.length > 0) {
                 const content = chunk.choices[0]?.delta?.content || "";

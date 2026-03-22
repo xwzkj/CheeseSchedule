@@ -24,7 +24,7 @@ import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { getScreenshotableMonitors, getMonitorScreenshot } from "tauri-plugin-screenshots-api";
 import { readFile } from "@tauri-apps/plugin-fs";
 
-import { computed, onMounted, ref, useTemplateRef } from "vue";
+import { computed, onMounted, onBeforeUnmount, ref, useTemplateRef } from "vue";
 import { NButton, NScrollbar } from "naive-ui";
 import OpenAI from "openai";
 import MarkdownIt from "markdown-it";
@@ -95,6 +95,14 @@ function imageToBase64(image: Uint8Array<ArrayBuffer>): Promise<string> {
     })
 }
 
+
+const controller = new AbortController();
+onBeforeUnmount(() => {
+    controller.abort()
+})
+window.addEventListener('beforeunload', () => {
+    controller.abort()
+})
 async function AInote(image: string) {
     try {
         if (!scheduleStore.setting.AIapiKey) {
@@ -133,7 +141,10 @@ async function AInote(image: string) {
                         "image_url": { "url": image },
                     }]
                 }]
-        });
+        }, {
+            signal: controller.signal
+        }
+        );
         for await (const chunk of stream) {
             if (chunk.choices && chunk.choices.length > 0) {
                 const content = chunk.choices[0]?.delta?.content || "";
