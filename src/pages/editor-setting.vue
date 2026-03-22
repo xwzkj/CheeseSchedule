@@ -1,9 +1,15 @@
 <template>
     <div class="p-0.5rem">
         <setting-item t1="打开配置文件所在位置" t2="可手动导入导出 / 若文件不存在会先保存再打开" :needInput="false" :actionOnClick="openConfigDir" />
+        <n-divider title-placement="left" class="m-y-0.5rem!">AI</n-divider>
         <setting-item t1="AI API密钥" t2="若想使用AI功能，请先设置您的阿里百炼apiKey">
             <div class="w-7rem">
                 <n-input v-model:value="scheduleStore.setting.AIapiKey" type="password" :show-password-toggle="true" />
+            </div>
+        </setting-item>
+        <setting-item t1="上下课语音提醒" t2="开启后，将会在上下课时进行语音播报">
+            <div>
+                <n-switch v-model:value="scheduleStore.setting.AIplayVoiceWhenLessonSwitch" />
             </div>
         </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">课程表</n-divider>

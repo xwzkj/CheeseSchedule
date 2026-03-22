@@ -27,6 +27,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         password: '', // 密码 以sha256存储
         passwordScope: ['editor-password'], // 密码作用域
         AIapiKey: '', // API密钥
+        AIplayVoiceWhenLessonSwitch: true, // 是否在上下课时播放语音提醒
     })
     let drawCandidates = ref<candidate[]>([]) // 抽签候选人 在该此处由init统一从配置文件中读取，在drawStore中使用
 

@@ -36,6 +36,10 @@
     "global-shortcut:allow-unregister",
     "global-shortcut:allow-unregister-all",
     "dialog:default",
-    "screenshots:default"
+    "screenshots:default",
+    {
+      "identifier": "http:default",
+      "allow": [{ "url": "https://*.aliyuncs.com" }]
+    }
   ]
 }

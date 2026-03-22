@@ -41,10 +41,7 @@
         "width": 60,
         "height": 60
       }
-    ],
-    "security": {
-      "csp": null
-    }
+    ]
   },
   "bundle": {
     "active": true,
