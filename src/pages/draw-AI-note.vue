@@ -2,14 +2,24 @@
     <div class="h-100vh w-100vw flex justify-center items-center" v-if="showWindow">
         <div class="h-95% w-95% bg-white rounded-1rem p-2rem 
     flex flex-col justify-center outer">
-            <div v-if="!res" class="text-1.5rem">
-                深度思考中...
+            <div v-if="!(res || reasoningRes)" class="flex flex-col justify-center gap-4 flex-1 min-h-0">
+                <div class="text-1.5rem">让AI总结屏幕内容...</div>
+                <img :src="base64" alt="屏幕截图" class="w-full h-auto rounded-1rem">
+                <div class="flex gap-2">
+                    <n-input v-model="userPrompt" placeholder="请输入您的问题（可选）" />
+                    <n-button @click="AInote()" type="primary" secondary>总结笔记</n-button>
+                </div>
             </div>
-            <div class="flex-1 min-h-0">
-                <n-scrollbar ref="scrollbarRef">
-                    <div v-if="!res" class="!color-#888 markdown-body" v-html="renderedReasoningRes"></div>
-                    <div v-else class="markdown-body" v-html="renderedRes"></div>
-                </n-scrollbar>
+            <div v-else class="flex flex-col justify-center flex-1 min-h-0">
+                <div v-if="!res" class="text-1.5rem">
+                    深度思考中...
+                </div>
+                <div class="flex-1 min-h-0">
+                    <n-scrollbar ref="scrollbarRef">
+                        <div v-if="!res" class="!color-#888 markdown-body" v-html="renderedReasoningRes"></div>
+                        <div v-else class="markdown-body" v-html="renderedRes"></div>
+                    </n-scrollbar>
+                </div>
             </div>
             <div class="m-t-1rem">
                 <n-button @click="closeWindow" size="large" secondary>关闭</n-button>
@@ -25,10 +35,10 @@ import { getScreenshotableMonitors, getMonitorScreenshot } from "tauri-plugin-sc
 import { readFile } from "@tauri-apps/plugin-fs";
 
 import { computed, onMounted, onBeforeUnmount, ref, useTemplateRef } from "vue";
-import { NButton, NScrollbar } from "naive-ui";
+import { NButton, NScrollbar, NInput } from "naive-ui";
 import OpenAI from "openai";
 import MarkdownIt from "markdown-it";
-// @ts-ignore
+
 import MarkdownItKatex from "@vscode/markdown-it-katex";
 import 'github-markdown-css/github-markdown-light.css';
 import 'katex/dist/katex.min.css';
@@ -41,6 +51,8 @@ const md = new MarkdownIt();
 md.use(MarkdownItKatex);
 
 let showWindow = ref(false)
+let userPrompt = ref('')
+let base64 = ref('')
 let reasoningRes = ref('')
 let res = ref('')
 let scrollbarRef = useTemplateRef('scrollbarRef')
@@ -67,10 +79,9 @@ onMounted(async () => {
         const screenshotableMonitors = await getScreenshotableMonitors()
         const monitor = screenshotableMonitors[0]
         const image = await getMonitorScreenshot(monitor.id)
-        const base64 = await imageToBase64(await readFile(image))
+        base64.value = await imageToBase64(await readFile(image))
         console.log(image)
         showWindow.value = true
-        await AInote(base64)
     } catch (e) {
         console.error(e)
     }
@@ -103,7 +114,7 @@ onBeforeUnmount(() => {
 window.addEventListener('beforeunload', () => {
     controller.abort()
 })
-async function AInote(image: string) {
+async function AInote() {
     try {
         if (!scheduleStore.setting.AIapiKey) {
             window.$NMessageApi.error('您没有配置AI API密钥，请先前往设置再使用！')
@@ -117,7 +128,7 @@ async function AInote(image: string) {
             }
         );
         res.value = ''
-        reasoningRes.value = ''
+        reasoningRes.value = '网络请求中...\n\n'
         const stream = await (openai as any).chat.completions.create({
             model: "qwen3.5-plus",
             stream: true,
@@ -138,7 +149,11 @@ async function AInote(image: string) {
                     role: "user",
                     content: [{
                         "type": "image_url",
-                        "image_url": { "url": image },
+                        "image_url": { "url": base64.value },
+                    },
+                    {
+                        "type": "text",
+                        "text": userPrompt.value,
                     }]
                 }]
         }, {
