@@ -48,7 +48,10 @@ import { useScheduleStore } from "../stores/scheduleStore";
 
 const scheduleStore = useScheduleStore();
 const md = new MarkdownIt();
-md.use(MarkdownItKatex);
+md.use(MarkdownItKatex, {
+    throwOnError: false,
+    errorColor: 'inherit',
+});
 
 let showWindow = ref(false)
 let userPrompt = ref('')
