@@ -6,7 +6,7 @@
                 <div class="text-1.5rem">让AI总结屏幕内容...</div>
                 <img :src="base64" alt="屏幕截图" class="w-full h-auto rounded-1rem">
                 <div class="flex gap-2">
-                    <n-input v-model="userPrompt" placeholder="请输入您的问题（可选）" />
+                    <n-input v-model:value="userPrompt" placeholder="请输入您的问题（可选）" />
                     <n-button @click="AInote()" type="primary" secondary>总结笔记</n-button>
                 </div>
             </div>
