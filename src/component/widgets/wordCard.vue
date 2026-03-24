@@ -52,7 +52,7 @@ onMounted(async () => {
     try {
         const completion = await (openai as any).chat.completions.create({
             model: "qwen3.5-flash",
-            temperature: 1.7,
+            temperature: 1.3,
             thinking_budget: 150,
             messages: [
                 {
