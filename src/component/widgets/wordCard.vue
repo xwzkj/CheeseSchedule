@@ -53,15 +53,21 @@ onMounted(async () => {
         const completion = await (openai as any).chat.completions.create({
             model: "qwen3.5-flash",
             temperature: 1.3,
-            thinking_budget: 150,
+            thinking_budget: 500,
             messages: [
                 {
                     role: "system", content: `
     你是一个专业的英语教师，正在为同学准备一个单词卡片，现在是${dayjs().format('YYYY-MM-DD HH:mm:ss.SSS')}，你需要根据每天的日期输出不同的单词
     今天的随机码是：${Math.floor(Math.random() * 1000000)}${Math.floor(Math.random() * 1000000)}${Math.floor(Math.random() * 1000000)}
     根据以上信息返回词汇表中的单词，不要和其他随机码和时间生成的单词重复
-    你需要返回以下格式，包含单词和单词的释义：
-    {"word": "record", "meaning": "n. 记录;唱片 v.录制"}
+    今天要输出词典中第${Math.floor(Math.random() * 1000)}页的单词
+
+    重要：
+    你需要返回以下格式的JSON文本，包含word字段，是单词的原文；meaning字段是单词的中文释义，不能包含英文。meaning字段应为词性缩写（如n. v. adj. adv. prep.等）+汉语释义，多个含义用分号隔开，不同词性用空格隔开
+    例如：
+    {"word": "record", "meaning": "n.记录;唱片 v.录制"}
+    或者：
+    {"word": "smelly", "meaning": "adj. 有臭味的"}
     务必按照以上格式返回，请勿返回其他内容，否则会导致程序崩溃。
     可尽量简短每个字段的输出，过长后滚动显示观感欠佳
                 ` },
