@@ -51,7 +51,7 @@ let data = ref({"word": "generating", "meaning": "AI生成中..."})
 onMounted(async () => {
     try {
         const completion = await (openai as any).chat.completions.create({
-            model: "qwen3.5-flash",
+            model: "qwen3.5-plus",
             temperature: 1.3,
             thinking_budget: 500,
             messages: [
