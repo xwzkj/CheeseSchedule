@@ -135,7 +135,7 @@ async function AInote() {
         const stream = await (openai as any).chat.completions.create({
             model: "qwen3.5-plus",
             stream: true,
-            thinking_budget: 500,
+            thinking_budget: 1500,
             messages: [
                 {
                     role: "system",
