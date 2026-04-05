@@ -12,6 +12,11 @@
                 <n-switch v-model:value="scheduleStore.setting.AIplayVoiceWhenLessonSwitch" />
             </div>
         </setting-item>
+        <setting-item t1="单词卡片历史记录" :t2="`防止AI重复输出 | 当前有${scheduleStore.setting.widgetWordCardHistory.length}个单词`">
+            <div>
+                <n-button type="error" secondary @click="scheduleStore.setting.widgetWordCardHistory = []">清除</n-button>
+            </div>
+        </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">课程表</n-divider>
         <setting-item t1="多周轮换" :t2="`设置循环使用的课程表数量 | 当前：${scheduleStore.schedule.length}`">
             <div class="w-7rem flex gap-1">
