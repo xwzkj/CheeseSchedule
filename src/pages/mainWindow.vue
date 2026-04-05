@@ -13,11 +13,13 @@ import * as app from '@tauri-apps/api/app';
 import { Menu, MenuItem } from '@tauri-apps/api/menu';
 import { exit } from '@tauri-apps/plugin-process';
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
 
 // 小组件
 import daysLeft from "../component/widgets/daysLeft.vue";
 import clock from "../component/widgets/clock.vue";
 import dateProgress from "../component/widgets/dateProgress.vue";
+import wordCard from "../component/widgets/wordCard.vue";
 
 let updateInfo = ref<UpdateInfo>();
 let outerEle = useTemplateRef('outerEle')
@@ -40,6 +42,8 @@ function getWidgetComponent(id: string) {
             return dateProgress
         case 'clock':
             return clock
+        case 'wordCard':
+            return wordCard
         default:
             return 'div'
     }
@@ -233,6 +237,34 @@ async function setTop(isTop: boolean) {
     }
 }
 
+// 使用AI将文本转为语音并播放
+async function playVoice(text: string) {
+    // 判断该功能是否开启
+    if (!scheduleStore.setting.AIplayVoiceWhenLessonSwitch) {
+        return
+    }
+    const res = await tauriFetch("https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation", {
+        method: "POST",
+        headers: {
+            "Authorization": scheduleStore.setting.AIapiKey,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "model": "qwen3-tts-flash",
+            "input": {
+                "text": text,
+                "voice": "Cherry",
+                "language_type": "Chinese"
+            }
+        })
+    })
+    const resJson = await res.json()
+    console.log(resJson);
+    const url = resJson.output.audio.url
+    new Audio(url).play()
+}
+
+
 onMounted(() => {
     initWindow();
     // 上下课自动切换窗口置顶
@@ -242,11 +274,21 @@ onMounted(() => {
                 NMessage.success("下课了!")
                 await setTop(true)
                 console.log("下课了，自动窗口置顶");
+                await playVoice("同学们，下课了！")
             } else {
                 NMessage.success("上课了!", { duration: 5000 })
                 await tool.sleep(5000)
                 await setTop(false)
                 console.log("上课了，取消窗口置顶");
+                // 查找当前课程
+                let lessonName = ""
+                for (let i = 0; i < scheduleStore.scheduleToday.length; i++) {
+                    if (scheduleStore.scheduleToday[i].active == 2) {
+                        lessonName = scheduleStore.scheduleToday[i].name
+                        break
+                    }
+                }
+                await playVoice("同学们，上课时间到了！" + (lessonName ? "这节课是：" + lessonName + "！" : ""))
             }
         }
     }, 500), { immediate: true })

@@ -68,6 +68,11 @@ const router = createRouter({
                     name: 'draw-float',
                     path: 'float',
                     component: () => import('../pages/draw-float.vue')
+                },
+                {
+                    name: 'draw-AI-note',
+                    path: 'AI-note',
+                    component: () => import('../pages/draw-AI-note.vue')
                 }
             ]
         }

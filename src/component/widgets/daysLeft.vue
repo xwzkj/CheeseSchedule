@@ -42,7 +42,7 @@ function update() {
 let dayData = ref(update())
 let timer = setInterval(() => {
     dayData.value = update()
-}, 5 * 60 * 1000)
+}, 1000)
 onBeforeUnmount(() => {
     clearInterval(timer)
 })

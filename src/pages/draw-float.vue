@@ -1,9 +1,13 @@
 <template>
     <div class="w-100vw h-100vh
-    flex justify-center items-center">
-        <div ref="button" class="w-90% h-90% rounded-0.5rem
-        flex justify-center items-center cursor-pointer" @click="() => router.push({ name: 'draw-home' })">
+    flex flex-col justify-center items-center gap-0.5" v-if="inited">
+        <div class="w-90% h-90% rounded-0.5rem
+        flex justify-center items-center cursor-pointer bg" @click="() => router.push({ name: 'draw-home' })">
             <div class="text-0.8rem select-none">抽签</div>
+        </div>
+        <div class="w-90% h-90% rounded-0.5rem
+        flex justify-center items-center cursor-pointer bg" @click="() => router.push({ name: 'draw-AI-note' })">
+            <div class="text-0.8rem select-none">笔记</div>
         </div>
     </div>
 </template>
@@ -12,17 +16,17 @@
 import { LogicalSize, PhysicalPosition, primaryMonitor } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
-import { onMounted, useTemplateRef, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import router from "../router";
 import { useScheduleStore } from "../stores/scheduleStore";
 import { listen } from "@tauri-apps/api/event";
-const button = useTemplateRef('button')
 const scheduleStore = useScheduleStore()
+let inited = ref(false)
 onMounted(async () => {
     try {
         const webviewWindow = getCurrentWebviewWindow();
         const monitor = await primaryMonitor();
-        await webviewWindow.setSize(new LogicalSize(35, 35));
+        await webviewWindow.setSize(new LogicalSize(35, 70));
         await webviewWindow.setPosition(new PhysicalPosition(2, Math.floor(monitor?.workArea.size.height as number / 3 * 2)));
         watch(() => scheduleStore.setting.drawSmallWindowEnabled, (enabled) => {
             if (enabled) {
@@ -35,8 +39,12 @@ onMounted(async () => {
         console.error(e)
     }
     listen('draw', () => router.push({ name: 'draw-home' }))
-    button.value!.style.backgroundColor = 'var(--color-4)' // 防止切换页面时出现闪烁
+    inited.value = true // 防止切换页面时出现闪烁
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.bg{
+    background-color: var(--color-4);
+}
+</style>

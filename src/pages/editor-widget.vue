@@ -98,7 +98,19 @@ const availableList = ref<WidgetConfig[]>([
         id: 'clock',
         key: 3,
         param: {}
-    }
+    },
+        {
+        name: '每日单词',
+        id: 'wordCard',
+        key: 4,
+        param: {
+            prompt: {
+                label: '对单词的要求',
+                type: 'text',
+                value: '请选择高中常见的课外词汇'
+            }
+        }
+    },
 ])
 function clone(item: any) {
     let n = JSON.parse(JSON.stringify(item));

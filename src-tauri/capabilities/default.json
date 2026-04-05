@@ -22,6 +22,7 @@
     "core:window:allow-center",
     "fs:default",
     "fs:write-all",
+    "fs:allow-appdata-read-recursive",
     "opener:default",
     "process:default",
     "autostart:default",
@@ -34,6 +35,11 @@
     "global-shortcut:allow-register",
     "global-shortcut:allow-unregister",
     "global-shortcut:allow-unregister-all",
-    "dialog:default"
+    "dialog:default",
+    "screenshots:default",
+    {
+      "identifier": "http:default",
+      "allow": [{ "url": "https://*.aliyuncs.com" }]
+    }
   ]
 }
