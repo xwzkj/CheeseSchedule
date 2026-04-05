@@ -28,7 +28,6 @@
     "github-markdown-css": "^5.9.0",
     "katex": "^0.16.40",
     "markdown-it": "^14.1.1",
-    "markdown-it-mathjax3": "^5.2.0",
     "mitt": "^3.0.1",
     "naive-ui": "^2.43.1",
     "openai": "^6.32.0",
