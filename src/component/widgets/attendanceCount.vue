@@ -93,6 +93,8 @@ async function updateNames() {
     await nextTick()
     if (namesDiv.value && namesDiv.value.scrollWidth > namesDiv.value.clientWidth) {
         needMarquee.value = true
+    }else{
+        needMarquee.value = false
     }
 }
 async function openWebPage() {
