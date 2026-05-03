@@ -20,6 +20,7 @@ import daysLeft from "../component/widgets/daysLeft.vue";
 import clock from "../component/widgets/clock.vue";
 import dateProgress from "../component/widgets/dateProgress.vue";
 import wordCard from "../component/widgets/wordCard.vue";
+import attendanceCount from "../component/widgets/attendanceCount.vue";
 
 let updateInfo = ref<UpdateInfo>();
 let outerEle = useTemplateRef('outerEle')
@@ -44,6 +45,8 @@ function getWidgetComponent(id: string) {
             return clock
         case 'wordCard':
             return wordCard
+        case 'attendanceCount':
+            return attendanceCount
         default:
             return 'div'
     }

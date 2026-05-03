@@ -99,7 +99,7 @@ const availableList = ref<WidgetConfig[]>([
         key: 3,
         param: {}
     },
-        {
+    {
         name: '每日单词',
         id: 'wordCard',
         key: 4,
@@ -111,6 +111,23 @@ const availableList = ref<WidgetConfig[]>([
             }
         }
     },
+    {
+        name:'出席人数',
+        id: 'attendanceCount',
+        key: 5,
+        param: {
+            apiUrl: {
+                label: 'api接口地址',
+                type: 'text',
+                value: ''
+            },
+            apiKey: {
+                label: 'api密钥',
+                type: 'text',
+                value: ''
+            }
+        }
+    }
 ])
 function clone(item: any) {
     let n = JSON.parse(JSON.stringify(item));

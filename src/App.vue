@@ -76,4 +76,44 @@ initAnyThing()
     --color-8: v-bind('mainColors[8]');
     --color-9: v-bind('mainColors[9]');
 }
+
+.c9 {
+    color: var(--color-9);
+}
+
+.c8 {
+    color: var(--color-8);
+}
+
+.c7 {
+    color: var(--color-7);
+}
+
+.c6 {
+    color: var(--color-6);
+}
+
+.c5 {
+    color: var(--color-5);
+}
+
+.c4 {
+    color: var(--color-4);
+}
+
+.c3 {
+    color: var(--color-3);
+}
+
+.c2 {
+    color: var(--color-2);
+}
+
+.c1 {
+    color: var(--color-1);
+}
+
+.c0 {
+    color: var(--color-0);
+}
 </style>
