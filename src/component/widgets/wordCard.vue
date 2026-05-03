@@ -51,9 +51,9 @@ let data = ref({ "word": "generating", "meaning": "AI生成中..." })
 onMounted(async () => {
     try {
         const completion = await (openai as any).chat.completions.create({
-            model: "qwen3.5-plus",
+            model: "deepseek-v4-flash",
             // temperature: 1.3,
-            thinking_budget: 150,
+            thinking_budget: 250,
             messages: [
                 {
                     role: "system", content: `
@@ -61,7 +61,6 @@ onMounted(async () => {
     现在是${dayjs().format('YYYY-MM-DD HH:mm:ss.SSS')}，你需要根据每天的日期输出不同的单词
     今天的随机码是：${Math.floor(Math.random() * 1000000)}${Math.floor(Math.random() * 1000000)}${Math.floor(Math.random() * 1000000)}
     根据以上信息返回词汇表中的单词，不要和其他随机码和时间生成的单词重复
-    今天要输出词典中第${Math.floor(Math.random() * 1000)}页的单词
 
     ${scheduleStore.setting.widgetWordCardHistory.length > 0 ? `下列单词已经生成过，你这次**坚决不能**返回它们：` : ``}
     ${scheduleStore.setting.widgetWordCardHistory.join(',')}
