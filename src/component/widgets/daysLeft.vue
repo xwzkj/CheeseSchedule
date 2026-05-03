@@ -3,9 +3,9 @@
     flex flex-col items-end justify-center 
     overflow-hidden whitespace-nowrap">
         <div class="flex items-center gap-1">
-            <span class="text-1.2rem">距</span>
+            <span class="text-1.2rem c8">距</span>
             <span class="text-1.7rem line-height-120%">{{ props.param?.name?.value }}</span>
-            <span class="text-1.2rem">{{ dayData.passed }}</span>
+            <span class="text-1.2rem c8">{{ dayData.passed }}</span>
         </div>
         <div class="text-2.2rem line-height-120% font-bold">{{ dayData.days }}天</div>
     </div>

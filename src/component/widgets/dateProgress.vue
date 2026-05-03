@@ -4,11 +4,11 @@
     overflow-hidden whitespace-nowrap relative">
         <div class="flex items-center gap-1 relative z-2">
             <span class="text-1.7rem line-height-120%">{{ props.param?.name?.value }}</span>
-            <span class="text-1.2rem">已过</span>
+            <span class="text-1.2rem c8">已过</span>
         </div>
         <div class="font-bold flex items-end relative z-2 top-1.5">
             <div class="text-2.2rem line-height-120%">{{ dayData.int }}</div>
-            <div class="text-1.2rem">{{ dayData.dec }}%</div>
+            <div class="text-1.2rem c8">{{ dayData.dec }}%</div>
         </div>
         <div class="progress-box">
             <div class="progress-bar"></div>

@@ -7,7 +7,7 @@
             class="line-height-120% whitespace-nowrap z-2">
             {{ props.name }}
         </div>
-        <div v-if="props.active" class="text-1.3rem font-bold whitespace-nowrap z-2">{{ props.time }}</div>
+        <div v-if="props.active" class="text-1.3rem font-bold whitespace-nowrap z-2 c8">{{ props.time }}</div>
         <div v-if="props.active" class="bg">
         </div>
     </div>
