@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="flex flex-col items-center">
-            <div @click="openGithub" class="underline decoration-solid color-#5fc76a cursor-pointer">GitHub</div>
+            <div @click="openGithub" class="underline decoration-solid cursor-pointer link">GitHub</div>
             <div>© 2025-至今 丸子</div>
         </div>
     </div>
@@ -38,4 +38,8 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.link {
+    color: var(--color-5);
+}
+</style>
