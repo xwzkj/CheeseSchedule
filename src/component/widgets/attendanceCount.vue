@@ -73,28 +73,31 @@ async function updateNum() {
     }
 }
 async function updateNames() {
+    let newNames = ''
     try {
         let res = await api('/get')
         let resJson = await res.json()
         if (!res.ok) {
             throw new Error(resJson.msg)
         }
-        names.value = resJson.map((item: Leave) => item.name).join('、')
-        if (names.value) {
-            names.value = '请假：' + names.value
+        newNames = resJson.map((item: Leave) => item.name).join('、')
+        if (newNames) {
+            newNames = '请假：' + newNames
         } else {
-            names.value = '暂无请假'
+            newNames = '暂无请假'
         }
     } catch (e: any) {
         console.error('更新请假列表失败:', e)
         window.$NMessageApi.error('出席人数小组件获取数据失败，请按文档搭建后端并填写正确参数', { duration: 10000, closable: true })
-        names.value = '错误：' + e.message
+        newNames = '错误：' + e.message
     }
-    await nextTick()
-    if (namesDiv.value && namesDiv.value.scrollWidth > namesDiv.value.clientWidth) {
-        needMarquee.value = true
-    }else{
-        needMarquee.value = false
+    if (newNames !== names.value) {
+        names.value = newNames
+        needMarquee.value = false // 防止滚动时会判断为false
+        await nextTick()
+        if (namesDiv.value && namesDiv.value.scrollWidth > namesDiv.value.clientWidth) {
+            needMarquee.value = true
+        }
     }
 }
 async function openWebPage() {
