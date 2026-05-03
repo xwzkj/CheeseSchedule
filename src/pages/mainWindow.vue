@@ -4,6 +4,7 @@ import classCard from "../component/classCard.vue"
 import { useMessage, NScrollbar, NEllipsis } from "naive-ui";
 import { ref, onMounted, useTemplateRef, watch, computed } from "vue";
 import * as tool from '../tools/tool'
+import { Howl } from "howler";
 
 // tauri api
 import { primaryMonitor, PhysicalPosition, LogicalSize } from "@tauri-apps/api/window";
@@ -264,7 +265,19 @@ async function playVoice(text: string) {
     const resJson = await res.json()
     console.log(resJson);
     const url = resJson.output.audio.url
-    new Audio(url).play()
+    // new Audio(url).play()
+    const howl = new Howl({
+        src: url,
+        autoplay: true,
+        loop: false,
+        onplay: () => {
+            howl.fade(0, 1, 700)// 淡入
+        },
+        onend: () => {
+            howl.unload()
+        },
+    });
+
 }
 
 
@@ -280,10 +293,7 @@ onMounted(() => {
                 await playVoice("同学们，下课了！")
             } else {
                 NMessage.success("上课了!", { duration: 5000 })
-                await tool.sleep(5000)
-                await setTop(false)
-                console.log("上课了，取消窗口置顶");
-                // 查找当前课程
+                // 查找当前课程 
                 let lessonName = ""
                 for (let i = 0; i < scheduleStore.scheduleToday.length; i++) {
                     if (scheduleStore.scheduleToday[i].active == 2) {
@@ -291,7 +301,10 @@ onMounted(() => {
                         break
                     }
                 }
-                await playVoice("同学们，上课时间到了！" + (lessonName ? "这节课是：" + lessonName + "！" : ""))
+                playVoice("同学们，上课时间到了！" + (lessonName ? "这节课是：" + lessonName + "！" : ""))
+                await tool.sleep(5000)
+                await setTop(false)
+                console.log("上课了，取消窗口置顶");
             }
         }
     }, 500), { immediate: true })
@@ -308,7 +321,6 @@ onMounted(() => {
         }
     })
 })
-
 
 
 </script>
