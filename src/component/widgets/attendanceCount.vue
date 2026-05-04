@@ -75,7 +75,7 @@ async function updateNum() {
 async function updateNames() {
     let newNames = ''
     try {
-        let res = await api('/get')
+        let res = await api('/getToday')
         let resJson = await res.json()
         if (!res.ok) {
             throw new Error(resJson.msg)
@@ -88,7 +88,6 @@ async function updateNames() {
         }
     } catch (e: any) {
         console.error('更新请假列表失败:', e)
-        window.$NMessageApi.error('出席人数小组件获取数据失败，请按文档搭建后端并填写正确参数', { duration: 10000, closable: true })
         newNames = '错误：' + e.message
     }
     if (newNames !== names.value) {
