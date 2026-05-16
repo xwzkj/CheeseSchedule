@@ -13,6 +13,7 @@ import { RouterView } from 'vue-router';
 import messageApi from './component/messageApi.vue';
 import { NMessageProvider, NConfigProvider, zhCN, dateZhCN } from 'naive-ui';
 import { generate } from '@ant-design/colors'
+import Color from 'color';
 import { computed, ref, watch } from 'vue';
 import { useScheduleStore } from './stores/scheduleStore'
 import { debounce } from './tools/tool';
@@ -21,11 +22,13 @@ import { isRegistered, register, unregisterAll } from '@tauri-apps/plugin-global
 import { emit } from "@tauri-apps/api/event";
 const scheduleStore = useScheduleStore()
 
-let mainColors = ref(generate(scheduleStore.setting.themeColor))
+let mainColors = ref<string[]>([])
 watch(() => scheduleStore.setting.themeColor,
     debounce((val: string) => {
-        mainColors.value = generate(val)
-    }, 100)
+        let c = Color(val)
+        c = c.lightness(40) // 把亮度固定
+        mainColors.value = generate(c.hex())
+    }, 100), { immediate: true }
 )
 
 let themeOverrides = computed(() => ({
