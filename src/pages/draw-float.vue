@@ -16,35 +16,39 @@
 import { LogicalSize, PhysicalPosition, primaryMonitor } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
-import { onMounted, ref, watch } from "vue";
+import { onMounted, onBeforeUnmount, ref, watch } from "vue";
 import router from "../router";
 import { useScheduleStore } from "../stores/scheduleStore";
-import { listen } from "@tauri-apps/api/event";
+import { listen, UnlistenFn } from "@tauri-apps/api/event";
 const scheduleStore = useScheduleStore()
 let inited = ref(false)
+let unlisten: UnlistenFn
 onMounted(async () => {
     try {
         const webviewWindow = getCurrentWebviewWindow();
         const monitor = await primaryMonitor();
         await webviewWindow.setSize(new LogicalSize(35, 70));
         await webviewWindow.setPosition(new PhysicalPosition(2, Math.floor(monitor?.workArea.size.height as number / 3 * 2)));
-        watch(() => scheduleStore.setting.drawSmallWindowEnabled, (enabled) => {
+        watch(() => scheduleStore.setting.drawSmallWindowEnabled, async (enabled) => {
             if (enabled) {
-                webviewWindow.show()
+                await webviewWindow.show()
             } else {
-                webviewWindow.hide()
+                await webviewWindow.hide()
             }
         }, { immediate: true })
     } catch (e) {
         console.error(e)
     }
-    listen('draw', () => router.push({ name: 'draw-home' }))
+    unlisten = await listen('draw', () => router.push({ name: 'draw-home' }))
     inited.value = true // 防止切换页面时出现闪烁
 });
+onBeforeUnmount(() => {
+    unlisten()
+})
 </script>
 
 <style scoped>
-.bg{
+.bg {
     background-color: var(--color-4);
 }
 </style>

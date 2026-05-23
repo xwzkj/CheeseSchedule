@@ -37,9 +37,9 @@
 <script setup lang="ts">
 import { LogicalSize } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-import { listen } from "@tauri-apps/api/event";
+import { listen, UnlistenFn } from "@tauri-apps/api/event";
 
-import { onMounted, ref, useTemplateRef } from "vue";
+import { onMounted, onBeforeUnmount, ref, useTemplateRef } from "vue";
 import { NButton } from "naive-ui";
 
 import router from "../router";
@@ -55,6 +55,7 @@ const scheduleStore = useScheduleStore();
 let drawResult = ref("刘华强");
 const result = useTemplateRef('result')
 
+let unlisten:UnlistenFn[] = []
 onMounted(async () => {
     try {
         const webviewWindow = getCurrentWebviewWindow()
@@ -65,14 +66,23 @@ onMounted(async () => {
     } catch (e) {
         console.error(e)
     }
-    listen('draw', draw)
-    listen('close-draw-window', closeWindow)
     await sleep(50)
     draw()
+    await sleep(50)
+    unlisten.push(await listen('draw', draw))
+    unlisten.push(await listen('close-draw-window', closeWindow))
 });
 
+onBeforeUnmount(() => {
+    unlisten.forEach(unlisten => unlisten())
+    unlisten = []
+})
+
+let drawLock = false // 互斥锁
 function closeWindow() {
-    router.push({ name: 'draw-float' })
+    if (!drawLock) {
+        router.push({ name: 'draw-float' })
+    }
 }
 
 window.addEventListener('keydown', function (e) {
@@ -81,7 +91,6 @@ window.addEventListener('keydown', function (e) {
     }
 })
 
-let drawLock = false // 互斥锁
 let isFake = false // 是否为虚假抽选，如课间抽着玩
 async function draw() {
     if (drawLock) {
@@ -112,6 +121,7 @@ async function draw() {
     } finally { // 防止死锁
         await sleep(500)
         drawLock = false
+        console.log(drawResult.value)
     }
 }
 </script>
