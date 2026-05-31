@@ -386,6 +386,6 @@ onMounted(() => {
 .card-border {
     border-radius: 1rem;
     /* border: 1px solid #ddd; */
-    box-shadow: 0 1.5px 5px 0 rgba(0, 0, 0, 0.35);
+    box-shadow: 0 2.5px 5px 0 rgba(0, 0, 0, 0.35);
 }
 </style>
