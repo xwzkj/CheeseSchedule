@@ -1,12 +1,15 @@
 <template>
     <div class="h-100vh w-100vw flex justify-center items-center">
         <div class="h-95% w-95% bg-white rounded-1rem p-2rem 
-    flex flex-col justify-center outer">
-            <div class="text-3rem color-#555">
+    flex flex-col justify-between gap-1 outer">
+            <div class="text-3rem color-#555 line-height-130%">
                 从{{ drawStore.enabledCandidates.length - drawStore.leaveCandidates.length }}人中随机抽选：
             </div>
-            <div class="text-1.5rem color-#777" v-if="drawStore.leaveCandidates.length">已排除{{ drawStore.leaveCandidates.length }}位请假者</div>
-            <div class="text-6rem text-align-center result" ref="result">
+            <div class="text-1.5rem color-#777 line-height-110%">
+                <span v-if="drawStore.leaveCandidates.length">已排除{{ drawStore.leaveCandidates.length }}位请假者</span>
+                <span v-else>&nbsp;</span>
+            </div>
+            <div class="text-6rem text-align-center line-height-140% result" ref="result">
                 {{ drawResult }}
             </div>
             <div class="text-1.5rem color-#777">
@@ -20,14 +23,18 @@
                     <HugeiconsCancelSquare v-else />
                     <div>防止重复</div>
                 </div>
-                <div v-if="scheduleStore.setting.drawPreventDuplicate">
-                    本轮还剩：{{ drawStore.availableCandidates.length }}人
+                <div>
+                    <span v-if="scheduleStore.setting.drawPreventDuplicate">
+                        本轮还剩：{{ drawStore.availableCandidates.length }}人
+                    </span>
+                    <span v-else>&nbsp;</span>
                 </div>
-                <div v-if="isFake">
-                    课间防作弊已开启，本次抽选处于课间，未被计入历史
+                <div>
+                    <span v-if="isFake">课间防作弊已开启，本次抽选处于课间，未被计入历史</span>
+                    <span v-else>&nbsp;</span>
                 </div>
             </div>
-            <div class="flex gap-2 m-t-1rem">
+            <div class="flex gap-2">
                 <n-button @click="draw" type="primary" size="large" secondary>重新抽选</n-button>
                 <n-button @click="closeWindow" size="large" secondary>关闭窗口</n-button>
             </div>
@@ -56,7 +63,7 @@ const scheduleStore = useScheduleStore();
 let drawResult = ref("刘华强");
 const result = useTemplateRef('result')
 
-let unlisten:UnlistenFn[] = []
+let unlisten: UnlistenFn[] = []
 onMounted(async () => {
     try {
         const webviewWindow = getCurrentWebviewWindow()
