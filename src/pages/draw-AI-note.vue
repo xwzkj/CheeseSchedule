@@ -186,7 +186,7 @@ async function AInote() {
 
 <style scoped>
 .outer {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .flex-center {

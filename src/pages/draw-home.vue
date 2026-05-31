@@ -13,12 +13,12 @@
                 {{ drawResult }}
             </div>
             <div class="text-1.5rem color-#777">
-                <div class="flex-center c4">
+                <div class="flex-center c7 opacity-50">
                     <HugeiconsCheckmarkSquare02 v-if="scheduleStore.setting.drawDynamicProbability" />
                     <HugeiconsCancelSquare v-else />
                     <div>动态概率</div>
                 </div>
-                <div class="flex-center c4">
+                <div class="flex-center c7 opacity-50">
                     <HugeiconsCheckmarkSquare02 v-if="scheduleStore.setting.drawPreventDuplicate" />
                     <HugeiconsCancelSquare v-else />
                     <div>防止重复</div>
@@ -136,7 +136,7 @@ async function draw() {
 
 <style scoped>
 .outer {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .result {
