@@ -38,18 +38,21 @@ const props = defineProps<{
 let wordNeedMarquee = ref(false)
 let meaningNeedMarquee = ref(false)
 
-const openai = new OpenAI(
-    {
-        apiKey: scheduleStore.setting.AIapiKey,
-        baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
-        dangerouslyAllowBrowser: true
-    }
-);
 
 let data = ref({ "word": "generating", "meaning": "AI生成中..." })
 
 onMounted(async () => {
     try {
+        if(!scheduleStore.setting.AIapiKey) {
+            throw new Error('您没有配置AI API密钥，请先前往设置再使用！')
+        }
+        const openai = new OpenAI(
+            {
+                apiKey: scheduleStore.setting.AIapiKey,
+                baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                dangerouslyAllowBrowser: true
+            }
+        );
         const completion = await (openai as any).chat.completions.create({
             model: "deepseek-v4-flash",
             // temperature: 1.3,

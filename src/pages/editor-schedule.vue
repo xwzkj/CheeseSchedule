@@ -81,13 +81,6 @@ import daySchedule from '../component/daySchedule.vue';
 const days: Week[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 const CNdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 const scheduleStore = useScheduleStore()
-const openai = new OpenAI(
-    {
-        apiKey: scheduleStore.setting.AIapiKey,
-        baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
-        dangerouslyAllowBrowser: true
-    }
-);
 
 const scheduleId = ref(scheduleStore.currentScheduleId)
 
@@ -120,6 +113,13 @@ async function importFromImage() {
             window.$NMessageApi.error('请先选择课程表图片')
             return
         }
+        const openai = new OpenAI(
+            {
+                apiKey: scheduleStore.setting.AIapiKey,
+                baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                dangerouslyAllowBrowser: true
+            }
+        );
         processing.value = true
         res.value = ''
         reasoningRes.value = ''
