@@ -3,20 +3,21 @@
         <div class="h-95% w-95% bg-white rounded-1rem p-2rem 
     flex flex-col justify-center outer">
             <div class="text-3rem color-#555">
-                从{{ drawStore.enabledCandidates.length }}人中随机抽选：
+                从{{ drawStore.enabledCandidates.length - drawStore.leaveCandidates.length }}人中随机抽选：
             </div>
+            <div class="text-1.5rem color-#777" v-if="drawStore.leaveCandidates.length">已排除{{ drawStore.leaveCandidates.length }}位请假者</div>
             <div class="text-6rem text-align-center result" ref="result">
                 {{ drawResult }}
             </div>
             <div class="text-1.5rem color-#777">
-                <div class="flex-center">
-                    <HugeiconsCheckmarkSquare02 class="icon" v-if="scheduleStore.setting.drawDynamicProbability" />
-                    <HugeiconsCancelSquare class="icon" v-else />
+                <div class="flex-center c4">
+                    <HugeiconsCheckmarkSquare02 v-if="scheduleStore.setting.drawDynamicProbability" />
+                    <HugeiconsCancelSquare v-else />
                     <div>动态概率</div>
                 </div>
-                <div class="flex-center">
-                    <HugeiconsCheckmarkSquare02 class="icon" v-if="scheduleStore.setting.drawPreventDuplicate" />
-                    <HugeiconsCancelSquare class="icon" v-else />
+                <div class="flex-center c4">
+                    <HugeiconsCheckmarkSquare02 v-if="scheduleStore.setting.drawPreventDuplicate" />
+                    <HugeiconsCancelSquare v-else />
                     <div>防止重复</div>
                 </div>
                 <div v-if="scheduleStore.setting.drawPreventDuplicate">
@@ -39,7 +40,7 @@ import { LogicalSize } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { listen, UnlistenFn } from "@tauri-apps/api/event";
 
-import { onMounted, onBeforeUnmount, ref, useTemplateRef } from "vue";
+import { onMounted, onBeforeUnmount, ref, useTemplateRef, nextTick } from "vue";
 import { NButton } from "naive-ui";
 
 import router from "../router";
@@ -66,9 +67,9 @@ onMounted(async () => {
     } catch (e) {
         console.error(e)
     }
-    await sleep(50)
+    await nextTick()
     draw()
-    await sleep(50)
+    await nextTick()
     unlisten.push(await listen('draw', draw))
     unlisten.push(await listen('close-draw-window', closeWindow))
 });
@@ -91,7 +92,7 @@ window.addEventListener('keydown', function (e) {
     }
 })
 
-let isFake = false // 是否为虚假抽选，如课间抽着玩
+let isFake = ref(false) // 是否为虚假抽选，如课间抽着玩
 async function draw() {
     if (drawLock) {
         return
@@ -100,7 +101,7 @@ async function draw() {
     try {
         result.value!.style.transform = 'scale(0.85)'
 
-        isFake = scheduleStore.setting.drawPreventCheating && !scheduleStore.lessonStatus
+        isFake.value = scheduleStore.setting.drawPreventCheating && !scheduleStore.lessonStatus
         if (drawStore.availableCandidates.length === 0) {
             drawStore.newRound()
         }
@@ -115,7 +116,7 @@ async function draw() {
                 delay += 50
             }
         }
-        drawResult.value = drawStore.draw(scheduleStore.setting.drawDynamicProbability, isFake)?.name ?? "抽选失败"
+        drawResult.value = drawStore.draw(scheduleStore.setting.drawDynamicProbability, isFake.value)?.name ?? "抽选失败"
         scheduleStore.save(true)
         result.value!.style.transform = 'scale(1)'
     } finally { // 防止死锁
@@ -133,10 +134,6 @@ async function draw() {
 
 .result {
     transition: transform 0.5s ease;
-}
-
-.icon {
-    color: var(--color-6);
 }
 
 .flex-center {

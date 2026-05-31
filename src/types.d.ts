@@ -58,3 +58,9 @@ type candidate = { // 抽签候选人
     isEnabled: boolean,
     isDrawnThisRound: boolean, // 本轮是否已经抽中过，可用于防止多次抽中
 }
+
+type Leave = { // 请假者
+    name: string,
+    start: string,
+    end: string,
+}

@@ -21,6 +21,7 @@
 import { nextTick, onBeforeUnmount, ref, useTemplateRef, watch } from 'vue';
 import { NMarquee } from 'naive-ui';
 import { openUrl } from '@tauri-apps/plugin-opener';
+import { emit } from '@tauri-apps/api/event'
 const props = defineProps<{
     param: {
         apiUrl: {
@@ -35,11 +36,7 @@ const props = defineProps<{
         }
     }
 }>()
-type Leave = {
-    name: string,
-    start: string,
-    end: string,
-}
+
 let namesDiv = useTemplateRef('namesDiv')
 let needMarquee = ref(false)
 let total = ref<number | string>(0)
@@ -80,7 +77,8 @@ async function updateNames() {
         if (!res.ok) {
             throw new Error(resJson.msg)
         }
-        newNames = resJson.map((item: Leave) => item.name).join('、')
+        emit('leaveStudentsList', resJson as Leave[]) // 广播请假列表
+        newNames = (resJson as Leave[]).map((item) => item.name).join('、')
         if (newNames) {
             newNames = '请假：' + newNames
         } else {
@@ -114,10 +112,10 @@ let timer = setInterval(() => {
     updateNum()
     updateNames()
 }, 60 * 1000)
-watch(() => props.param, () => {
+watch([() => props.param.apiUrl.value, () => props.param.apiKey.value], () => {
     updateNum()
     updateNames()
-}, { deep: true, immediate: true })
+}, { immediate: true })
 onBeforeUnmount(() => {
     clearInterval(timer)
 })

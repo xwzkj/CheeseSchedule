@@ -15,12 +15,14 @@
 <script setup lang="ts">
 import { LogicalSize, PhysicalPosition, primaryMonitor } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { listen, UnlistenFn } from "@tauri-apps/api/event";
 
 import { onMounted, onBeforeUnmount, ref, watch } from "vue";
 import router from "../router";
 import { useScheduleStore } from "../stores/scheduleStore";
-import { listen, UnlistenFn } from "@tauri-apps/api/event";
+import { useDrawStore } from "../stores/drawStore";
 const scheduleStore = useScheduleStore()
+useDrawStore() // 为了让store初始化，开始监听请假列表更新
 let inited = ref(false)
 let unlisten: UnlistenFn
 onMounted(async () => {

@@ -73,6 +73,11 @@
                 <n-switch v-model:value="scheduleStore.setting.drawAutoNewRound" />
             </div>
         </setting-item>
+        <setting-item t1="排除请假者" t2="防止抽中请假者，需搭配出席人数小组件使用">
+            <div>
+                <n-switch v-model:value="scheduleStore.setting.drawExcludeLeaveStudents" />
+            </div>
+        </setting-item>
         <setting-item t1="课间防作弊" t2="开启后，课间时的抽选将不被计入历史记录">
             <div>
                 <n-switch v-model:value="scheduleStore.setting.drawPreventCheating" />

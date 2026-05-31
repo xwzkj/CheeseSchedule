@@ -1,16 +1,37 @@
 import { defineStore } from 'pinia'
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { sleep } from '../tools/tool'
 import { useScheduleStore } from './scheduleStore'
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { listen } from '@tauri-apps/api/event'
 
 
 export const useDrawStore = defineStore('draw', () => {
     const scheduleStore = useScheduleStore()
+    let leaveStudentsList = ref<Leave[]>([])
+    // 监听请假列表更新
+    listen('leaveStudentsList', (e) => {
+        leaveStudentsList.value = e.payload as any
+        console.log('drawStore收到请假列表广播',leaveStudentsList.value)
+    })
     // 可供抽选的候选人
-    const availableCandidates = computed(() => scheduleStore.drawCandidates.filter(i => (i.isEnabled && !(i.isDrawnThisRound && scheduleStore.setting.drawPreventDuplicate))))
+    const availableCandidates = computed(() => {
+
+        return scheduleStore.drawCandidates.filter(i => (
+            i.isEnabled // 启用的候选人
+            && !(i.isDrawnThisRound && scheduleStore.setting.drawPreventDuplicate) // 开启防止重复且被抽中
+            && !(scheduleStore.setting.drawExcludeLeaveStudents && leaveStudentsList.value.some(item => item?.name == i.name)) // 开启排除请假者 且请假列表包含该候选人
+        ))
+    })
     // 已启用的候选人
     const enabledCandidates = computed(() => scheduleStore.drawCandidates.filter(i => i.isEnabled))
+    // 已请假被排除的候选人
+    const leaveCandidates = computed(() => {
+        if (!scheduleStore.setting.drawExcludeLeaveStudents) {
+            return []
+        }
+        return enabledCandidates.value.filter(i => leaveStudentsList.value.some(j => j?.name == i?.name))
+    })
 
     // 处理课前自动开启新轮次的逻辑
     if (getCurrentWebviewWindow().label == 'draw') {
@@ -101,6 +122,7 @@ export const useDrawStore = defineStore('draw', () => {
     return {
         availableCandidates,
         enabledCandidates,
+        leaveCandidates,
         draw,
         addCandidate,
         newRound,
