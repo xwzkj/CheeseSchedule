@@ -54,8 +54,16 @@ async function initAnyThing() {
         if (currentWindow.label == 'draw') { // 抽签窗口
             // Ctrl+Alt+D 抽签快捷键  Ctrl+Alt+E 关闭抽签窗口快捷键
             if (!(await isRegistered('CommandOrControl+Alt+D'))) {
-                await register('CommandOrControl+Alt+D', () => emit('draw'))
-                await register('CommandOrControl+Alt+E', () => emit('close-draw-window'))
+                await register('CommandOrControl+Alt+D', (event) => {
+                    if (event.state === 'Released') {
+                        emit('draw')
+                    }
+                })
+                await register('CommandOrControl+Alt+E', (event) => {
+                    if (event.state === 'Released') {
+                        emit('close-draw-window')
+                    }
+                })
             }
             window.addEventListener('beforeunload', () => unregisterAll())
         }

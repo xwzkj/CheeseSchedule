@@ -48,7 +48,7 @@ import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { listen, UnlistenFn } from "@tauri-apps/api/event";
 
 import { onMounted, onBeforeUnmount, ref, useTemplateRef, nextTick } from "vue";
-import { NButton } from "naive-ui";
+import { NButton, useMessage } from "naive-ui";
 
 import router from "../router";
 import { useDrawStore } from "../stores/drawStore";
@@ -60,6 +60,7 @@ import HugeiconsCheckmarkSquare02 from '~icons/hugeicons/checkmark-square-02';
 
 const drawStore = useDrawStore();
 const scheduleStore = useScheduleStore();
+const message = useMessage()
 let drawResult = ref("刘华强");
 const result = useTemplateRef('result')
 
@@ -100,8 +101,11 @@ window.addEventListener('keydown', function (e) {
 })
 
 let isFake = ref(false) // 是否为虚假抽选，如课间抽着玩
+let illegalDrawCount = 0 // 在抽选结束前再次触发抽选的次数 用于判断是否是娱乐行为
 async function draw() {
+    console.log('抽签函数被触发')
     if (drawLock) {
+        illegalDrawCount++
         return
     }
     drawLock = true
@@ -112,15 +116,15 @@ async function draw() {
         if (drawStore.availableCandidates.length === 0) {
             drawStore.newRound()
         }
-        let delay = 50
+        let delay = 30
         if (drawStore.availableCandidates.length > 1) { // 可抽选人数大于1，播放动画
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 6; i++) {
                 drawResult.value = drawStore.draw(scheduleStore.setting.drawDynamicProbability, true)?.name ?? ""
                 if (drawResult.value == "") { // 抽选出现问题
                     break
                 }
                 await sleep(delay)
-                delay += 50
+                delay += 30
             }
         }
         drawResult.value = drawStore.draw(scheduleStore.setting.drawDynamicProbability, isFake.value)?.name ?? "抽选失败"
@@ -128,6 +132,11 @@ async function draw() {
         result.value!.style.transform = 'scale(1)'
     } finally { // 防止死锁
         await sleep(500)
+        if (illegalDrawCount >= 2) { // 有人点的特别快，不是正常抽选行为，是在玩抽签
+            message.error("抽签过快！稍后再试", { duration: 4000 })
+            await sleep(4000) // 延长抽选cd
+        }
+        illegalDrawCount = 0
         drawLock = false
         console.log(drawResult.value)
     }
