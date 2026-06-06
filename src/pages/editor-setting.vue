@@ -2,8 +2,17 @@
     <div class="p-0.5rem">
         <n-divider title-placement="left" class="m-y-0.5rem!">配置文件</n-divider>
         <setting-item t1="打开配置文件所在位置" t2="可手动导入导出 / 若文件不存在会先保存再打开" :needInput="false" :actionOnClick="openConfigDir" />
-        <setting-item t1="导出为通用课程表交换格式(CSES)" t2="可导入到ClassIsland等支持的软件" :needInput="false"
-            :actionOnClick="exportToCSES" />
+        <setting-item t1="从通用课程表交换格式(CSES)文件导入" t2="实验性功能，将覆盖当前课程信息，请注意备份！" :needInput="false">
+            <n-popconfirm @positive-click="importFromCSES">
+                <template #trigger>
+                    <n-button type="primary" secondary>导入</n-button>
+                </template>
+                警告！导入后当前课程信息会被覆盖，请先手动备份后继续！<br />是否继续？
+            </n-popconfirm>
+        </setting-item>
+        <setting-item t1="导出为通用课程表交换格式(CSES)文件" t2="可导入到ClassIsland等支持的软件" :needInput="false">
+            <n-button @click="exportToCSES" type="primary" secondary>导出</n-button>
+        </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">AI</n-divider>
         <setting-item t1="AI API密钥" t2="若想使用AI功能，请先设置您的阿里百炼apiKey">
             <div class="w-7rem">
@@ -111,8 +120,8 @@
 <script setup lang="ts">
 import { revealItemInDir } from '@tauri-apps/plugin-opener';
 import { invoke } from '@tauri-apps/api/core';
-import { save } from '@tauri-apps/plugin-dialog';
-import { writeTextFile } from '@tauri-apps/plugin-fs';
+import { save, open } from '@tauri-apps/plugin-dialog';
+import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 
 import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown, NDivider, NSwitch, NColorPicker, NInput } from 'naive-ui'
 import settingItem from '../component/settingItem.vue'
@@ -157,7 +166,7 @@ async function exportToCSES() {
         const filePath = await save({
             title: '导出配置为通用课程表交换格式(CSES)',
             defaultPath: `奶酪课程表-CSES-${dayjs().format('YYYY-MM-DD')}.yaml`,
-            filters: [{ name: 'yaml文件', extensions: ['yaml', 'yml'] }]
+            filters: [{ name: '通用课程表交换格式(CSES)文件', extensions: ['yaml', 'yml'] }]
         })
         if (!filePath) return
         await writeTextFile(filePath, scheduleStore.exportToCSES())
@@ -167,6 +176,25 @@ async function exportToCSES() {
         }
     } catch (error) {
         NMessage.error('导出CSES失败：' + JSON.stringify(error), { duration: 60 * 1000, closable: true })
+    }
+}
+
+async function importFromCSES() {
+    try {
+        const filePath = await open({
+            title: '从通用课程表交换格式(CSES)导入',
+            filters: [{ name: '通用课程表交换格式(CSES)文件', extensions: ['yaml', 'yml'] }]
+        })
+        if (!filePath) return
+        let res = scheduleStore.importFromCSES(await readTextFile(filePath))
+        if (res.success) {
+            NMessage.success(res.message)
+            NMessage.success('请在检查后点击保存以更新配置')
+        } else {
+            NMessage.error(res.message, { duration: 60 * 1000, closable: true })
+        }
+    } catch (error) {
+        NMessage.error('导入CSES失败：' + JSON.stringify(error), { duration: 60 * 1000, closable: true })
     }
 }
 </script>

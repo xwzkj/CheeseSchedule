@@ -370,6 +370,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         }
     }
 
+    //把课程表信息导出为CSES格式（https://github.com/SmartTeachCN/CSES）
     function exportToCSES(): string {
         let cses: CSES = { version: 1, subjects: [], schedules: [] }
         for (let i = 0; i < Math.min(schedule.value.length, 2); i++) { //每张课表，最多遍历两张课表（CSES格式限制）
@@ -386,18 +387,18 @@ export const useScheduleStore = defineStore('schedule', () => {
                             teacher: '',
                         })
                     }
-                    const rex = /^(\d{1,2})[：:](\d{1,2})[-~ ]+(\d{1,2})[：:](\d{1,2})$/;
-                    let time = rex.exec(lesson.time)
+                    const reg = /^(\d{1,2})[：:](\d{1,2})[-~ ]+(\d{1,2})[：:](\d{1,2})$/;
+                    let time = reg.exec(lesson.time)
                     if (time && !lesson.isDivider) {
                         // 添加课程
                         csesDaySchedule.push({
                             subject: lesson.name,
-                            start_time: `${time?.[1]}:${time?.[2]}:00`,
-                            end_time: `${time?.[3]}:${time?.[4]}:00`,
+                            start_time: `${time?.[1].padStart(2, '0')}:${time?.[2].padStart(2, '0')}:00`,
+                            end_time: `${time?.[3].padStart(2, '0')}:${time?.[4].padStart(2, '0')}:00`,
                         })
                     }
                 }
-                let weekday = {
+                const weekday = {
                     mon: 1,
                     tue: 2,
                     wed: 3,
@@ -418,6 +419,70 @@ export const useScheduleStore = defineStore('schedule', () => {
         return YAML.stringify(cses)
     }
 
+    // 从CSES格式导入课程表。注意：该函数将覆盖课程表配置，注意备份
+    function importFromCSES(csesStr: string): { success: boolean, message: string } {
+        let cses: CSES
+        try {
+            cses = YAML.parse(csesStr)
+        } catch (e) {
+            return { success: false, message: `文件格式错误` }
+        }
+        if (!(cses && cses?.version === 1)) {
+            return { success: false, message: `不支持的配置版本` }
+        }
+        try {
+            setScheduleCount(0) // 清空课表
+            patterns.value = [] // 清空时间表
+
+            // 如果欲导入的内容包含大小周
+            if (cses.schedules.some(item => item.weeks === 'even')) {
+                setScheduleCount(2)
+            } else {
+                setScheduleCount(1)
+            }
+            // 导入时间表和课程表
+            const weekday: Week[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+            for (let i = 0; i < cses.schedules.length; i++) {
+                let lessons = cses.schedules[i] // 当前正在处理的这天的课程表
+                let res: Day = { pattern: -1, lessons: [] }
+                if (lessons.enable_day < 1 || lessons.enable_day > 7) {
+                    window.$NMessageApi.error(`发现错误数据，已跳过`)
+                    continue
+                }
+                let reg = /(\d{1,2}:\d{1,2})/
+                res.lessons = lessons.classes.map(item => ({
+                    name: item.subject,
+                    time: `${reg.exec(item.start_time)?.[1]}-${reg.exec(item.end_time)?.[1]}`,
+                    isDivider: false,
+                }))
+                let newPattern = res.lessons.map(item => ({
+                    isDivider: false,
+                    time: item.time,
+                }))
+                // 看看能不能复用时间表
+                let f = patterns.value.findIndex(item => JSON.stringify(item.data) === JSON.stringify(newPattern))
+                if (f != -1) {
+                    res.pattern = f // 复用
+                } else {
+                    // 新建
+                    patterns.value.push({ name: `模式${patterns.value.length + 1}`, data: newPattern })
+                    res.pattern = patterns.value.length - 1
+                }
+                schedule.value[lessons.weeks === 'even' ? 1 : 0][weekday[lessons.enable_day - 1]] = res
+            }
+            // 导入结束
+            if (patterns.value.length < 7) { // 如果时间表不足七个，就补全
+                for (let i = patterns.value.length; i < 7; i++) {
+                    patterns.value.push({ name: `空模式${i + 1}`, data: [] })
+                }
+            }
+
+        } catch (e) {
+            return { success: false, message: `导入失败：${JSON.stringify(e)}` }
+        }
+        return { success: true, message: `导入成功` }
+    }
+
     return {
         init,
         save, refreshPatternToDay,
@@ -428,6 +493,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         __isActive,
         __refreshActive,
         exportToCSES,
+        importFromCSES,
         patterns,
         schedule,
         scheduleThisWeek,
