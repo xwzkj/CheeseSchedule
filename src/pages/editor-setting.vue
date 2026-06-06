@@ -1,6 +1,9 @@
 <template>
     <div class="p-0.5rem">
+        <n-divider title-placement="left" class="m-y-0.5rem!">配置文件</n-divider>
         <setting-item t1="打开配置文件所在位置" t2="可手动导入导出 / 若文件不存在会先保存再打开" :needInput="false" :actionOnClick="openConfigDir" />
+        <setting-item t1="导出为通用课程表交换格式(CSES)" t2="可导入到ClassIsland等支持的软件" :needInput="false"
+            :actionOnClick="exportToCSES" />
         <n-divider title-placement="left" class="m-y-0.5rem!">AI</n-divider>
         <setting-item t1="AI API密钥" t2="若想使用AI功能，请先设置您的阿里百炼apiKey">
             <div class="w-7rem">
@@ -108,12 +111,15 @@
 <script setup lang="ts">
 import { revealItemInDir } from '@tauri-apps/plugin-opener';
 import { invoke } from '@tauri-apps/api/core';
+import { save } from '@tauri-apps/plugin-dialog';
+import { writeTextFile } from '@tauri-apps/plugin-fs';
 
 import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown, NDivider, NSwitch, NColorPicker, NInput } from 'naive-ui'
 import settingItem from '../component/settingItem.vue'
 import { useScheduleStore } from '../stores/scheduleStore'
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router'
+import dayjs from 'dayjs';
 const router = useRouter()
 const scheduleStore = useScheduleStore()
 const NMessage = useMessage()
@@ -146,7 +152,23 @@ async function openConfigDir() {
     }
     await revealItemInDir(filePath);
 }
-
+async function exportToCSES() {
+    try {
+        const filePath = await save({
+            title: '导出配置为通用课程表交换格式(CSES)',
+            defaultPath: `奶酪课程表-CSES-${dayjs().format('YYYY-MM-DD')}.yaml`,
+            filters: [{ name: 'yaml文件', extensions: ['yaml', 'yml'] }]
+        })
+        if (!filePath) return
+        await writeTextFile(filePath, scheduleStore.exportToCSES())
+        NMessage.success('已成功导出')
+        if (scheduleStore.schedule.length > 2) { // 多周轮换多于两周
+            NMessage.warning('由于CSES格式限制，仅导出了前两周的课程！', { duration: 60 * 1000, closable: true })
+        }
+    } catch (error) {
+        NMessage.error('导出CSES失败：' + JSON.stringify(error), { duration: 60 * 1000, closable: true })
+    }
+}
 </script>
 
 <style scoped></style>

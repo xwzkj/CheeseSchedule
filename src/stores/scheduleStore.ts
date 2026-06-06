@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import dayjs from "dayjs";
 import updateLocale from 'dayjs/plugin/updateLocale'
+import YAML from 'yaml'
 import { invoke } from '@tauri-apps/api/core'
 import { emit } from '@tauri-apps/api/event'
 import { listen } from '@tauri-apps/api/event'
@@ -369,6 +370,54 @@ export const useScheduleStore = defineStore('schedule', () => {
         }
     }
 
+    function exportToCSES(): string {
+        let cses: CSES = { version: 1, subjects: [], schedules: [] }
+        for (let i = 0; i < Math.min(schedule.value.length, 2); i++) { //每张课表，最多遍历两张课表（CSES格式限制）
+            for (let key in schedule.value[i]) { //周一到周日
+                let daySchedule = schedule.value[i][key as keyof Schedule]
+                let csesDaySchedule: CsesClass[] = []
+                for (let lesson of daySchedule.lessons) { //每节课 
+                    // 如果课程不再cses的课程列表中，就添加
+                    if (!cses.subjects.find(item => item.name === lesson.name)) {
+                        cses.subjects.push({
+                            name: lesson.name,
+                            simplified_name: lesson.name.substring(0, 1),
+                            room: '',
+                            teacher: '',
+                        })
+                    }
+                    const rex = /^(\d{1,2})[：:](\d{1,2})[-~ ]+(\d{1,2})[：:](\d{1,2})$/;
+                    let time = rex.exec(lesson.time)
+                    if (time && !lesson.isDivider) {
+                        // 添加课程
+                        csesDaySchedule.push({
+                            subject: lesson.name,
+                            start_time: `${time?.[1]}:${time?.[2]}:00`,
+                            end_time: `${time?.[3]}:${time?.[4]}:00`,
+                        })
+                    }
+                }
+                let weekday = {
+                    mon: 1,
+                    tue: 2,
+                    wed: 3,
+                    thu: 4,
+                    fri: 5,
+                    sat: 6,
+                    sun: 7,
+                }
+                cses.schedules.push({
+                    name: `第${i + 1}周 周${weekday?.[key as Week]}`,
+                    enable_day: weekday[key as Week],
+                    classes: csesDaySchedule,
+                    // 如果有多张课表，则加入weeks字段
+                    ...(schedule.value.length > 1 ? { weeks: i === 0 ? 'odd' : 'even' } : {})
+                })
+            }
+        }
+        return YAML.stringify(cses)
+    }
+
     return {
         init,
         save, refreshPatternToDay,
@@ -378,6 +427,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         getCurrentScheduleId,
         __isActive,
         __refreshActive,
+        exportToCSES,
         patterns,
         schedule,
         scheduleThisWeek,
