@@ -32,7 +32,7 @@
 import { LogicalSize } from "@tauri-apps/api/window";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { getScreenshotableMonitors, getMonitorScreenshot } from "tauri-plugin-screenshots-api";
-import { readFile } from "@tauri-apps/plugin-fs";
+import { readFile, remove } from "@tauri-apps/plugin-fs";
 
 import { computed, onMounted, onBeforeUnmount, ref, useTemplateRef } from "vue";
 import { NButton, NScrollbar, NInput } from "naive-ui";
@@ -83,8 +83,10 @@ onMounted(async () => {
         const monitor = screenshotableMonitors[0]
         const image = await getMonitorScreenshot(monitor.id)
         base64.value = await imageToBase64(await readFile(image))
-        console.log(image)
+        console.log('截图文件：', image)
         showWindow.value = true
+        await remove(image)
+        console.log('截图文件已删除')
     } catch (e) {
         console.error(e)
     }

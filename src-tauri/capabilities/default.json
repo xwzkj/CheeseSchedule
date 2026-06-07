@@ -23,6 +23,7 @@
     "fs:default",
     "fs:write-all",
     "fs:allow-appdata-read-recursive",
+    "fs:allow-appdata-write-recursive",
     "opener:default",
     "process:default",
     "autostart:default",
