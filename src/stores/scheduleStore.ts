@@ -339,21 +339,23 @@ export const useScheduleStore = defineStore('schedule', () => {
         schedule.value[scheduleID][day].pattern = patternId
         let p = patterns.value[patternId].data
         let lessons = schedule.value[scheduleID][day].lessons
-
-        if (lessons.length > p.length) {
-            lessons.splice(p.length)
-        }
+        // 提取已有课程中非分割线的课程名，按顺序保存
+        let courseNames = lessons.filter(l => !l.isDivider).map(l => l.name)
+        lessons = []
+        let courseIdx = 0
         for (let i = 0; i < p.length; i++) {
+            let name = '空'
+            if (!p[i].isDivider) {
+                // 非分割线槽位按顺序匹配已有的非分割线课程
+                name = courseNames[courseIdx] ?? '空'
+                courseIdx++
+            }
             let lesson: Lesson = {
-                name: lessons?.[i]?.name ?? '空',
+                name: name,
                 time: p[i]?.time ?? '',
                 isDivider: p[i].isDivider,
             }
-            if (lessons.length < i + 1) {
-                lessons.push(lesson)
-            } else {
-                lessons[i] = lesson
-            }
+            lessons.push(lesson)
         }
         schedule.value[scheduleID][day].lessons = lessons
     }
