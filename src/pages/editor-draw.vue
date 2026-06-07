@@ -25,7 +25,12 @@
                     <n-switch v-model:value="item.isEnabled" />
                 </div>
                 <div class="flex-1">
-                    <n-button type="error" secondary @click="removeCandidate(index)">删除</n-button>
+                    <n-popconfirm @positive-click="removeCandidate(index)">
+                        <template #trigger>
+                            <n-button type="error" secondary>删除</n-button>
+                        </template>
+                        确定删除“{{ item.name }}”？
+                    </n-popconfirm>
                 </div>
             </div>
             <div v-if="scheduleStore.drawCandidates.length == 0" class="w-full text-center text-#999 text-1.2rem">
