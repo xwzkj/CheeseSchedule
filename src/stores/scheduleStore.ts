@@ -468,7 +468,13 @@ export const useScheduleStore = defineStore('schedule', () => {
                     patterns.value.push({ name: `模式${patterns.value.length + 1}`, data: newPattern })
                     res.pattern = patterns.value.length - 1
                 }
-                schedule.value[lessons.weeks === 'even' ? 1 : 0][weekday[lessons.enable_day - 1]] = res
+                if (lessons.weeks === 'all') {
+                    for (let j = 0; j < schedule.value.length; j++) {
+                        schedule.value[j][weekday[lessons.enable_day - 1]] = res
+                    }
+                } else {
+                    schedule.value[lessons.weeks === 'even' ? 1 : 0][weekday[lessons.enable_day - 1]] = res
+                }
             }
             // 导入结束
             if (patterns.value.length < 7) { // 如果时间表不足七个，就补全

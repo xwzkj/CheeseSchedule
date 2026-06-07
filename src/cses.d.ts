@@ -7,7 +7,7 @@ type CsesClass = {
 type CsesSchedule = {
     name: string
     enable_day: number // 星期几启用，1-7
-    weeks?: 'odd' | 'even'
+    weeks?: 'odd' | 'even' | 'all'
     classes: CsesClass[]
 }
 
