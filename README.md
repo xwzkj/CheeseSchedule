@@ -102,3 +102,6 @@
 
 欢迎提交issue
 
+### 星标历史
+
+[![Star History Chart](https://api.star-history.com/chart?repos=xwzkj/cheeseschedule&type=date&legend=top-left)](https://www.star-history.com/?repos=xwzkj%2Fcheeseschedule&type=date&legend=top-left)
