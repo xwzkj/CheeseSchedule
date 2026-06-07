@@ -23,7 +23,7 @@
                     class="cursor-move bg-gray-500/5 rounded-0.5rem p-3">
                     <n-collapse>
                         <template #arrow>
-                            <hugeicons-arrow-right-01 class="do-not-drag" />
+                            <hugeiconsArrowRight01 class="do-not-drag" />
                         </template>
                         <!-- 参数设置 -->
                         <n-collapse-item :title="item.name" name="1">
