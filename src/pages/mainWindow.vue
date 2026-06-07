@@ -366,9 +366,9 @@ onMounted(() => {
             </div>
         </n-scrollbar>
         <!-- 无课程时的提示 -->
-        <div v-else class="flex items-center justify-center h-100% bg-#ffffff55 rounded-1rem">
+        <div v-else class="flex items-center justify-center h-100% bg-#aaaaaa55 rounded-1rem">
             <div class="text-center bg-white p-0.25rem rounded-1rem">
-                <p class="text-1.2rem">奶酪课程表已启动</p>
+                <p class="text-1.2rem ">奶酪课程表已启动</p>
                 <br />
                 <div class="text-1.1rem text-#888">
                     今日没有课程数据
