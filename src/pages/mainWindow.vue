@@ -336,13 +336,13 @@ onMounted(() => {
                 card-border bg-white overflow-hidden">
 
                 <div class="text-1.3rem font-bold 
-                line-height-120% whitespace-nowrap text-#ff5252">
+                line-height-120% whitespace-nowrap c6 cursor-pointer underline" @click.stop="openUrl('https://github.com/xwzkj/CheeseSchedule/releases/latest')"> 
                     有新版本:{{ updateInfo?.latestVersion }}
                 </div>
-                <n-ellipsis class="text-#ff6b6b">
+                <n-ellipsis class="c4">
                     {{ updateInfo?.changeLog?.simple || '无更新日志' }}
                     <template #tooltip>
-                        <div class="whitespace-pre-line max-w-80vw">
+                        <div class="whitespace-pre-line max-w-80vw max-h-50vh overflow-y-scroll">
                             {{ updateInfo?.changeLog?.full || '无更新日志' }}
                         </div>
                     </template>
