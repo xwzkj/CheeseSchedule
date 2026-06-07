@@ -123,8 +123,38 @@ async function importFromImage() {
         processing.value = true
         res.value = ''
         reasoningRes.value = ''
-        let schedule: any = {}
+        let schedule: Schedule = {
+            mon: {
+                pattern: 0,
+                lessons: []
+            },
+            tue: {
+                pattern: 0,
+                lessons: []
+            },
+            wed: {
+                pattern: 0,
+                lessons: []
+            },
+            thu: {
+                pattern: 0,
+                lessons: []
+            },
+            fri: {
+                pattern: 0,
+                lessons: []
+            },
+            sat: {
+                pattern: 0,
+                lessons: []
+            },
+            sun: {
+                pattern: 0,
+                lessons: []
+            }
+        }
         let days: Week[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+        let isAllEmpty = true // 是否每天的时间表都是空的
         for (let i = 0; i < days.length; i++) {
             schedule[days[i]] = {
                 pattern: scheduleStore.schedule[scheduleId.value][days[i]].pattern,
@@ -137,8 +167,14 @@ async function importFromImage() {
                     }
                 })
             }
+            if (schedule[days[i]].lessons.length > 0) {
+                isAllEmpty = false
+            }
         }
-        // return
+        if (isAllEmpty) {
+            window.$NMessageApi.error('请先配置时间表再导入！')
+            return
+        }
         const stream = await (openai as any).chat.completions.create({
             model: "qwen3.5-plus",
             stream: true,
@@ -184,7 +220,8 @@ ${JSON.stringify(schedule)}
 如果图片缺少某些课节，请在数据的name字段中填写“空”，而不是保持空白
 如果图片中的课程是单字，请补全为两个字（如“文”=>“语文”等），但对于不确定的课程，不要补全
 只需读取图片中每天的课程名称和顺序进行填充，并忽略图片中的其他信息，如时间等
-你只可以改动name字段，不能改动其他字段，否则会导致程序崩溃
+你只可以改动name字段，不能改动其他字段，不能新增或删除数组中的项目，否则会导致程序崩溃
+若待补全内容为空或部分为空，不要根据图片中该部分的课程信息新增数组中的项目，直接跳过该部分。如：图片有周一到周五的课程信息，但待补全内容中周三是空的，则不对周三进行处理。再比如：图片中某天有10节课，但是待补全内容只有5节，则只补全前五节
 返回规则：
 先返回<true/>或<false/>来代表用户输入是否合法（如以上数据是否符合图片中的课程表，或图片是否为课程表）然后加个换行符，
 如果输入合法，返回这段json，不要返回任何额外内容，并确保json格式合法，否则程序将无法解析返回内容;
