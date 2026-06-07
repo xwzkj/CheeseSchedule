@@ -23,14 +23,10 @@
             </div>
         </setting-item>
         <setting-item t1="上下课语音提醒" t2="开启后，将会在上下课时进行语音播报">
-            <div>
-                <n-switch v-model:value="scheduleStore.setting.AIplayVoiceWhenLessonSwitch" />
-            </div>
+            <n-switch v-model:value="scheduleStore.setting.AIplayVoiceWhenLessonSwitch" />
         </setting-item>
         <setting-item t1="单词卡片历史记录" :t2="`防止AI重复输出 | 当前有${scheduleStore.setting.widgetWordCardHistory.length}个单词`">
-            <div>
-                <n-button type="error" secondary @click="scheduleStore.setting.widgetWordCardHistory = []">清除</n-button>
-            </div>
+            <n-button type="error" secondary @click="scheduleStore.setting.widgetWordCardHistory = []">清除</n-button>
         </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">课程表</n-divider>
         <setting-item t1="多周轮换" :t2="`设置循环使用的课程表数量 | 当前：${scheduleStore.schedule.length}`">
@@ -45,19 +41,17 @@
             </div>
         </setting-item>
         <setting-item t1="设置起始周" t2="请选择现在应使用哪张课程表">
-            <div>
-                <n-dropdown :options="scheduleStore.scheduleIdOption" trigger="click" @select="setFirstWeek">
-                    <n-button type="primary" dashed>
-                        {{ scheduleStore.scheduleIdOption[scheduleStore.currentScheduleId]?.label }}
-                        <template #icon>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="1.5" d="M18 9s-4.419 6-6 6s-6-6-6-6" />
-                            </svg>
-                        </template>
-                    </n-button>
-                </n-dropdown>
-            </div>
+            <n-dropdown :options="scheduleStore.scheduleIdOption" trigger="click" @select="setFirstWeek">
+                <n-button type="primary" dashed>
+                    {{ scheduleStore.scheduleIdOption[scheduleStore.currentScheduleId]?.label }}
+                    <template #icon>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="1.5" d="M18 9s-4.419 6-6 6s-6-6-6-6" />
+                        </svg>
+                    </template>
+                </n-button>
+            </n-dropdown>
         </setting-item>
         <setting-item t1="时间偏移" t2="适用于铃声不准的场景 | 单位：秒 | 正值将延后课程切换，负值则会提前">
             <div class="w-7rem">
@@ -69,34 +63,22 @@
             <div></div>
         </setting-item>
         <setting-item t1="启用悬浮按钮" t2="关闭后将不显示抽签悬浮按钮，但仍可通过快捷键触发">
-            <div>
-                <n-switch v-model:value="scheduleStore.setting.drawSmallWindowEnabled" />
-            </div>
+            <n-switch v-model:value="scheduleStore.setting.drawSmallWindowEnabled" />
         </setting-item>
         <setting-item t1="动态概率" t2="抽中越多，概率越低，使每人的总抽取次数更平均">
-            <div>
-                <n-switch v-model:value="scheduleStore.setting.drawDynamicProbability" />
-            </div>
+            <n-switch v-model:value="scheduleStore.setting.drawDynamicProbability" />
         </setting-item>
         <setting-item t1="防止重复" t2="抽中后，本轮内将不会再抽取该候选人">
-            <div>
-                <n-switch v-model:value="scheduleStore.setting.drawPreventDuplicate" />
-            </div>
+            <n-switch v-model:value="scheduleStore.setting.drawPreventDuplicate" />
         </setting-item>
         <setting-item t1="自动开启新轮次" t2="在每节课开始时自动开启新一轮抽选">
-            <div>
-                <n-switch v-model:value="scheduleStore.setting.drawAutoNewRound" />
-            </div>
+            <n-switch v-model:value="scheduleStore.setting.drawAutoNewRound" />
         </setting-item>
         <setting-item t1="排除请假者" t2="防止抽中请假者，需搭配出席人数小组件使用">
-            <div>
-                <n-switch v-model:value="scheduleStore.setting.drawExcludeLeaveStudents" />
-            </div>
+            <n-switch v-model:value="scheduleStore.setting.drawExcludeLeaveStudents" />
         </setting-item>
         <setting-item t1="课间防作弊" t2="开启后，课间时的抽选将不被计入历史记录">
-            <div>
-                <n-switch v-model:value="scheduleStore.setting.drawPreventCheating" />
-            </div>
+            <n-switch v-model:value="scheduleStore.setting.drawPreventCheating" />
         </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">个性化</n-divider>
         <setting-item t1="主窗口缩放比例" t2="默认为1，与系统缩放乘算">
