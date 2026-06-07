@@ -22,18 +22,21 @@
                 <div v-for="(item, index) in scheduleStore.widgets" :key="item.key"
                     class="cursor-move bg-gray-500/5 rounded-0.5rem p-3">
                     <n-collapse>
+                        <template #arrow>
+                            <hugeicons-arrow-right-01 class="do-not-drag" />
+                        </template>
                         <!-- 参数设置 -->
                         <n-collapse-item :title="item.name" name="1">
                             <!-- 每个参数 -->
-                            <div v-for="(i, key) in item.param" class="m-t-0.5rem">
+                            <div v-for="(i, key) in item.param" class="m-t-0.5rem do-not-drag">
                                 <div>{{ i.label }}：<span class="text-#999">({{ key }}:{{ i.value }})</span></div>
-                                <div class="do-not-drag">
+                                <div>
                                     <n-date-picker v-if="i.type == 'date'" v-model:value="i.value" type="date" />
                                     <n-input v-if="i.type == 'text'" v-model:value="i.value" type="text"
                                         placeholder="请输入" />
                                 </div>
                             </div>
-                            <div class="flex justify-end m-t-0.5rem">
+                            <div class="flex justify-end m-t-0.5rem do-not-drag">
                                 <n-button @click="scheduleStore.widgets.splice(index, 1)" type="error"
                                     secondary>删除</n-button>
                             </div>
@@ -51,6 +54,7 @@ import { ref } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import { NCollapse, NCollapseItem, NDatePicker, NInput, NButton } from 'naive-ui'
 import { useScheduleStore } from '../stores/scheduleStore'
+import hugeiconsArrowRight01 from '~icons/hugeicons/arrow-right-01'
 const scheduleStore = useScheduleStore()
 
 const availableList = ref<WidgetConfig[]>([
@@ -112,7 +116,7 @@ const availableList = ref<WidgetConfig[]>([
         }
     },
     {
-        name:'出席人数',
+        name: '出席人数',
         id: 'attendanceCount',
         key: 5,
         param: {
