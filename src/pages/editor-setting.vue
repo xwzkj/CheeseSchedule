@@ -13,6 +13,9 @@
         <setting-item t1="导出为通用课程表交换格式(CSES)文件" t2="可导入到ClassIsland等支持的软件" :needInput="false">
             <n-button @click="exportToCSES" type="primary" secondary>导出</n-button>
         </setting-item>
+        <setting-item t1="开机自启动" t2="是否允许奶酪课程表跟随系统自动启动">
+            <n-switch v-model:value="scheduleStore.setting.startup" />
+        </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">AI</n-divider>
         <setting-item t1="AI API密钥" t2="若想使用AI功能，请先设置您的阿里百炼apiKey">
             <div class="w-7rem">
