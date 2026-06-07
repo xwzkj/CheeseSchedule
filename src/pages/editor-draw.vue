@@ -53,6 +53,9 @@
                 <div class="m-b-0.5rem">请在下方输入候选人姓名 每行一个<br />可直接从成绩单等包含姓名列的excel表格中复制粘贴<br />不支持重名，若出现重名将只会添加一个</div>
                 <n-input v-model:value="newCandidates" type="textarea" :placeholder="`请输入候选人姓名,如：\n刘华强\n李田所\n侯国玉`"
                     rows="10" />
+                <n-checkbox v-model:checked="setAverageCount" class="m-t-0.5rem">
+                    将新候选人的抽中次数设置为当前平均值
+                </n-checkbox>
                 <template #footer>
                     <n-flex>
                         <n-button secondary type="primary" @click="addCandidates">添加</n-button>
@@ -74,6 +77,7 @@ const scheduleStore = useScheduleStore()
 
 let showModalAddCandidate = ref(false)
 let newCandidates = ref('')
+let setAverageCount = ref(true)
 
 function removeCandidate(index: number) {
     scheduleStore.drawCandidates.splice(index, 1)
@@ -93,6 +97,10 @@ function addCandidates() {
         window.$NMessageApi.error('请输入文本')
         return
     }
+    // 计算当前平均抽中次数
+    let averageCount = scheduleStore.drawCandidates.reduce((count, current) => count + current.historyCount, 0) / scheduleStore.drawCandidates.length
+    averageCount = Math.round(averageCount)
+
     let candidates = newCandidates.value.split('\n')
     let trueCount = 0, falseCount = 0
     for (let i = 0; i < candidates.length; i++) {
@@ -102,7 +110,7 @@ function addCandidates() {
         if (drawStore.addCandidate({
             name: candidates[i].trim(),
             isEnabled: true,
-            historyCount: 0,
+            historyCount: setAverageCount.value ? averageCount : 0,
             isDrawnThisRound: false,
         }) == true) {
             trueCount++
