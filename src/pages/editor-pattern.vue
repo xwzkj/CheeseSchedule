@@ -27,8 +27,8 @@
                             <div style="display: flex; align-items: center; width: 100%">
                                 <n-checkbox v-model:checked="value.isDivider" class="w-10rem ml-0.5rem"
                                     label="是否为分割线" />
-                                <n-input v-show="!value.isDivider" v-model:value="value.time" type="text"
-                                    placeholder="hh:mm-hh:mm格式的课程时间" />
+                                <time-range-picker v-if="!value.isDivider" v-model="value.time" />
+                                <n-divider v-else class="!m-0" />
                             </div>
                         </template>
                     </n-dynamic-input>
@@ -40,8 +40,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { NScrollbar, NDropdown, NDynamicInput, NCheckbox, NInput, NButton } from 'naive-ui'
+import { NScrollbar, NDropdown, NDynamicInput, NCheckbox, NInput, NButton, NDivider } from 'naive-ui'
 import { useScheduleStore } from '../stores/scheduleStore'
+import timeRangePicker from '../component/timeRangePicker.vue'
 const scheduleStore = useScheduleStore()
 let editingNum = ref(0);
 
