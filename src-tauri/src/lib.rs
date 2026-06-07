@@ -6,7 +6,6 @@ use std::path::PathBuf;
 use sysinfo::Disks;
 
 // 封装获取配置文件路径的函数
-#[tauri::command]
 fn get_config_path() -> Result<PathBuf, String> {
     // 获取可执行文件路径
     let exe_path =
@@ -22,14 +21,6 @@ fn get_config_path() -> Result<PathBuf, String> {
 }
 
 #[tauri::command]
-fn check_file_exists(file_path: String) -> Result<bool, String> {
-    // 将传入的字符串转换为 PathBuf
-    let path = PathBuf::from(file_path);
-    // 检查文件是否存在
-    Ok(path.exists())
-}
-
-#[tauri::command]
 fn read_config() -> Result<String, String> {
     let config_path = get_config_path()?;
     println!("Config path: {}", config_path.display());
@@ -41,13 +32,6 @@ fn read_config() -> Result<String, String> {
         }
         false => Err("Config file does not exist".to_string()),
     }
-}
-
-#[tauri::command]
-fn write_config(data: &str) -> Result<(), String> {
-    let config_path = get_config_path()?;
-
-    fs::write(&config_path, data).map_err(|e| format!("Failed to write config: {}", e))
 }
 
 #[tauri::command]
@@ -91,10 +75,7 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_screenshots::init())
         .invoke_handler(tauri::generate_handler![
-            get_config_path,
-            check_file_exists,
             read_config,
-            write_config,
             read_key_from_removable
         ])
         .run(tauri::generate_context!())

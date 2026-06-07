@@ -104,9 +104,9 @@
 
 <script setup lang="ts">
 import { revealItemInDir } from '@tauri-apps/plugin-opener';
-import { invoke } from '@tauri-apps/api/core';
 import { save, open } from '@tauri-apps/plugin-dialog';
-import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
+import { readTextFile, writeTextFile, BaseDirectory, exists } from '@tauri-apps/plugin-fs';
+import { appDataDir } from '@tauri-apps/api/path';
 
 import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown, NDivider, NSwitch, NColorPicker, NInput } from 'naive-ui'
 import settingItem from '../component/settingItem.vue'
@@ -140,11 +140,10 @@ function setFirstWeek(key: number) {
     NMessage.success('已设置')
 }
 async function openConfigDir() {
-    const filePath = await invoke('get_config_path') as string
-    if (!await invoke('check_file_exists', { filePath: filePath })) {
+    if (!await exists('config.json', { baseDir: BaseDirectory.AppData })) {
         await scheduleStore.save()
     }
-    await revealItemInDir(filePath);
+    await revealItemInDir(await appDataDir() + '/config.json');
 }
 async function exportToCSES() {
     try {

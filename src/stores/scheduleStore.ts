@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import dayjs from "dayjs";
 import updateLocale from 'dayjs/plugin/updateLocale'
 import YAML from 'yaml'
+import { BaseDirectory, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import { invoke } from '@tauri-apps/api/core'
 import { emit } from '@tauri-apps/api/event'
 import { listen } from '@tauri-apps/api/event'
@@ -103,11 +104,16 @@ export const useScheduleStore = defineStore('schedule', () => {
     async function init() {
         let data: any
         try {
-            data = await invoke("read_config")
-            data = JSON.parse(data)
+            data = await readTextFile('config.json', { baseDir: BaseDirectory.AppData })
         } catch (e) {
-            console.log('读取配置失败：', e)
+            console.log('读取appdata的配置失败：', e)
+            try {
+                data = await invoke("read_config")
+            } catch (e) {
+                console.log('读取可执行文件目录的配置还是失败：', e)
+            }
         }
+        data = JSON.parse(data)
         console.log("config-data:", data)
         if (data) {
             async function loadV0(d: any) {
@@ -202,18 +208,17 @@ export const useScheduleStore = defineStore('schedule', () => {
 
     async function save(doNotShowSuccessMessage: boolean = false) {
         try {
-            await invoke("write_config", {
-                data: JSON.stringify({
-                    version: 1,
-                    setting: setting?.value,
-                    drawCandidates: drawCandidates?.value,
-                    patterns: patterns?.value,
-                    schedule: schedule?.value,
-                    scheduleOverride: scheduleOverride?.value,
-                    firstWeekMonday: firstWeekMonday?.value,
-                    widgets: widgets?.value,
-                }, null, 2)
-            });
+            await writeTextFile('config.json', JSON.stringify({
+                version: 1,
+                setting: setting?.value,
+                drawCandidates: drawCandidates?.value,
+                patterns: patterns?.value,
+                schedule: schedule?.value,
+                scheduleOverride: scheduleOverride?.value,
+                firstWeekMonday: firstWeekMonday?.value,
+                widgets: widgets?.value,
+            }, null, 2), { baseDir: BaseDirectory.AppData })
+
             emit("updated");
             if (!doNotShowSuccessMessage) {
                 window.$NMessageApi.success("已保存");
