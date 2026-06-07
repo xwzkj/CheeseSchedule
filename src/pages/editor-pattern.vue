@@ -4,7 +4,7 @@
             <div class="flex items-center gap-2">
                 <n-dropdown :options="scheduleStore.patternsOption" @select="handleSelect" trigger="click">
                     <n-button type="primary" dashed>
-                        选择一个“模式”来编辑
+                        选择一个时间表来编辑
                         <template #icon>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"

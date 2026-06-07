@@ -80,7 +80,7 @@ const menuOptions: MenuOption[] = [
         key: 'editor-home',
     },
     {
-        label: renderLink('editor-pattern', '模式编辑'),
+        label: renderLink('editor-pattern', '时间表编辑'),
         key: 'editor-pattern',
     },
     {

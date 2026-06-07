@@ -186,7 +186,7 @@ export const useScheduleStore = defineStore('schedule', () => {
             }
         } else {
             for (let i = 0; i < 7; i++) {
-                patterns.value.push({ name: `模式${i + 1}`, data: [] })
+                patterns.value.push({ name: `时间表${i + 1}`, data: [] })
             }
         }
         currentScheduleId.value = getCurrentScheduleId()
@@ -465,7 +465,7 @@ export const useScheduleStore = defineStore('schedule', () => {
                     res.pattern = f // 复用
                 } else {
                     // 新建
-                    patterns.value.push({ name: `模式${patterns.value.length + 1}`, data: newPattern })
+                    patterns.value.push({ name: `时间表${patterns.value.length + 1}`, data: newPattern })
                     res.pattern = patterns.value.length - 1
                 }
                 if (lessons.weeks === 'all') {
@@ -479,7 +479,7 @@ export const useScheduleStore = defineStore('schedule', () => {
             // 导入结束
             if (patterns.value.length < 7) { // 如果时间表不足七个，就补全
                 for (let i = patterns.value.length; i < 7; i++) {
-                    patterns.value.push({ name: `空模式${i + 1}`, data: [] })
+                    patterns.value.push({ name: `空时间表${i + 1}`, data: [] })
                 }
             }
 
