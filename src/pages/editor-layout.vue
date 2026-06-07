@@ -132,16 +132,25 @@ async function checkKeyFile() {
 </script>
 
 <style scoped>
-.blur-enter-active,
 .blur-leave-active {
     transition: all 0.2s ease-in;
     overflow: hidden;
 }
 
-.blur-enter-from,
+.blur-enter-active {
+    transition: all 0.3s ease-out;
+    overflow: hidden;
+}
+
 .blur-leave-to {
-    filter: blur(1.5rem);
+    filter: blur(0.5rem);
     opacity: 0;
-    transform: scale(1.05);
+    transform: translate(0, -2vh);
+}
+
+.blur-enter-from {
+    filter: blur(0.5rem);
+    opacity: 0;
+    transform: translate(0, 2vh);
 }
 </style>
