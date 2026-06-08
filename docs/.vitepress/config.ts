@@ -48,8 +48,6 @@ export default defineConfig({
     darkModeSwitchTitle: '切换到深色模式',
     skipToContentLabel: '跳转到内容',
 
-
-    lastUpdated: true,
     markdown: {
       image: {
         lazyLoading: true
