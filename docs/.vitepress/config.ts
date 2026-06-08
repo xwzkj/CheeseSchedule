@@ -10,6 +10,7 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     siteTitle: "奶酪课程表",
+    logo: '/app-icon.png',
     search: {
       provider: 'local',
       options: {
