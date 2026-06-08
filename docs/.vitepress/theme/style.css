@@ -1,0 +1,28 @@
+:root {
+  --color-0: #fffde6;
+  --color-1: #faf1a5;
+  --color-2: #eddd77;
+  --color-3: #e0c84c;
+  --color-4: #d4b126;
+  --color-5: #c89904;
+  --color-6: #a17600;
+  --color-7: #7a5600;
+  --color-8: #543800;
+  --color-9: #2e1d00;
+}
+
+/* 奶酪主题色 - 暖金色 */
+:root {
+  --vp-c-brand-1: var(--color-6);
+  --vp-c-brand-2: var(--color-5);
+  --vp-c-brand-3: var(--color-4);
+  --vp-c-brand-soft: color-mix(in srgb, var(--color-0) 60%, transparent);
+}
+
+/* 首页 Hero 区域品牌色 */
+:root {
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, var(--color-4) 30%, var(--color-5) 70%);
+  --vp-home-hero-image-background-image: linear-gradient(120deg, var(--color-2), var(--color-3));
+  --vp-home-hero-image-filter: blur(100px);
+}
