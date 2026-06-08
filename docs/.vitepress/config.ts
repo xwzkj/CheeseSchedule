@@ -67,8 +67,14 @@ export default defineConfig({
       {
         text: '起步',
         items: [
-          { text: '介绍', link: '/doc/introduction' },
-          { text: '下载', link: '/doc/download' }
+          { text: '软件简介', link: '/doc/introduction' },
+          { text: '下载该软件', link: '/doc/download' }
+        ]
+      },
+      {
+        text: '其他',
+        items: [
+          { text: '更多信息', link: '/doc/more-info' }
         ]
       }
     ],
