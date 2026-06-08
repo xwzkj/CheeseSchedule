@@ -8,7 +8,10 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev --verbose",
-    "tauri:build": "tauri build --verbose"
+    "tauri:build": "tauri build --verbose",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "dependencies": {
     "@ant-design/colors": "^8.0.1",
@@ -55,6 +58,7 @@
     "unplugin-icons": "^22.4.2",
     "vite": "^7.3.3",
     "vite-plugin-vue-devtools": "^8.1.2",
+    "vitepress": "2.0.0-alpha.17",
     "vue-tsc": "^2.1.10"
   },
   "pnpm": {
