@@ -9,7 +9,7 @@
             </div>
         </component>
         <component :is="meaningNeedMarquee ? NMarquee : 'div'" class="w-full">
-            <div class="text-1.1rem max-w-full text-right" :class="{ 'm-r-3rem': meaningNeedMarquee }" ref="meaning">
+            <div class="text-1.1rem max-w-full text-right c8" :class="{ 'm-r-3rem': meaningNeedMarquee }" ref="meaning">
                 {{ data.meaning }}
             </div>
         </component>
