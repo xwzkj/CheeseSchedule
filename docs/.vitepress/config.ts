@@ -2,10 +2,14 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "奶酪课程表",
-  description: "专为教室大屏设计的AI课程表系统",
+  title: "奶酪课程表 - 专为教室大屏设计的桌面课程表系统",
+  description: "这是一款用于教室大屏幕的开源桌面课程表软件，与AI融合，内置多种实用功能，基于tauri和vue构建",
+  head: [
+    ['link', { rel: 'icon', type: 'image/png', href: '/app-icon.png' }]
+  ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    siteTitle: "奶酪课程表",
     search: {
       provider: 'local',
       options: {
