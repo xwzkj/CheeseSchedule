@@ -18,7 +18,12 @@
             </div>
         </div>
         <div class="flex flex-col items-center">
-            <div @click="openGithub" class="underline decoration-solid cursor-pointer link">GitHub</div>
+            <div class="flex gap-2">
+                <div @click="openUrl('https://schedule.wanzii.cn')"
+                    class="underline decoration-solid cursor-pointer link">官网</div>
+                <div @click="openUrl('https://github.com/xwzkj/CheeseSchedule')"
+                    class="underline decoration-solid cursor-pointer link">GitHub</div>
+            </div>
             <div>© 2025-至今 丸子</div>
         </div>
     </div>
@@ -32,9 +37,6 @@ let timeNow = ref(dayjs().format('YYYY/MM/DD HH:mm:ss'))
 let timer = setInterval(() => {
     timeNow.value = dayjs().format('YYYY/MM/DD HH:mm:ss')
 }, 500);
-let openGithub = async () => {
-    await openUrl('https://github.com/xwzkj/CheeseSchedule')
-}
 onUnmounted(() => {
     clearInterval(timer);
 })

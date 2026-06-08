@@ -151,6 +151,13 @@ async function initWindow() {
                 enabled: false,
             },
             {
+                id: 'official',
+                text: '前往官网',
+                action: async () => {
+                    await openUrl("https://schedule.wanzii.cn")
+                },
+            },
+            {
                 id: 'github',
                 text: '前往GitHub项目页',
                 action: async () => {
@@ -189,7 +196,7 @@ async function initWindow() {
     // 检查更新=====================================================================================
     updateInfo.value = await tool.checkUpdate()
     // updateInfo.value.hasUpdate = true // 调试用
-    let insertPosition = 6
+    let insertPosition = 7
     if (updateInfo.value && updateInfo.value.hasUpdate) {
         console.log("有新版本", updateInfo.value);
         NMessage.success("有新版本，请前往托盘菜单更新", { duration: 60000, closable: true })
@@ -336,7 +343,8 @@ onMounted(() => {
                 card-border bg-white overflow-hidden">
 
                 <div class="text-1.3rem font-bold 
-                line-height-120% whitespace-nowrap c6 cursor-pointer underline" @click.stop="openUrl('https://github.com/xwzkj/CheeseSchedule/releases/latest')"> 
+                line-height-120% whitespace-nowrap c6 cursor-pointer underline"
+                    @click.stop="openUrl('https://github.com/xwzkj/CheeseSchedule/releases/latest')">
                     有新版本:{{ updateInfo?.latestVersion }}
                 </div>
                 <n-ellipsis class="c4">
