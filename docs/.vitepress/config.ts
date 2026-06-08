@@ -5,8 +5,20 @@ export default defineConfig({
   title: "奶酪课程表 - 专为教室大屏设计的桌面课程表系统",
   description: "这是一款用于教室大屏幕的开源桌面课程表软件，与AI融合，内置多种实用功能，基于tauri和vue构建",
   head: [
-    ['link', { rel: 'icon', type: 'image/png', href: '/app-icon.png' }]
+    ['link', { rel: 'icon', type: 'image/png', href: '/app-icon.png' }],
+    ['script', { async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-FH4JGQSSCX' }],
+    ['script', {}, `
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-FH4JGQSSCX');
+    `]
   ],
+  markdown: {
+    image: {
+      lazyLoading: true
+    }
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     siteTitle: "奶酪课程表",
@@ -53,11 +65,6 @@ export default defineConfig({
     darkModeSwitchTitle: '切换到深色模式',
     skipToContentLabel: '跳转到内容',
 
-    markdown: {
-      image: {
-        lazyLoading: true
-      }
-    },
     nav: [
       { text: '主页', link: '/' },
       { text: '使用说明', link: '/doc/introduction' }
