@@ -10,9 +10,9 @@ export const useDrawStore = defineStore('draw', () => {
     const scheduleStore = useScheduleStore()
     let leaveStudentsList = ref<Leave[]>([])
     // 监听请假列表更新
-    listen('leaveStudentsList', (e) => {
-        leaveStudentsList.value = e.payload as any
-        console.log('drawStore收到请假列表广播',leaveStudentsList.value)
+    listen<Leave[]>('leaveStudentsList', (e) => {
+        leaveStudentsList.value = e.payload
+        console.log('drawStore收到请假列表广播', leaveStudentsList.value)
     })
     // 可供抽选的候选人
     const availableCandidates = computed(() => {
