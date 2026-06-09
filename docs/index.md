@@ -14,6 +14,9 @@ hero:
     - theme: alt
       text: 下载
       link: /doc/download
+    - theme: alt
+      text: GitHub
+      link: https://github.com/xwzkj/CheeseSchedule
 
 features:
   - title: 轻量
