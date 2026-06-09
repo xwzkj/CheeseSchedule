@@ -5,7 +5,9 @@
         <div v-else class="p-1 rounded-2 border-#ddd border border-1 flex items-center flex-col cursor-pointer">
             <n-auto-complete v-model:value="props.data.name" :options="lessonsOption" :input-props="{
                 autocomplete: 'disabled'
-            }" blur-after-select class="w-4.5rem">
+            }" blur-after-select
+                @update:value="(val: string) => { if (val.length > 3) props.data.name = val.slice(0, 3) }"
+                class="w-4.5rem">
             </n-auto-complete>
             <div class="text-0.7rem text-gray">{{ props.data?.time }}</div>
         </div>
