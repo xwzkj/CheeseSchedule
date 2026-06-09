@@ -21,13 +21,13 @@ function sleep(ms: number) {
 
 async function request(config: AxiosRequestConfig) {
     try {
+        return await axios(config)
+    } catch (e) {
+        console.log('直连访问失败：', e)
         return await axios({
             ...config,
             url: proxyURI(config.url as string),
         })
-    } catch (e) {
-        console.log('使用代理访问失败：', e)
-        return await axios(config)
     }
 }
 async function isNewerVersion(ver: string) {
@@ -56,7 +56,7 @@ async function isNewerVersion(ver: string) {
 }
 
 async function checkUpdate(): Promise<UpdateInfo> {
-    let updateInfo: UpdateInfo = { hasUpdate: false, latestVersion: await app.getVersion(), assets: [], html_url: '', changeLog: { full: '', simple: '' } }
+    let updateInfo: UpdateInfo = { hasUpdate: false, latestVersion: '', assets: [], html_url: '', changeLog: { full: '', simple: '' } }
     try {
         for (let i = 0; i < 15; i++) { // 如果未联网，等待网络连接
             if (navigator.onLine) {

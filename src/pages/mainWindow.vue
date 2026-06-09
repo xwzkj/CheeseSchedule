@@ -11,7 +11,8 @@ import { primaryMonitor, PhysicalPosition, LogicalSize } from "@tauri-apps/api/w
 import { getCurrentWebviewWindow, WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { TrayIcon, type TrayIconOptions } from '@tauri-apps/api/tray';
 import * as app from '@tauri-apps/api/app';
-import { Menu, MenuItem } from '@tauri-apps/api/menu';
+import { Menu } from '@tauri-apps/api/menu';
+import { listen, emit } from "@tauri-apps/api/event";
 import { exit } from '@tauri-apps/plugin-process';
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
@@ -194,47 +195,11 @@ async function initWindow() {
         tray.close()// 防止生成多个托盘图标
     })
     // 检查更新=====================================================================================
+    listen('getUpdateInfo', () => {
+        emit('updateInfo', updateInfo.value)
+    })
     updateInfo.value = await tool.checkUpdate()
     // updateInfo.value.hasUpdate = true // 调试用
-    let insertPosition = 7
-    if (updateInfo.value && updateInfo.value.hasUpdate) {
-        console.log("有新版本", updateInfo.value);
-        NMessage.success("有新版本，请前往托盘菜单更新", { duration: 60000, closable: true })
-        menu.insert(await MenuItem.new({
-            text: `检测到新版本${updateInfo.value.latestVersion}，点击打开更新页面`,
-            action: async () => {
-                await openUrl((updateInfo.value as UpdateInfo).html_url)
-            },
-        }), insertPosition++)
-        menu.insert(await MenuItem.new({
-            text: `${updateInfo.value.changeLog.simple ? `更新日志：${updateInfo.value.changeLog.simple?.slice(0, 25)}...` : '无更新日志'}`,
-            enabled: false,
-        }), insertPosition++)
-        menu.insert({ item: 'Separator' }, insertPosition++)
-        menu.insert(await MenuItem.new({ text: '点击下载新版本：', enabled: false }), insertPosition++)
-        menu.insert({ item: 'Separator' }, insertPosition)
-
-        // 添加下载链接
-        for (let i = 0; i < updateInfo.value.assets?.length; i++) {
-            menu.insert(await MenuItem.new({
-                id: 'download' + i,
-                text: "原始链接:" + updateInfo.value.assets[i].name,
-                action: async () => {
-                    await openUrl((updateInfo.value as UpdateInfo).assets[i].browser_download_url)
-                },
-            }), insertPosition)
-            menu.insert(await MenuItem.new({
-                id: 'downloadWithProxy' + i,
-                text: "用代理下载:" + updateInfo.value.assets[i].name,
-                action: async () => {
-                    await openUrl(tool.proxyURI((updateInfo.value as UpdateInfo).assets[i].browser_download_url))
-                },
-            }), insertPosition)
-        }
-    } else {
-        menu.insert(await MenuItem.new({ text: '未检测到新版本', enabled: false }), insertPosition++)
-        menu.insert({ item: 'Separator' }, insertPosition++)
-    }
 }
 
 async function setTop(isTop: boolean) {
@@ -343,8 +308,7 @@ onMounted(() => {
                 card-border bg-white overflow-hidden">
 
                 <div class="text-1.3rem font-bold 
-                line-height-120% whitespace-nowrap c6 cursor-pointer underline"
-                    @click.stop="openUrl('https://github.com/xwzkj/CheeseSchedule/releases/latest')">
+                line-height-120% whitespace-nowrap c6 cursor-pointer underline" @click.stop="openEditorWindow()">
                     有新版本:{{ updateInfo?.latestVersion }}
                 </div>
                 <n-ellipsis class="c4">
