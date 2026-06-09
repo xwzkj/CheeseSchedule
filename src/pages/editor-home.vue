@@ -85,7 +85,7 @@ import { NModal, NScrollbar, NButton } from 'naive-ui'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { app } from '@tauri-apps/api';
-const md = new MarkdownIt();
+const md = new MarkdownIt().disable('link');
 let timeNow = ref(dayjs().format('YYYY/MM/DD HH:mm:ss'))
 let version = ref('0.0.0')
 let updateInfo = ref<UpdateInfo>()
