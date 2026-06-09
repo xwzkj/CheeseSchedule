@@ -81,6 +81,7 @@ gtag('config', 'G-FH4JGQSSCX');
       {
         text: '其他',
         items: [
+          { text: '群聊', link: '/doc/group' },
           { text: '更多信息', link: '/doc/more-info' }
         ]
       }
