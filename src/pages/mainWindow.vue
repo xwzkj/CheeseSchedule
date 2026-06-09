@@ -12,7 +12,6 @@ import { getCurrentWebviewWindow, WebviewWindow } from "@tauri-apps/api/webviewW
 import { TrayIcon, type TrayIconOptions } from '@tauri-apps/api/tray';
 import * as app from '@tauri-apps/api/app';
 import { Menu } from '@tauri-apps/api/menu';
-import { listen, emit } from "@tauri-apps/api/event";
 import { exit } from '@tauri-apps/plugin-process';
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
@@ -195,9 +194,6 @@ async function initWindow() {
         tray.close()// 防止生成多个托盘图标
     })
     // 检查更新=====================================================================================
-    listen('getUpdateInfo', () => {
-        emit('updateInfo', updateInfo.value)
-    })
     updateInfo.value = await tool.checkUpdate()
     // updateInfo.value.hasUpdate = true // 调试用
 }

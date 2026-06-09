@@ -17,7 +17,7 @@
                 详细说明请点击下方的“GitHub”查看README文档
             </div>
             <settingItem t1="版本信息" :t2="versionText">
-                <n-button type="primary" secondary @click="() => showUpdateModal = true">检查更新</n-button>
+                <n-button type="primary" secondary @click="() => showUpdateModal = true">查看更新</n-button>
             </settingItem>
         </div>
         <div class="flex flex-col items-center">
@@ -32,15 +32,19 @@
 
         <!-- 检查更新模态框 -->
         <n-modal v-model:show="showUpdateModal">
-            <div class="h-80vh w-70vw flex flex-col bg-white p-1.5rem rounded-1rem gap-2">
-                <div class="text-2rem line-height-110%">检查更新</div>
+            <div class="h-90vh w-90vw flex flex-col bg-white p-1.5rem rounded-1rem gap-2">
+                <div class="text-2rem line-height-110%">
+                    {{ updateInfo?.hasUpdate === true ? '有新版本' : (updateInfo?.hasUpdate === false ? '已是最新版本' : '检查中') }}
+                </div>
                 <div class="flex gap-2 justify-between">
                     <div class="rounded-0.5rem bg-#f5f5f5 p-0.5rem text-center flex-1">
                         <div class="text-1.2rem">v{{ version }}</div>
                         <div class="text-#777">当前</div>
                     </div>
                     <div class="rounded-0.5rem bg-#f5f5f5 p-0.5rem text-center flex-1">
-                        <div class="text-1.2rem">{{ updateInfo?.latestVersion || '检查失败' }}</div>
+                        <div class="text-1.2rem">
+                            {{ updateInfo?.latestVersion === undefined ? '检查中' : updateInfo?.latestVersion || '检查失败' }}
+                        </div>
                         <div class="text-#777">最新</div>
                     </div>
                 </div>
@@ -81,10 +85,9 @@ import { NModal, NScrollbar, NButton } from 'naive-ui'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { app } from '@tauri-apps/api';
-import { emit, listen } from '@tauri-apps/api/event';
 const md = new MarkdownIt();
 let timeNow = ref(dayjs().format('YYYY/MM/DD HH:mm:ss'))
-let version = ref('v0.0.0')
+let version = ref('0.0.0')
 let updateInfo = ref<UpdateInfo>()
 let versionText = computed(() => {
     let res = "当前版本：v" + version.value
@@ -94,18 +97,12 @@ let versionText = computed(() => {
     return res
 })
 let showUpdateModal = ref(false)
-let renderedChangeLog = ref('暂无更新日志')
+let renderedChangeLog = ref('暂无更新日志');
 
-// 获取版本信息
-listen<UpdateInfo>('updateInfo', async (event) => {
-    updateInfo.value = event.payload
-    if (!updateInfo.value.latestVersion) { // 没获取到，在这里检查一下
-        updateInfo.value = await checkUpdate()
-    }
-})
-emit('getUpdateInfo');
+
 (async () => {
     version.value = await app.getVersion()
+    updateInfo.value = await checkUpdate()
 })()
 
 onMounted(() => {
