@@ -79,8 +79,10 @@ async function initWindowSize() {
         innerSize.width = Math.floor(170 * monitor.scaleFactor * scheduleStore.setting?.zoom)
 
         await thisWindow.setZoom(scheduleStore.setting?.zoom)
+        await thisWindow.setMaxSize(innerSize) // 偏方实现禁止调节大小，规避resizable导致的ubuntu中窗口最小200px尺寸
+        await thisWindow.setMinSize(innerSize)
         await thisWindow.setSize(innerSize)
-
+        
         // 设置窗口位置
         const outerSize = await thisWindow.outerSize()
         await thisWindow.setPosition(new PhysicalPosition(workAreaPosition.x + workAreaSize.width - outerSize.width, workAreaPosition.y))

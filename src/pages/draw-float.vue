@@ -29,6 +29,8 @@ onMounted(async () => {
     try {
         const webviewWindow = getCurrentWebviewWindow();
         const monitor = await primaryMonitor();
+        await webviewWindow.setMaxSize(new LogicalSize(35, 70))
+        await webviewWindow.setMinSize(new LogicalSize(35, 70))
         await webviewWindow.setSize(new LogicalSize(35, 70));
         await webviewWindow.setPosition(new PhysicalPosition(2, Math.floor(monitor?.workArea.size.height as number / 3 * 2)));
         watch(() => scheduleStore.setting.drawSmallWindowEnabled, async (enabled) => {

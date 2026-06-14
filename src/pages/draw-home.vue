@@ -68,6 +68,8 @@ let unlisten: UnlistenFn[] = []
 onMounted(async () => {
     try {
         const webviewWindow = getCurrentWebviewWindow()
+        await webviewWindow.setMaxSize(new LogicalSize(730, 550))
+        await webviewWindow.setMinSize(new LogicalSize(730, 550))
         await webviewWindow.setSize(new LogicalSize(730, 550))
         await webviewWindow.center()
         await webviewWindow.show()

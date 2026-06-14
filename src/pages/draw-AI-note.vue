@@ -70,6 +70,8 @@ let renderedRes = computed(() => {
 onMounted(async () => {
     try {
         const webviewWindow = getCurrentWebviewWindow()
+        await webviewWindow.setMaxSize(new LogicalSize(850, 700))
+        await webviewWindow.setMinSize(new LogicalSize(850, 700))
         await webviewWindow.setSize(new LogicalSize(850, 700))
         await webviewWindow.center()
         await webviewWindow.show()
