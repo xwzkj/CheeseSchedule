@@ -113,9 +113,9 @@ export const useScheduleStore = defineStore('schedule', () => {
                 console.log('读取可执行文件目录的配置还是失败：', e)
             }
         }
-        data = JSON.parse(data)
-        console.log("config-data:", data)
         if (data) {
+            data = JSON.parse(data)
+            console.log("config-data:", data)
             async function loadV0(d: any) {
                 if (d?.patterns) {
                     patterns.value = d?.patterns
