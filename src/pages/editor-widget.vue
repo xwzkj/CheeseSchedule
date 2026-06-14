@@ -7,7 +7,7 @@
                 :group="{ name: 'widget', pull: 'clone', put: false }" :clone="clone" :sort="false"
                 class="flex flex-col gap-2 p-4 w-100% grow-1">
 
-                <div v-for="item in availableList" :key="item.key" class="cursor-move bg-gray-500/5 rounded-0.5rem p-3">
+                <div v-for="item in availableList" :key="item.key" class="cursor-move bg-#f7f8f9 rounded-0.5rem p-3">
                     {{ item.name }}
                 </div>
 
@@ -20,7 +20,7 @@
                 :prevent-on-filter="false" class="flex flex-col gap-2 p-4 h-100% grow-1 overflow-auto">
 
                 <div v-for="(item, index) in scheduleStore.widgets" :key="item.key"
-                    class="cursor-move bg-gray-500/5 rounded-0.5rem p-3">
+                    class="cursor-move bg-#f7f8f9 rounded-0.5rem p-3">
                     <n-collapse>
                         <template #arrow>
                             <hugeiconsArrowRight01 class="do-not-drag" />
