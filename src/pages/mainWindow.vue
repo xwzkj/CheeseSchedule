@@ -82,7 +82,7 @@ async function initWindowSize() {
         await thisWindow.setMaxSize(innerSize) // 偏方实现禁止调节大小，规避resizable导致的ubuntu中窗口最小200px尺寸
         await thisWindow.setMinSize(innerSize)
         await thisWindow.setSize(innerSize)
-        
+
         // 设置窗口位置
         const outerSize = await thisWindow.outerSize()
         await thisWindow.setPosition(new PhysicalPosition(workAreaPosition.x + workAreaSize.width - outerSize.width, workAreaPosition.y))
@@ -258,7 +258,6 @@ onMounted(() => {
             if (!scheduleStore.lessonStatus) {// 下课状态
                 NMessage.success("下课了!")
                 await setTop(true)
-                console.log("下课了，自动窗口置顶");
                 await playVoice("同学们，下课了！")
             } else {
                 NMessage.success("上课了!", { duration: 5000 })
@@ -273,21 +272,13 @@ onMounted(() => {
                 playVoice("同学们，上课时间到了！" + (lessonName ? "这节课是：" + lessonName + "！" : ""))
                 await tool.sleep(5000)
                 await setTop(false)
-                console.log("上课了，取消窗口置顶");
             }
         }
     }, 500), { immediate: true })
-    // 点击切换窗口置顶
+    // 点击取消窗口置顶
     outerEle.value?.addEventListener("click", async () => {
-        if (!scheduleStore.lessonStatus) {// 下课状态
-            let isTop = await thisWindow.isAlwaysOnTop()
-            await setTop(!isTop)
-            NMessage.success(`窗口置顶：${!isTop}`)
-            console.log(`点击切换了窗口置顶为：${!isTop}`);
-        } else {
-            await setTop(false)
-            NMessage.success(`上课中，取消置顶`)
-        }
+        await setTop(false)
+        NMessage.success(`取消置顶`)
     })
 })
 
