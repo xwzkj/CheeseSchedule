@@ -21,6 +21,7 @@ import { onMounted, onBeforeUnmount, ref, watch } from "vue";
 import router from "../router";
 import { useScheduleStore } from "../stores/scheduleStore";
 import { useDrawStore } from "../stores/drawStore";
+import { sleep } from "../tools/tool";
 const scheduleStore = useScheduleStore()
 useDrawStore() // 为了让store初始化，开始监听请假列表更新
 let inited = ref(false)
@@ -32,6 +33,7 @@ onMounted(async () => {
         await webviewWindow.setMaxSize(new LogicalSize(35, 70))
         await webviewWindow.setMinSize(new LogicalSize(35, 70))
         await webviewWindow.setSize(new LogicalSize(35, 70));
+        await sleep(50)
         await webviewWindow.setPosition(new PhysicalPosition(2, Math.floor(monitor?.workArea.size.height as number / 3 * 2)));
         watch(() => scheduleStore.setting.drawSmallWindowEnabled, async (enabled) => {
             if (enabled) {

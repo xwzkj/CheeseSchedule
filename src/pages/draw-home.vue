@@ -71,6 +71,7 @@ onMounted(async () => {
         await webviewWindow.setMaxSize(new LogicalSize(730, 550))
         await webviewWindow.setMinSize(new LogicalSize(730, 550))
         await webviewWindow.setSize(new LogicalSize(730, 550))
+        await sleep(50)
         await webviewWindow.center()
         await webviewWindow.show()
         // await webviewWindow.setFocus()

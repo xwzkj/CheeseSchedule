@@ -45,6 +45,7 @@ import 'katex/dist/katex.min.css';
 
 import router from "../router";
 import { useScheduleStore } from "../stores/scheduleStore";
+import { sleep } from "../tools/tool";
 
 const scheduleStore = useScheduleStore();
 const md = new MarkdownIt();
@@ -73,6 +74,7 @@ onMounted(async () => {
         await webviewWindow.setMaxSize(new LogicalSize(850, 700))
         await webviewWindow.setMinSize(new LogicalSize(850, 700))
         await webviewWindow.setSize(new LogicalSize(850, 700))
+        await sleep(50)
         await webviewWindow.center()
         await webviewWindow.show()
         // await webviewWindow.setAlwaysOnTop(false)
