@@ -72,8 +72,7 @@ async function initWindowSize() {
         const innerSize = await thisWindow.innerSize()
         const workAreaSize = monitor.workArea.size
         const workAreaPosition = monitor.workArea.position
-        console.log('工作区大小:', workAreaSize)
-        console.log('工作区位置:', workAreaPosition)
+        console.log('默认显示器:', monitor)
 
         // 计算窗口大小
         innerSize.height = Math.floor(workAreaSize.height * scheduleStore.setting?.heightFactor)
