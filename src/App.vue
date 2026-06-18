@@ -127,4 +127,8 @@ initAnyThing()
 .c0 {
     color: var(--color-0);
 }
+
+body {
+    -webkit-font-smoothing: antialiased;
+}
 </style>
