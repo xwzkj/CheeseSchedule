@@ -4,6 +4,13 @@
 
 ![banner](./readme-assets/banner.png)
 
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/xwzkj/CheeseSchedule/total?label=下载量&logo=github)
+![GitHub Repo stars](https://img.shields.io/github/stars/xwzkj/CheeseSchedule?style=flat&label=%E6%98%9F%E6%A0%87%E6%95%B0)
+![GitHub License](https://img.shields.io/github/license/xwzkj/CheeseSchedule?label=许可证)
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/xwzkj/CheeseSchedule)
+
+
 奶酪课程表是一款简洁的教室大屏电子课表软件，基于tauri + vite + vue开发，相较同类软件，该软件简单易懂，资源占用轻量。
 
 | 软件                 | 包体积 | 内存占用 |
