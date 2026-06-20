@@ -1,5 +1,5 @@
 <template>
-    <div class="h-100vh w-100vw flex justify-center items-center">
+    <div class="h-100vh w-100vw flex justify-center items-center" v-show="windowInited">
         <div class="h-95% w-95% bg-white rounded-1rem p-2rem 
     flex flex-col justify-between gap-1 outer">
             <div class="text-3rem color-#555 line-height-130%">
@@ -63,6 +63,7 @@ const scheduleStore = useScheduleStore();
 const message = useMessage()
 let drawResult = ref("刘华强");
 const result = useTemplateRef('result')
+let windowInited = ref(false)
 
 let unlisten: UnlistenFn[] = []
 onMounted(async () => {
@@ -78,7 +79,9 @@ onMounted(async () => {
     } catch (e) {
         console.error(e)
     }
+    windowInited.value = true
     await nextTick()
+    result.value!.offsetHeight // 读取offsetHeight，强制触发result元素的重排，确保动画生效
     draw()
     await nextTick()
     unlisten.push(await listen('draw', draw))
