@@ -91,6 +91,9 @@
                 <n-slider v-model:value="scheduleStore.setting.heightFactor" :min="0.3" :max="1" :step="0.01" />
             </div>
         </setting-item>
+        <setting-item t1="位置避让" t2="避免遮挡全屏窗口标题栏的关闭按钮">
+            <n-switch v-model:value="scheduleStore.setting.avoidCoverTitleBar" />
+        </setting-item>
         <setting-item t1="主题色" t2="选择一个主题色，将生成配色方案 | 默认值：#ce9e04">
             <div class="w-7rem">
                 <n-color-picker v-model:value="scheduleStore.setting.themeColor" :show-alpha="false" :modes="['hex']" />

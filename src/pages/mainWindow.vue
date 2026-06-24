@@ -75,7 +75,8 @@ async function initWindowSize() {
         console.log('默认显示器:', monitor)
 
         // 计算窗口大小
-        innerSize.height = Math.floor(workAreaSize.height * scheduleStore.setting?.heightFactor)
+        let yOffset = scheduleStore.setting.avoidCoverTitleBar ? 32 * monitor.scaleFactor : 0 // 避让全屏窗口的标题栏
+        innerSize.height = Math.floor(workAreaSize.height * scheduleStore.setting?.heightFactor - yOffset)
         innerSize.width = Math.floor(170 * monitor.scaleFactor * scheduleStore.setting?.zoom)
 
         await thisWindow.setZoom(scheduleStore.setting?.zoom)
@@ -85,7 +86,7 @@ async function initWindowSize() {
 
         // 设置窗口位置
         const outerSize = await thisWindow.outerSize()
-        await thisWindow.setPosition(new PhysicalPosition(workAreaPosition.x + workAreaSize.width - outerSize.width, workAreaPosition.y))
+        await thisWindow.setPosition(new PhysicalPosition(workAreaPosition.x + workAreaSize.width - outerSize.width, workAreaPosition.y + yOffset))
     } catch (error) {
         console.error("设置窗口位置失败:", error);
     }
@@ -121,8 +122,11 @@ async function openEditorWindow() {
 }
 async function initWindow() {
     // 立即初始化窗口大小，并监听缩放比例变化，实时更新窗口大小
-    watch(() => scheduleStore.setting.zoom, initWindowSize, { immediate: true })
-    watch(() => scheduleStore.setting.heightFactor, initWindowSize)
+    watch([
+        () => scheduleStore.setting.zoom,
+        () => scheduleStore.setting.heightFactor,
+        () => scheduleStore.setting.avoidCoverTitleBar
+    ], initWindowSize, { immediate: true })
 
     // 禁用 Ctrl+P
     window.addEventListener("keydown", (e) => {
