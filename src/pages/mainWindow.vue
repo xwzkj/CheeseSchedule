@@ -15,6 +15,7 @@ import { Menu } from '@tauri-apps/api/menu';
 import { exit } from '@tauri-apps/plugin-process';
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
+import { platform } from '@tauri-apps/plugin-os';
 
 // 小组件
 import daysLeft from "../component/widgets/daysLeft.vue";
@@ -281,8 +282,14 @@ onMounted(() => {
     }, 500), { immediate: true })
     // 点击取消窗口置顶
     outerEle.value?.addEventListener("click", async () => {
-        await setTop(false)
-        NMessage.success(`取消置顶`)
+        if (platform() === 'linux' || scheduleStore.lessonStatus) {
+            await setTop(false)
+            NMessage.success(`取消置顶`)
+        } else {// 下课状态 且 不是linux平台
+            let isTop = await thisWindow.isAlwaysOnTop()
+            await setTop(!isTop)
+            NMessage.success(`${(!isTop) ? '启用' : '取消'}窗口置顶`)
+        }
     })
 })
 
