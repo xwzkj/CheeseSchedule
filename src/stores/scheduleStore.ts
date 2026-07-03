@@ -327,7 +327,7 @@ export const useScheduleStore = defineStore('schedule', () => {
             if (scheduleToday.value[i].isDivider) {
                 continue
             }
-            let lastTimeIndex = 0;
+            let lastTimeIndex = i; // 上一个不是分割线的课程 如果前面全是分割线 则设置为当前课程，以触发课间判断
             for (let j = i - 1; j >= 0; j--) {
                 if (!scheduleToday.value[j].isDivider) {
                     lastTimeIndex = j;
