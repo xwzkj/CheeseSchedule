@@ -30,6 +30,8 @@
 
 得益于tauri2的跨平台特性，程序也实验性支持linux和macos系统，可自行编译体验。
 
+该软件还有[小米手环版](./vela)，可在vela系统的小米手环上使用
+
 [宣传视频](https://www.bilibili.com/video/BV1JfEM66EfE)
 
 ## 功能

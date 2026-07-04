@@ -6,7 +6,7 @@ export default defineConfig({
   description: "这是一款用于教室大屏幕的开源桌面课程表软件，与AI融合，内置多种实用功能，基于tauri和vue构建",
   head: [
     ['link', { rel: 'icon', type: 'image/png', href: '/app-icon.png' }],
-    ['script', { async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-FH4JGQSSCX' }],
+    ['script', { async: 'true', src: 'https://www.googletagmanager.com/gtag/js?id=G-FH4JGQSSCX' }],
     ['script', {}, `
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -75,6 +75,7 @@ gtag('config', 'G-FH4JGQSSCX');
         text: '起步',
         items: [
           { text: '软件简介', link: '/doc/introduction' },
+          { text: '手环版', link: '/doc/vela' },
           { text: '下载该软件', link: '/doc/download' }
         ]
       },

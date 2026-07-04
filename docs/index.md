@@ -12,6 +12,9 @@ hero:
       text: 查看详情
       link: /doc/introduction
     - theme: alt
+      text: 手环版
+      link: /doc/vela
+    - theme: alt
       text: 下载
       link: /doc/download
     - theme: alt
