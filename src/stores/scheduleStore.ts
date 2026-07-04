@@ -19,7 +19,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         startup: true, // 是否开机自启
         zoom: 1, // 主窗口缩放比例
         heightFactor: 0.7, // 主窗口高度乘数
-        avoidCoverTitleBar:true,// 避免主窗口遮挡窗口标题栏
+        avoidCoverTitleBar: false,// 是否避免主窗口遮挡窗口标题栏
         timeOffset: 0, // 时间偏移量 单位：秒
         drawDynamicProbability: true, // 是否启用动态概率
         drawPreventDuplicate: true, // 是否阻止在同一轮中重复抽中某人
