@@ -15,9 +15,6 @@ hero:
       text: 手环版
       link: /doc/vela
     - theme: alt
-      text: 下载
-      link: /doc/download
-    - theme: alt
       text: GitHub
       link: https://github.com/xwzkj/CheeseSchedule
 
