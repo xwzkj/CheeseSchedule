@@ -110,4 +110,4 @@
 
 ### 星标历史
 
-[![Star History Chart](https://api.star-history.com/chart?repos=xwzkj/cheeseschedule&type=date&legend=top-left)](https://www.star-history.com/?repos=xwzkj%2Fcheeseschedule&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/chart?repos=xwzkj/cheeseschedule&type=date&legend=bottom-right&sealed_token=ChTGjARVXdHNEPmn4fKs-4QaytBptLTKkFpsOyDY9iNMSygRX8Ag7UdUYcnVxGRBYcWEfPna5oG68RFMFuDlLY_EAGkytBQXWEGooY7k60uECYnc_s76ZJV3FVKMKpvXUsJQR-Cm9KQafkZchnJiM5ImFSpdnGweFPjiBHyqvWCxUzQdYPV3Vif2LUpU)](https://www.star-history.com/?repos=xwzkj%2Fcheeseschedule&type=date&legend=bottom-right)
