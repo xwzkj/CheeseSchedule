@@ -19,6 +19,9 @@ gtag('config', 'G-FH4JGQSSCX');
       lazyLoading: true
     }
   },
+  sitemap:{
+    hostname: 'https://schedule.wanzii.cn',
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     siteTitle: "奶酪课程表",
