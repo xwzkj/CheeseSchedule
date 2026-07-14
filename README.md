@@ -7,9 +7,9 @@
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/xwzkj/CheeseSchedule/total?label=下载量&logo=github)
 ![GitHub Repo stars](https://img.shields.io/github/stars/xwzkj/CheeseSchedule?style=flat&label=%E6%98%9F%E6%A0%87%E6%95%B0)
 ![GitHub License](https://img.shields.io/github/license/xwzkj/CheeseSchedule?label=许可证)
+[![Website](https://img.shields.io/badge/%E7%82%B9%E5%87%BB%E6%89%93%E5%BC%80-%E7%BD%91%E7%AB%99-yellow?logo=googlechrome&logoColor=white)](https://schedule.wanzii.cn/)
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/xwzkj/CheeseSchedule)
-
 
 奶酪课程表是一款简洁的教室大屏电子课表软件，基于tauri + vite + vue开发，相较同类软件，该软件简单易懂，资源占用轻量。
 
@@ -24,6 +24,10 @@
 ![screenshot_ubuntu](./readme-assets/screenshot_ubuntu.png)
 
 ## 功能
+
+::: tip 提示
+README文件的信息可能不是最新，请前往[项目网站](https://schedule.wanzii.cn/)查看。
+:::
 
 ### 课表
 
@@ -86,13 +90,25 @@
 
 ## 备注
 
-### 关于Windows7等旧系统
+### 关于Windows7系统
 
-奶酪课程表无法在此类系统正常运行。
+奶酪课程表无法在Windows7系统正常运行。
 
-1. 旧系统不支持新版本rust
-2. 旧系统不支持新版webview2
-3. 在win7使用拓展内核([VxKex](https://github.com/YuZhouRen86/VxKex-NEXT/releases/tag/1.1.3.1584))和webview2 109后可以正常启动，但主窗口透明效果失效，且该版本webview2无法正常渲染UnoCSS presetWind4预设的颜色
+存在问题：
+
+1. 窗口透明无法生效
+2. 窗口尺寸计算存在问题
+
+兼容进度：
+
+1. [x] 使用Rust 1.77.2构建了支持win7的可执行文件
+2. [x] 使用postcss处理了UnoCSS presetWind4预设的颜色
+3. [ ] 使用win7支持的最新WebView2（109版本），无法支持透明背景
+
+相关讯息：
+
+1. tauri wry对windows7做了特殊处理：[相关拉取请求](https://github.com/tauri-apps/wry/pull/460)
+2. win7拓展内核[VxKex-NEXT](https://github.com/YuZhouRen86/VxKex-NEXT/releases/tag/1.1.3.1584)暂无法支持新版Edge或WebView2，且支持tauri应用在win7的窗口透明限制涉及系统内核，风险过大：[相关issue](https://github.com/YuZhouRen86/VxKex-NEXT/issues/359)
 
 ### 添加小组件（对于开发者）
 
