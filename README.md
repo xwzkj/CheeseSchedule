@@ -25,9 +25,8 @@
 
 ## 功能
 
-::: tip 提示
-README文件的信息可能不是最新，请前往[项目网站](https://schedule.wanzii.cn/)查看。
-:::
+> [!TIP]
+> README文件的信息可能不是最新，请前往[项目网站](https://schedule.wanzii.cn/)查看。
 
 ### 课表
 
