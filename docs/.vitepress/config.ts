@@ -76,13 +76,14 @@ gtag('config', 'G-FH4JGQSSCX');
         items: [
           { text: '软件简介', link: '/doc/introduction' },
           { text: '手环版', link: '/doc/vela' },
-          { text: '下载该软件', link: '/doc/download' }
+          { text: '下载中心', link: '/doc/download' }
         ]
       },
       {
         text: '其他',
         items: [
-          { text: '群聊', link: '/doc/group' },
+          { text: '使用AI生成CSES数据', link: '/doc/ai-cses' },
+          { text: 'QQ群聊', link: '/doc/group' },
           { text: '更多信息', link: '/doc/more-info' }
         ]
       }
