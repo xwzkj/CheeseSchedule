@@ -34,8 +34,8 @@
                             <n-input v-model:value="userPrompt" placeholder="请添加您的额外要求" />
                         </div>
                         <div class="flex gap-1 items-center">
-                            <div>节省tokens</div>
-                            <n-switch v-model:value="saveTokens" />
+                            <div>节省token</div>
+                            <n-switch v-model:value="saveToken" />
                         </div>
                     </div>
                 </div>
@@ -87,7 +87,7 @@ const scheduleId = ref(scheduleStore.currentScheduleId)
 let showModalImportFromImage = ref(false)
 let modalImportFromImageScrollbar = useTemplateRef('modalImportFromImageScrollbar')
 let userPrompt = ref('')
-let saveTokens = ref(false)// 是否节省tokens
+let saveToken = ref(false)// 是否节省token
 let processing = ref(false)
 let res = ref('');
 let reasoningRes = ref(``);
@@ -179,7 +179,7 @@ async function importFromImage() {
             model: "qwen3.5-plus",
             stream: true,
             enable_thinking: true,
-            ...(saveTokens.value ? { thinking_budget: 2000 } : {}),
+            ...(saveToken.value ? { thinking_budget: 2000 } : {}),
             messages: [
                 {
                     role: "system",
