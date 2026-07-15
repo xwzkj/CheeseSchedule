@@ -60,7 +60,7 @@
                 </div>
                 <template #footer>
                     <n-flex>
-                        <n-button secondary type="primary" @click="importFromImage" v-if="!processing">添加</n-button>
+                        <n-button secondary type="primary" @click="importFromImage" v-if="!processing">导入</n-button>
                         <n-button secondary @click="showModalImportFromImage = false">关闭</n-button>
                     </n-flex>
                 </template>
