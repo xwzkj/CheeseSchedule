@@ -16,7 +16,7 @@
   --vp-c-brand-1: var(--color-6);
   --vp-c-brand-2: var(--color-5);
   --vp-c-brand-3: var(--color-4);
-  --vp-c-brand-soft: color-mix(in srgb, var(--color-0) 60%, transparent);
+  --vp-c-brand-soft: color-mix(in srgb, var(--color-1) 60%, transparent);
 }
 
 /* 首页 Hero 区域品牌色 */
