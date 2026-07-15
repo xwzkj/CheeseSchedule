@@ -75,7 +75,7 @@ gtag('config', 'G-FH4JGQSSCX');
 
     sidebar: [
       {
-        text: '起步',
+        text: '初次见面',
         items: [
           { text: '软件简介', link: '/doc/introduction' },
           { text: '手环版', link: '/doc/vela' },
@@ -83,11 +83,17 @@ gtag('config', 'G-FH4JGQSSCX');
         ]
       },
       {
+        text: '起步',
+        items: [
+          { text: '初次使用', link: '/doc/starter/first-try' }
+        ]
+      },
+      {
         text: '其他',
         items: [
-          { text: '使用AI生成CSES数据', link: '/doc/ai-cses' },
-          { text: 'QQ群聊', link: '/doc/group' },
-          { text: '更多信息', link: '/doc/more-info' }
+          { text: '使用AI生成CSES数据', link: '/doc/other/ai-cses' },
+          { text: 'QQ群聊', link: '/doc/other/group' },
+          { text: '更多信息', link: '/doc/other/more-info' }
         ]
       }
     ],
