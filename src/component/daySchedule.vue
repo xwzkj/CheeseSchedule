@@ -26,7 +26,7 @@ const props = defineProps<{
 }>()
 let patternName = computed(() => {
     let p = scheduleStore.schedule[props.scheduleId][props.day]?.pattern
-    return p != -1 ? scheduleStore.patterns?.[p]?.name : "选择本日模式"
+    return p != -1 ? scheduleStore.patterns?.[p]?.name : "请选择时间表"
 })
 
 function handlePatternSelect(key: number) {

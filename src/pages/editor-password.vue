@@ -44,7 +44,7 @@ const routeNames = router.getRoutes()
     .map(route => route.name)
     .filter(i => (i as string).startsWith('editor-'))
 const routeDisplayNames = {
-    'editor-pattern': '模式编辑',
+    'editor-pattern': '时间表编辑',
     'editor-schedule': '课程表编辑',
     'editor-override': '临时换课',
     'editor-draw': '抽签',
