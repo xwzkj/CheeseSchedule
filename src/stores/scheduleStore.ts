@@ -3,7 +3,8 @@ import { ref, computed } from 'vue'
 import dayjs from "dayjs";
 import updateLocale from 'dayjs/plugin/updateLocale'
 import YAML from 'yaml'
-import { BaseDirectory, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
+import { BaseDirectory, readTextFile, writeTextFile, mkdir } from '@tauri-apps/plugin-fs';
+import { appDataDir } from '@tauri-apps/api/path'
 import { invoke } from '@tauri-apps/api/core'
 import { emit } from '@tauri-apps/api/event'
 import { listen } from '@tauri-apps/api/event'
@@ -209,6 +210,7 @@ export const useScheduleStore = defineStore('schedule', () => {
 
     async function save(doNotShowSuccessMessage: boolean = false) {
         try {
+            await mkdir(await appDataDir(), { recursive: true }) // 确保appdata目录存在，解决全新安装的保存时报错问题
             await writeTextFile('config.json', JSON.stringify({
                 version: 1,
                 setting: setting?.value,
