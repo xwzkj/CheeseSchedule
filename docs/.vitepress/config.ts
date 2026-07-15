@@ -1,9 +1,26 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import removeMd from 'remove-markdown'
 import { defineConfig } from 'vitepress'
+
+/** 读取 md 文件，提取前 200 字的纯文本描述 */
+function makePageDescription(relativePath: string, rootDir: string): string {
+  const filePath = resolve(rootDir, relativePath)
+
+  let markdown: string
+  try {
+    markdown = readFileSync(filePath, 'utf8')
+  } catch {
+    return ''
+  }
+
+  const text = removeMd(markdown).replace(/\s+/g, ' ').trim()
+  return text.slice(0, 200)
+}
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "奶酪课程表 - 专为教室大屏设计的桌面课程表系统",
-  description: "这是一款用于教室大屏幕的开源桌面课程表软件，与AI融合，内置多种实用功能，基于tauri和vue构建",
   head: [
     ['link', { rel: 'icon', type: 'image/png', href: '/app-icon.png' }],
     ['script', { async: 'true', src: 'https://www.googletagmanager.com/gtag/js?id=G-FH4JGQSSCX' }],
@@ -101,5 +118,11 @@ gtag('config', 'G-FH4JGQSSCX');
     socialLinks: [
       { icon: 'github', link: 'https://github.com/xwzkj/CheeseSchedule' }
     ]
+  },
+
+  transformPageData(pageData, { siteConfig }) {
+    if (pageData.frontmatter.description) return
+    const desc = makePageDescription(pageData.relativePath, siteConfig.root)
+    if (desc) pageData.description = desc
   }
 })

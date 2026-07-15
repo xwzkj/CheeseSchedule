@@ -3,15 +3,15 @@
 
 <div style="display: flex; gap: 0.5rem;">
 
-[![GitHub Repo](https://img.shields.io/badge/github-仓库-blue?logo=github)](https://github.com/xwzkj/CheeseSchedule)
+[![ ](https://img.shields.io/badge/github-仓库-blue?logo=github)](https://github.com/xwzkj/CheeseSchedule)
 
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/xwzkj/CheeseSchedule/total?label=下载量&logo=github)
+![ ](https://img.shields.io/github/downloads/xwzkj/CheeseSchedule/total?label=下载量&logo=github)
 
-![GitHub Repo stars](https://img.shields.io/github/stars/xwzkj/CheeseSchedule?style=flat&label=%E6%98%9F%E6%A0%87%E6%95%B0)
+![ ](https://img.shields.io/github/stars/xwzkj/CheeseSchedule?style=flat&label=%E6%98%9F%E6%A0%87%E6%95%B0)
 
-![GitHub License](https://img.shields.io/github/license/xwzkj/CheeseSchedule)
+![ ](https://img.shields.io/github/license/xwzkj/CheeseSchedule)
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/xwzkj/CheeseSchedule)
+[![ ](https://deepwiki.com/badge.svg)](https://deepwiki.com/xwzkj/CheeseSchedule)
 
 </div>
 

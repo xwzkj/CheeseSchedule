@@ -1,7 +1,7 @@
 ---
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
-
+description: 这是一款用于教室大屏幕的开源桌面课程表软件，与AI融合，内置多种实用功能，基于tauri和vue构建
 hero:
   name: "奶酪课程表"
   text: ""
