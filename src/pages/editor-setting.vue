@@ -86,7 +86,7 @@
                 <n-slider v-model:value="scheduleStore.setting.zoom" :min="0.5" :max="2" :step="0.1" />
             </div>
         </setting-item>
-        <setting-item t1="主窗口高度乘数" t2="高度=屏幕高度(不含任务栏)*乘数 | 默认值：0.7">
+        <setting-item t1="主窗口高度乘数" t2="高度=屏幕高度(不含任务栏)*乘数 | 默认值：1">
             <div class="w-7rem">
                 <n-slider v-model:value="scheduleStore.setting.heightFactor" :min="0.3" :max="1" :step="0.01" />
             </div>
