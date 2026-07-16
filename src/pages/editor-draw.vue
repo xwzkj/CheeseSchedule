@@ -100,6 +100,9 @@ function addCandidates() {
     // 计算当前平均抽中次数
     let averageCount = scheduleStore.drawCandidates.reduce((count, current) => count + current.historyCount, 0) / scheduleStore.drawCandidates.length
     averageCount = Math.round(averageCount)
+    if (isNaN(averageCount)) {
+        averageCount = 0
+    }
 
     let candidates = newCandidates.value.split('\n')
     let trueCount = 0, falseCount = 0
