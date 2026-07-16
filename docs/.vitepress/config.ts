@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import removeMd from 'remove-markdown'
+import MarkdownItKatex from "@vscode/markdown-it-katex";
+
 import { defineConfig } from 'vitepress'
 
 /** 读取 md 文件，提取前 200 字的纯文本描述 */
@@ -34,6 +36,12 @@ gtag('config', 'G-FH4JGQSSCX');
   markdown: {
     image: {
       lazyLoading: true
+    },
+    config: (md) => {
+      md.use(MarkdownItKatex.default, {
+        throwOnError: false,
+        strict: false,
+      })
     }
   },
   sitemap:{
@@ -102,7 +110,8 @@ gtag('config', 'G-FH4JGQSSCX');
       {
         text: '起步',
         items: [
-          { text: '初次使用', link: '/doc/starter/first-try' }
+          { text: '初次使用', link: '/doc/starter/first-try' },
+          { text: '随机抽选：抽签', link: '/doc/starter/draw' }
         ]
       },
       {
