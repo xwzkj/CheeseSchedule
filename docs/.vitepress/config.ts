@@ -34,9 +34,9 @@ gtag('config', 'G-FH4JGQSSCX');
     `]
   ],
   markdown: {
-    image: {
-      lazyLoading: true
-    },
+    // image: {
+    //   lazyLoading: true
+    // },
     config: (md) => {
       md.use(MarkdownItKatex.default, {
         throwOnError: false,
