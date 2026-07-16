@@ -111,7 +111,15 @@ gtag('config', 'G-FH4JGQSSCX');
         text: '起步',
         items: [
           { text: '初次使用', link: '/doc/starter/first-try' },
+          { text: '小组件', link: '/doc/starter/widgets' },
           { text: '随机抽选：抽签', link: '/doc/starter/draw' }
+        ]
+      },
+      {
+        text: '高级',
+        items: [
+          { text: 'AI功能', link: '/doc/advanced/AI' },
+          { text: '出席人数', link: '/doc/advanced/attendance' }
         ]
       },
       {
