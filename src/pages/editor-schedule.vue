@@ -25,18 +25,18 @@
         </div>
         <n-modal :show="showModalImportFromImage">
             <n-card style="width: 600px" title="从课程表图片导入" :bordered="false" size="huge" role="dialog" aria-modal="true">
-                <div v-if="!processing" class="flex flex-col gap-1">
+                <div v-if="!processing" class="flex flex-col gap-2">
+                    <div class="text-#888">课程表图片：</div>
                     <n-upload list-type="image-card" :default-upload="false" :max="1" accept=".jpg,.jpeg,.png,.bmp"
                         @update:file-list="handleFileListChange">
                     </n-upload>
-                    <div class="flex gap-1">
-                        <div class="flex-1">
-                            <n-input v-model:value="userPrompt" placeholder="请添加您的额外要求" />
-                        </div>
-                        <div class="flex gap-1 items-center">
-                            <div>节省token</div>
-                            <n-switch v-model:value="saveToken" />
-                        </div>
+                    <div class="text-#888">AI模型：</div>
+                    <n-input v-model:value="modelStorage" :placeholder="DEFAULT_MODEL" clearable />
+                    <div class="text-#888">补充要求（可选）：</div>
+                    <n-input v-model:value="userPrompt" placeholder="请添加您的额外要求" />
+                    <div class="text-#888">限制思维链长度：</div>
+                    <div>
+                        <n-switch v-model:value="saveToken" />
                     </div>
                 </div>
                 <div v-else>
@@ -74,6 +74,7 @@
 import { NDropdown, NButton, NModal, NCard, NFlex, NUpload, NScrollbar, NSpin, NInput, NSwitch } from 'naive-ui'
 import { onBeforeUnmount, ref, useTemplateRef } from 'vue';
 import { OpenAI } from 'openai';
+import { useStorage } from '@vueuse/core'
 import Compressor from 'compressorjs';
 import { useScheduleStore } from '../stores/scheduleStore';
 import daySchedule from '../component/daySchedule.vue';
@@ -83,9 +84,11 @@ const CNdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周
 const scheduleStore = useScheduleStore()
 
 const scheduleId = ref(scheduleStore.currentScheduleId)
+const DEFAULT_MODEL = 'qwen3.7-plus'
 
 let showModalImportFromImage = ref(false)
 let modalImportFromImageScrollbar = useTemplateRef('modalImportFromImageScrollbar')
+let modelStorage = useStorage('ai-model-import', DEFAULT_MODEL)
 let userPrompt = ref('')
 let saveToken = ref(false)// 是否节省token
 let processing = ref(false)
@@ -176,7 +179,7 @@ async function importFromImage() {
             return
         }
         const stream = await (openai as any).chat.completions.create({
-            model: "qwen3.5-plus",
+            model: modelStorage.value || DEFAULT_MODEL,
             stream: true,
             enable_thinking: true,
             ...(saveToken.value ? { thinking_budget: 2000 } : {}),

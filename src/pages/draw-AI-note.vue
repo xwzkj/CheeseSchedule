@@ -5,8 +5,14 @@
             <div v-if="!(res || reasoningRes)" class="flex flex-col justify-center gap-4 flex-1 min-h-0">
                 <div class="text-1.5rem">让AI总结屏幕内容...</div>
                 <img :src="base64" alt="屏幕截图" class="w-full h-auto rounded-1rem">
-                <div class="flex gap-2">
-                    <n-input v-model:value="userPrompt" placeholder="请输入您的问题（可选）" />
+                <div class="flex gap-2 items-center">
+                    <div class="flex-shrink-0 c8">模型:</div>
+                    <div class="flex-1 min-w-0">
+                        <n-input v-model:value="modelStorage" :placeholder="DEFAULT_MODEL" clearable />
+                    </div>
+                    <div class="flex-[3] min-w-0">
+                        <n-input v-model:value="userPrompt" placeholder="请输入您的问题（可选）" />
+                    </div>
                     <n-button @click="AInote()" type="primary" secondary>总结笔记</n-button>
                 </div>
             </div>
@@ -37,6 +43,7 @@ import { readFile, remove } from "@tauri-apps/plugin-fs";
 import { computed, onMounted, onBeforeUnmount, ref, useTemplateRef } from "vue";
 import { NButton, NScrollbar, NInput } from "naive-ui";
 import OpenAI from "openai";
+import { useStorage } from '@vueuse/core'
 import MarkdownIt from "markdown-it";
 
 import MarkdownItKatex from "@vscode/markdown-it-katex";
@@ -54,7 +61,10 @@ md.use(MarkdownItKatex, {
     errorColor: 'inherit',
 });
 
+const DEFAULT_MODEL = 'qwen3.7-plus'
+
 let showWindow = ref(false)
+let modelStorage = useStorage('ai-model-note', DEFAULT_MODEL )
 let userPrompt = ref('')
 let base64 = ref('')
 let reasoningRes = ref('')
@@ -139,7 +149,7 @@ async function AInote() {
         res.value = ''
         reasoningRes.value = '网络请求中...\n\n'
         const stream = await (openai as any).chat.completions.create({
-            model: "qwen3.5-plus",
+            model: modelStorage.value || DEFAULT_MODEL,
             stream: true,
             thinking_budget: 1500,
             messages: [
