@@ -31,7 +31,11 @@ export const useScheduleStore = defineStore('schedule', () => {
         themeColor: '#ce9e04',// 主题色
         password: '', // 密码 以sha256存储
         passwordScope: ['editor-password'], // 密码作用域
+        AIapiBaseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1', // API URL
         AIapiKey: '', // API密钥
+        AIvisionModel: 'qwen3.7-plus', // 视觉模型
+        AItextFlashModel: 'deepseek-v4-flash', // 轻量文本模型
+        AIbailianApiKey: '', // 阿里云百炼API密钥
         AIplayVoiceWhenLessonSwitch: true, // 是否在上下课时播放语音提醒
         widgetWordCardHistory: [] as string[],  // 单词卡片历史记录，防止重复
     })

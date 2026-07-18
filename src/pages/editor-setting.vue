@@ -17,20 +17,41 @@
             <n-switch v-model:value="scheduleStore.setting.startup" />
         </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">AI</n-divider>
-        <setting-item t1="AI API密钥" t2="若想使用AI功能，请先设置您的阿里百炼apiKey">
-            <div class="w-7rem">
+        <setting-item t1="API地址" t2="设置兼容OpenAI SDK的baseURL，一般以v1结尾">
+            <div class="w-15rem">
+                <n-input v-model:value="scheduleStore.setting.AIapiBaseUrl" clearable />
+            </div>
+        </setting-item>
+        <setting-item t1="API密钥" t2="设置上方api地址对应的密钥">
+            <div class="w-8rem">
                 <n-input v-model:value="scheduleStore.setting.AIapiKey" type="password" :show-password-toggle="true" />
             </div>
         </setting-item>
-        <setting-item t1="上下课语音提醒" t2="开启后，将会在上下课时进行语音播报">
+        <setting-item t1="默认视觉模型" t2="设置一个强劲的视觉模型，供图片导入、AI笔记等功能使用">
+            <div class="w-8rem">
+                <n-input v-model:value="scheduleStore.setting.AIvisionModel" />
+            </div>
+        </setting-item>
+        <setting-item t1="默认轻量文本模型" t2="设置一个快速、低成本的模型，供每日单词等功能使用">
+            <div class="w-8rem">
+                <n-input v-model:value="scheduleStore.setting.AItextFlashModel" />
+            </div>
+        </setting-item>
+        <setting-item t1="上下课语音提醒" t2="开启后，将会在上下课时进行语音播报 | 使用阿里云百炼，需要单独设置密钥">
             <n-switch v-model:value="scheduleStore.setting.AIplayVoiceWhenLessonSwitch" />
+        </setting-item>
+        <setting-item t1="阿里云百炼API密钥" t2="供上下课语音提醒功能使用">
+            <div class="w-8rem">
+                <n-input v-model:value="scheduleStore.setting.AIbailianApiKey" type="password"
+                    :show-password-toggle="true" />
+            </div>
         </setting-item>
         <setting-item t1="单词卡片历史记录" :t2="`防止AI重复输出 | 当前有${scheduleStore.setting.widgetWordCardHistory.length}个单词`">
             <n-button type="error" secondary @click="scheduleStore.setting.widgetWordCardHistory = []">清除</n-button>
         </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">课程表</n-divider>
         <setting-item t1="多周轮换" :t2="`设置循环使用的课程表数量 | 当前：${scheduleStore.schedule.length}`">
-            <div class="w-7rem flex gap-1">
+            <div class="w-8rem flex gap-1">
                 <n-input-number v-model:value="scheduleCount" :precision="0" :min="1" :max="8" :show-button="false" />
                 <n-popconfirm @positive-click="setScheduleCount">
                     <template #trigger>
@@ -54,7 +75,7 @@
             </n-dropdown>
         </setting-item>
         <setting-item t1="时间偏移" t2="适用于铃声不准的场景 | 单位：秒 | 正值将延后课程切换，负值则会提前">
-            <div class="w-7rem">
+            <div class="w-8rem">
                 <n-input-number v-model:value="scheduleStore.setting.timeOffset" :update-value-on-input="false" />
             </div>
         </setting-item>
@@ -82,12 +103,12 @@
         </setting-item>
         <n-divider title-placement="left" class="m-y-0.5rem!">个性化</n-divider>
         <setting-item t1="主窗口缩放比例" t2="默认为1，与系统缩放乘算">
-            <div class="w-7rem">
+            <div class="w-8rem">
                 <n-slider v-model:value="scheduleStore.setting.zoom" :min="0.5" :max="2" :step="0.1" />
             </div>
         </setting-item>
         <setting-item t1="主窗口高度乘数" t2="高度=屏幕高度(不含任务栏)*乘数 | 默认值：1">
-            <div class="w-7rem">
+            <div class="w-8rem">
                 <n-slider v-model:value="scheduleStore.setting.heightFactor" :min="0.3" :max="1" :step="0.01" />
             </div>
         </setting-item>
@@ -95,7 +116,7 @@
             <n-switch v-model:value="scheduleStore.setting.avoidCoverTitleBar" />
         </setting-item>
         <setting-item t1="主题色" t2="选择一个主题色，将生成配色方案 | 默认值：#ce9e04">
-            <div class="w-7rem">
+            <div class="w-8rem">
                 <n-color-picker v-model:value="scheduleStore.setting.themeColor" :show-alpha="false" :modes="['hex']" />
             </div>
         </setting-item>

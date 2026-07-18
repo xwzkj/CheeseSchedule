@@ -8,7 +8,7 @@
                 <div class="flex gap-2 items-center">
                     <div class="flex-shrink-0 c8">模型:</div>
                     <div class="flex-1 min-w-0">
-                        <n-input v-model:value="modelStorage" :placeholder="DEFAULT_MODEL" clearable />
+                        <n-input v-model:value="modelStorage" :placeholder="scheduleStore.setting.AIvisionModel" clearable />
                     </div>
                     <div class="flex-[3] min-w-0">
                         <n-input v-model:value="userPrompt" placeholder="请输入您的问题（可选）" />
@@ -61,10 +61,8 @@ md.use(MarkdownItKatex, {
     errorColor: 'inherit',
 });
 
-const DEFAULT_MODEL = 'qwen3.7-plus'
-
 let showWindow = ref(false)
-let modelStorage = useStorage('ai-model-note', DEFAULT_MODEL )
+let modelStorage = useStorage('ai-model-note', '' )
 let userPrompt = ref('')
 let base64 = ref('')
 let reasoningRes = ref('')
@@ -120,7 +118,7 @@ function imageToBase64(image: any): Promise<string> {
             window.$NMessageApi.error('截图读取失败')
             reject(e)
         }
-        const blob = new Blob([image])
+        const blob = new Blob([image], { type: 'image/png' })
         reader.readAsDataURL(blob)
     })
 }
@@ -135,6 +133,10 @@ window.addEventListener('beforeunload', () => {
 })
 async function AInote() {
     try {
+        if (!scheduleStore.setting.AIapiBaseUrl) {
+            window.$NMessageApi.error('您没有配置AI API地址，请先前往设置再使用！')
+            return
+        }
         if (!scheduleStore.setting.AIapiKey) {
             window.$NMessageApi.error('您没有配置AI API密钥，请先前往设置再使用！')
             return
@@ -142,16 +144,16 @@ async function AInote() {
         const openai = new OpenAI(
             {
                 apiKey: scheduleStore.setting.AIapiKey,
-                baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                baseURL: scheduleStore.setting.AIapiBaseUrl,
                 dangerouslyAllowBrowser: true
             }
         );
         res.value = ''
         reasoningRes.value = '网络请求中...\n\n'
         const stream = await (openai as any).chat.completions.create({
-            model: modelStorage.value || DEFAULT_MODEL,
+            model: modelStorage.value || scheduleStore.setting.AIvisionModel,
             stream: true,
-            thinking_budget: 1500,
+            ...(scheduleStore.setting.AIapiBaseUrl.includes('aliyuncs.com') ? { thinking_budget: 1500 } : {}),
             messages: [
                 {
                     role: "system",

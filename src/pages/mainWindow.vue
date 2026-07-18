@@ -224,7 +224,7 @@ async function playVoice(text: string) {
     const res = await tauriFetch("https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation", {
         method: "POST",
         headers: {
-            "Authorization": scheduleStore.setting.AIapiKey,
+            "Authorization": scheduleStore.setting.AIbailianApiKey,
             "Content-Type": "application/json"
         },
         body: JSON.stringify({

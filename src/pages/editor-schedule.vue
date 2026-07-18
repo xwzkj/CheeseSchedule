@@ -31,12 +31,12 @@
                         @update:file-list="handleFileListChange">
                     </n-upload>
                     <div class="text-#888">AI模型：</div>
-                    <n-input v-model:value="modelStorage" :placeholder="DEFAULT_MODEL" clearable />
+                    <n-input v-model:value="modelStorage" :placeholder="scheduleStore.setting.AIvisionModel" clearable />
                     <div class="text-#888">补充要求（可选）：</div>
                     <n-input v-model:value="userPrompt" placeholder="请添加您的额外要求" />
-                    <div class="text-#888">限制思维链长度：</div>
+                    <div class="text-#888">限制思维链长度（仅支持阿里云百炼）：</div>
                     <div>
-                        <n-switch v-model:value="saveToken" />
+                        <n-switch v-model:value="saveToken" :disabled="!scheduleStore.setting.AIapiBaseUrl.includes('aliyuncs.com')" />
                     </div>
                 </div>
                 <div v-else>
@@ -84,11 +84,10 @@ const CNdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周
 const scheduleStore = useScheduleStore()
 
 const scheduleId = ref(scheduleStore.currentScheduleId)
-const DEFAULT_MODEL = 'qwen3.7-plus'
 
 let showModalImportFromImage = ref(false)
 let modalImportFromImageScrollbar = useTemplateRef('modalImportFromImageScrollbar')
-let modelStorage = useStorage('ai-model-import', DEFAULT_MODEL)
+let modelStorage = useStorage('ai-model-import', '')
 let userPrompt = ref('')
 let saveToken = ref(false)// 是否节省token
 let processing = ref(false)
@@ -108,6 +107,10 @@ window.addEventListener('beforeunload', () => {
 })
 async function importFromImage() {
     try {
+        if (!scheduleStore.setting.AIapiBaseUrl) {
+            window.$NMessageApi.error('您没有配置AI API地址，请先前往设置再使用！')
+            return
+        }
         if (!scheduleStore.setting.AIapiKey) {
             window.$NMessageApi.error('您没有配置AI API密钥，请先前往设置再使用！')
             return
@@ -119,7 +122,7 @@ async function importFromImage() {
         const openai = new OpenAI(
             {
                 apiKey: scheduleStore.setting.AIapiKey,
-                baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                baseURL: scheduleStore.setting.AIapiBaseUrl,
                 dangerouslyAllowBrowser: true
             }
         );
@@ -131,7 +134,7 @@ async function importFromImage() {
             lessonNum[i] = scheduleStore.schedule[scheduleId.value][days[i]].lessons.filter(i => !i.isDivider).length
         }
         const stream = await (openai as any).chat.completions.create({
-            model: modelStorage.value || DEFAULT_MODEL,
+            model: modelStorage.value || scheduleStore.setting.AIvisionModel,
             stream: true,
             enable_thinking: true,
             ...(saveToken.value ? { thinking_budget: 2000 } : {}),

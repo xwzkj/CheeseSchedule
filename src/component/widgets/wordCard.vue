@@ -43,20 +43,23 @@ let data = ref({ "word": "generating", "meaning": "AI生成中..." })
 
 onMounted(async () => {
     try {
-        if(!scheduleStore.setting.AIapiKey) {
+        if (!scheduleStore.setting.AIapiBaseUrl) {
+            throw new Error('您没有配置AI API地址，请先前往设置再使用！')
+        }
+        if (!scheduleStore.setting.AIapiKey) {
             throw new Error('您没有配置AI API密钥，请先前往设置再使用！')
         }
         const openai = new OpenAI(
             {
                 apiKey: scheduleStore.setting.AIapiKey,
-                baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                baseURL: scheduleStore.setting.AIapiBaseUrl,
                 dangerouslyAllowBrowser: true
             }
         );
         const completion = await (openai as any).chat.completions.create({
-            model: "deepseek-v4-flash",
+            model: scheduleStore.setting.AItextFlashModel,
             // temperature: 1.3,
-            thinking_budget: 250,
+            ...(scheduleStore.setting.AIapiBaseUrl.includes('aliyuncs.com') ? { thinking_budget: 250 } : {}),
             messages: [
                 {
                     role: "system", content: `
@@ -94,7 +97,7 @@ onMounted(async () => {
                     scheduleStore.setting.widgetWordCardHistory.splice(0, scheduleStore.setting.widgetWordCardHistory.length - 100)
                 }
                 scheduleStore.save(true)
-            }else{
+            } else {
                 console.error('生成了重复的单词', data.value.word)
             }
         }
