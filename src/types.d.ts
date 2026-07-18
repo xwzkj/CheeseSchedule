@@ -15,15 +15,7 @@ type Day = {
     pattern: number,
     lessons: Lesson[]
 }
-type Schedule = {
-    mon: Day,
-    tue: Day,
-    wed: Day,
-    thu: Day,
-    fri: Day,
-    sat: Day,
-    sun: Day
-}
+type Schedule = Record<Week, Day>
 type Week = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
 type UpdateInfo = {
     hasUpdate: boolean,

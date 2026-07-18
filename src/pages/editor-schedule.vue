@@ -126,57 +126,9 @@ async function importFromImage() {
         processing.value = true
         res.value = ''
         reasoningRes.value = ''
-        let schedule: Schedule = {
-            mon: {
-                pattern: 0,
-                lessons: []
-            },
-            tue: {
-                pattern: 0,
-                lessons: []
-            },
-            wed: {
-                pattern: 0,
-                lessons: []
-            },
-            thu: {
-                pattern: 0,
-                lessons: []
-            },
-            fri: {
-                pattern: 0,
-                lessons: []
-            },
-            sat: {
-                pattern: 0,
-                lessons: []
-            },
-            sun: {
-                pattern: 0,
-                lessons: []
-            }
-        }
-        let days: Week[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-        let isAllEmpty = true // 是否每天的时间表都是空的
-        for (let i = 0; i < days.length; i++) {
-            schedule[days[i]] = {
-                pattern: scheduleStore.schedule[scheduleId.value][days[i]].pattern,
-                lessons: scheduleStore.schedule[scheduleId.value][days[i]].lessons.map(i => {
-                    return {
-                        name: '',
-                        time: i.time,
-                        active: i.active,
-                        isDivider: i.isDivider
-                    }
-                })
-            }
-            if (schedule[days[i]].lessons.length > 0) {
-                isAllEmpty = false
-            }
-        }
-        if (isAllEmpty) {
-            window.$NMessageApi.error('请先配置时间表再导入！')
-            return
+        let lessonNum = [0, 0, 0, 0, 0, 0, 0] // 周一~周日每天的课程数量
+        for (let i = 0; i < lessonNum.length; i++) {
+            lessonNum[i] = scheduleStore.schedule[scheduleId.value][days[i]].lessons.filter(i => !i.isDivider).length
         }
         const stream = await (openai as any).chat.completions.create({
             model: modelStorage.value || DEFAULT_MODEL,
@@ -187,44 +139,24 @@ async function importFromImage() {
                 {
                     role: "system",
                     content: `
-提取图中的课程表，供软件的配置文件使用，软件包括时间表(Pattern)和课程表(Schedule)两部分：
-type Pattern = {
-    name: string,
-    data: {
-        isDivider: boolean,
-        time?: string
-    }[]
-}
-type Lesson = {
-    name: string,
-    time: string,
-    active?: 0 | 1 | 2, // 0:不是当前课程，1:当前为课间，下一节是该课程，2:是当前课程
-    isDivider: boolean // 若该字段为true，则认为该项不是一节课，而只是分隔符，其他字段均无实际意义
-}
-type Day = {
-    pattern: number,
-    lessons: Lesson[]
-}
-type Schedule = {
-    mon: Day,
-    tue: Day,
-    wed: Day,
-    thu: Day,
-    fri: Day,
-    sat: Day,
-    sun: Day
-}
-按照以上规则，补全以下数据的name字段，如与图片产生冲突以所给数据为主，返回Schedule类型的完整课程表
+提取图中的课程表，供软件的配置文件使用。
+返回格式：string[][]
+第一维数组长度固定为7，0代表周一、6代表周日
+第二维数组长度根据以下数据决定，代表该日课程数量，每个元素的值为这节课的名称。
+所给信息：${JSON.stringify(lessonNum)}
+如与图片产生冲突以以上所给数据为主。
 
-${JSON.stringify(schedule)}
 
 重要：
 请务必仔细核对图片中的表格结构以防错误
 如果图片缺少某些课节，请在数据的name字段中填写“空”，而不是保持空白
 如果图片中的课程是单字，请补全为两个字（如“文”=>“语文”等），但对于不确定的课程，不要补全
 只需读取图片中每天的课程名称和顺序进行填充，并忽略图片中的其他信息，如时间等
-你只可以改动name字段，不能改动其他字段，不能新增或删除数组中的项目，否则会导致程序崩溃
-若待补全内容为空或部分为空，不要根据图片中该部分的课程信息新增数组中的项目，直接跳过该部分。如：图片有周一到周五的课程信息，但待补全内容中周三是空的，则不对周三进行处理。再比如：图片中某天有10节课，但是待补全内容只有5节，则只补全前五节
+若所给信息中某天课程数量为0或小于图片中信息，不要根据图片中的课程信息补充数组中的项目，直接跳过该部分。
+也就是说，输出的第二维数组的长度必须符合所给信息中的课程数量
+如：图片有周一到周五的课程信息，但所给信息中周三课程长度为0，则周三的课程为空数组。
+再比如：图片中某天有10节课，但是所给信息只有5节，则只输出前五节
+
 返回规则：
 先返回<true/>或<false/>来代表用户输入是否合法（如以上数据是否符合图片中的课程表，或图片是否为课程表）然后加个换行符，
 如果输入合法，返回这段json，不要返回任何额外内容，并确保json格式合法，否则程序将无法解析返回内容;
@@ -262,7 +194,17 @@ ${JSON.stringify(schedule)}
             }
         }
         if (res.value.startsWith('<true/>')) {
-            scheduleStore.schedule[scheduleId.value] = JSON.parse(res.value.slice(7))
+            let lessonList: string[][] = JSON.parse(res.value.slice(7))
+            for (let i = 0; i < 7; i++) {
+                let index = 0
+                for (let j = 0; j < scheduleStore.schedule[scheduleId.value][days[i]].lessons.length; j++) {
+                    if(scheduleStore.schedule[scheduleId.value][days[i]].lessons[j].isDivider){
+                        continue
+                    }
+                    scheduleStore.schedule[scheduleId.value][days[i]].lessons[j].name = lessonList[i]?.[index] || "未知"
+                    index++
+                }
+            }
             window.$NMessageApi.success('导入成功，请检查后再保存')
         } else if (res.value.startsWith('<false/>')) {
             window.$NMessageApi.error('导入失败：' + res.value.slice(8), { duration: 60 * 1000, closable: true })
