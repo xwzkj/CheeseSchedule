@@ -126,7 +126,8 @@ gtag('config', 'G-FH4JGQSSCX');
         text: '其他',
         items: [
           { text: '使用AI生成CSES数据', link: '/doc/other/ai-cses' },
-          { text: 'QQ群聊', link: '/doc/other/group' },
+          { text: '支持项目开发', link: '/doc/other/donate' },
+          { text: '社区交流/群聊', link: '/doc/other/group' },
           { text: '更多信息', link: '/doc/other/more-info' }
         ]
       }
