@@ -2,7 +2,7 @@
 import { useScheduleStore } from "../stores/scheduleStore";
 import classCard from "../component/classCard.vue"
 import { useMessage, NScrollbar, NEllipsis } from "naive-ui";
-import { ref, onMounted, useTemplateRef, watch, computed } from "vue";
+import { ref, onMounted, useTemplateRef, watch, computed, watchEffect } from "vue";
 import * as tool from '../tools/tool'
 import { Howl } from "howler";
 
@@ -257,35 +257,56 @@ async function playVoice(text: string) {
 
 onMounted(() => {
     initWindow();
-    // 上下课自动切换窗口置顶
+    // 上下课提示
     watch(() => scheduleStore.lessonStatus, tool.debounce(async () => {
         if (Date.now() - scheduleStore.initedTime > 1000) {
-            if (!scheduleStore.lessonStatus) {// 下课状态
+            if (!scheduleStore.lessonStatus) { // 下课状态
                 NMessage.success("下课了!")
-                await setTop(true)
                 await playVoice("同学们，下课了！")
-            } else {
+            } else { // 上课状态
                 NMessage.success("上课了!", { duration: 5000 })
-                // 查找当前课程 
-                let lessonName = ""
-                for (let i = 0; i < scheduleStore.scheduleToday.length; i++) {
-                    if (scheduleStore.scheduleToday[i].active == 2) {
-                        lessonName = scheduleStore.scheduleToday[i].name
-                        break
-                    }
-                }
-                playVoice("同学们，上课时间到了！" + (lessonName ? "这节课是：" + lessonName + "！" : ""))
-                await tool.sleep(5000)
-                await setTop(false)
+                let currentLessonName = scheduleStore.scheduleToday?.[scheduleStore.currentLessonIndex]?.name || ""  // 当前/即将开始的课程
+                await playVoice("同学们，上课时间到了！" + (currentLessonName ? "这节课是：" + currentLessonName + "！" : ""))
             }
         }
     }, 500), { immediate: true })
-    // 点击取消窗口置顶
+    // 置顶切换
+    watchEffect(async () => {
+        let shouldTop = false
+        let currentLessonName = scheduleStore.scheduleToday?.[scheduleStore.currentLessonIndex]?.name || ""  // 当前/即将开始的课程
+        let lastLessonName = ""
+        // 找上一节不是分割线的课程
+        for (let i = scheduleStore.currentLessonIndex - 1; i >= 0; i--) {
+            if (scheduleStore.scheduleToday?.[i]?.isDivider === false) {
+                lastLessonName = scheduleStore.scheduleToday?.[i]?.name || ""
+                break
+            }
+        }
+        if (scheduleStore.setting.alwaysOnTopMode === 'always') { // 总在最前
+            shouldTop = true
+        } else if (scheduleStore.setting.alwaysOnTopMode === 'never') { //总置底
+            shouldTop = false
+        } else if (scheduleStore.setting.alwaysOnTopMode === 'auto') { // 自动模式
+            if (!scheduleStore.lessonStatus) { // 下课状态
+                if (!scheduleStore.setting.alwaysOnBottomAfterTheseLessons.includes(lastLessonName)) { // 上一节课不在课后不置顶列表中
+                    if (!scheduleStore.setting.alwaysOnBottomBeforeTheseLessons.includes(currentLessonName)) { // 当前课不在课前不置顶列表中
+                        shouldTop = true
+                    }
+                }
+            } else {
+                if (scheduleStore.setting.alwaysOnTopDuringTheseLessons.includes(currentLessonName)) { // 当前课在上课时也置顶列表中
+                    shouldTop = true
+                }
+            }
+        }
+        await setTop(shouldTop)
+    })
+    // 点击切换窗口置顶
     outerEle.value?.addEventListener("click", async () => {
-        if (platform() === 'linux' || scheduleStore.lessonStatus) {
+        if (platform() === 'linux') {
             await setTop(false)
             NMessage.success(`取消置顶`)
-        } else {// 下课状态 且 不是linux平台
+        } else {// 不是linux平台
             let isTop = await thisWindow.isAlwaysOnTop()
             await setTop(!isTop)
             NMessage.success(`${(!isTop) ? '启用' : '取消'}窗口置顶`)

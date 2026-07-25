@@ -84,7 +84,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         }
         return scheduleThisWeek.value[today.value].lessons
     })
-    let lessonNowIndex = ref(() => { // 当前课程在scheduleToday的索引，为-1表示没有活跃课程
+    let currentLessonIndex = computed(() => { // 当前课程在scheduleToday的索引，为-1表示没有活跃课程
         return scheduleToday.value.findIndex((item) => (item.active ?? 0) > 0)
     })
     let lessonStatus = computed(() => {// true -> 正在上课 false -> 课间
@@ -531,7 +531,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         patternsOption,
         scheduleIdOption,
         scheduleToday,
-        lessonNowIndex,
+        currentLessonIndex,
         lessonStatus,
         scheduleOverride,
         setting,
