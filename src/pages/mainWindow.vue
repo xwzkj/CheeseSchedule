@@ -325,7 +325,7 @@ onMounted(() => {
             </component>
         </div>
         <!-- 课程表区域 -->
-        <n-scrollbar class="grow-1 overflow-x-visible" v-if="scheduleStore.scheduleToday.length" ref="outerScrollbar"
+        <n-scrollbar class="grow overflow-x-visible" v-if="scheduleStore.scheduleToday.length" ref="outerScrollbar"
             content-style="overflow: hidden;">
             <!-- overflow: hidden;是用于解决鼠标无法拖拽滚挡条到底部的问题 -->
             <!-- 课程表卡片 -->
