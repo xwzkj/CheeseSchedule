@@ -120,6 +120,49 @@
                 <n-color-picker v-model:value="scheduleStore.setting.themeColor" :show-alpha="false" :modes="['hex']" />
             </div>
         </setting-item>
+        <setting-item t1="窗口置顶" t2="自动：课间置顶，课上置底 | 点击主窗口可切换置顶置底">
+            <n-dropdown :options="alwaysOnTopModeOptions" trigger="click" @select="setAlwaysOnTopMode">
+                <n-button type="primary" dashed>
+                    {{alwaysOnTopModeOptions[alwaysOnTopModeOptions.findIndex(i => i.key ===
+                        scheduleStore.setting.alwaysOnTopMode)]?.label}}
+                    <template #icon>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="1.5" d="M18 9s-4.419 6-6 6s-6-6-6-6" />
+                        </svg>
+                    </template>
+                </n-button>
+            </n-dropdown>
+        </setting-item>
+        <div v-if="scheduleStore.setting.alwaysOnTopMode === 'auto'">
+            <setting-item t1="上课也置顶" t2="加入的课程会在上课时不置底">
+                <div class="w-8rem">
+                    <n-scrollbar class="max-h-3rem" x-scrollable>
+                        <div class="flex justify-end">
+                            <n-dynamic-tags v-model:value="scheduleStore.setting.alwaysOnTopDuringTheseLessons" />
+                        </div>
+                    </n-scrollbar>
+                </div>
+            </setting-item>
+            <setting-item t1="课前不置顶" t2="加入的课程会在课前不置底">
+                <div class="w-8rem">
+                    <n-scrollbar class="max-h-3rem" x-scrollable>
+                        <div class="flex justify-end">
+                            <n-dynamic-tags v-model:value="scheduleStore.setting.alwaysOnBottomBeforeTheseLessons" />
+                        </div>
+                    </n-scrollbar>
+                </div>
+            </setting-item>
+            <setting-item t1="课后不置顶" t2="加入的课程会在课后不置底">
+                <div class="w-8rem">
+                    <n-scrollbar class="max-h-3rem" x-scrollable>
+                        <div class="flex justify-end">
+                            <n-dynamic-tags v-model:value="scheduleStore.setting.alwaysOnBottomAfterTheseLessons" />
+                        </div>
+                    </n-scrollbar>
+                </div>
+            </setting-item>
+        </div>
         <n-divider title-placement="left" class="m-y-0.5rem!">身份验证</n-divider>
         <setting-item t1="设置密码" t2="用于锁定编辑器"
             :actionOnClick="() => router.push({ name: 'editor-password' })"></setting-item>
@@ -132,7 +175,7 @@ import { save, open } from '@tauri-apps/plugin-dialog';
 import { readTextFile, writeTextFile, BaseDirectory, exists } from '@tauri-apps/plugin-fs';
 import { appDataDir } from '@tauri-apps/api/path';
 
-import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown, NDivider, NSwitch, NColorPicker, NInput } from 'naive-ui'
+import { useMessage, NSlider, NInputNumber, NButton, NPopconfirm, NDropdown, NDivider, NSwitch, NColorPicker, NInput, NDynamicTags, NScrollbar } from 'naive-ui'
 import settingItem from '../component/settingItem.vue'
 import { useScheduleStore } from '../stores/scheduleStore'
 import { onMounted, ref, watch } from 'vue';
@@ -143,6 +186,11 @@ const scheduleStore = useScheduleStore()
 const NMessage = useMessage()
 
 let scheduleCount = ref(scheduleStore.schedule.length)
+let alwaysOnTopModeOptions = ref([
+    { label: '置顶', key: 'always' },
+    { label: '自动', key: 'auto' },
+    { label: '置底', key: 'never' },
+])
 onMounted(() => {
     watch(() => scheduleStore.setting.timeOffset, (value) => {
         if (typeof value !== 'number') {
@@ -157,11 +205,9 @@ onMounted(() => {
 })
 function setScheduleCount() {
     scheduleStore.setScheduleCount(scheduleCount.value)
-    NMessage.success('已设置')
 }
 function setFirstWeek(key: number) {
     scheduleStore.setFirstWeek(key)
-    NMessage.success('已设置')
 }
 async function openConfigDir() {
     if (!await exists('config.json', { baseDir: BaseDirectory.AppData })) {
@@ -204,6 +250,9 @@ async function importFromCSES() {
     } catch (error) {
         NMessage.error('导入CSES失败：' + JSON.stringify(error), { duration: 60 * 1000, closable: true })
     }
+}
+function setAlwaysOnTopMode(key: string) {
+    scheduleStore.setting.alwaysOnTopMode = key
 }
 </script>
 

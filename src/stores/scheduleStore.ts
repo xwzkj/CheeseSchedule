@@ -21,6 +21,10 @@ export const useScheduleStore = defineStore('schedule', () => {
         zoom: 1, // 主窗口缩放比例
         heightFactor: 1, // 主窗口高度乘数
         avoidCoverTitleBar: false,// 是否避免主窗口遮挡窗口标题栏
+        alwaysOnTopMode: 'auto', // 总在最前的模式 'auto'|'always'|'never'
+        alwaysOnTopDuringTheseLessons: ['自习'], // 在auto模式中，上课时也置顶的课程名称列表
+        alwaysOnBottomBeforeTheseLessons: [] as string[], // 在auto模式中，课前不置顶的课程名称列表
+        alwaysOnBottomAfterTheseLessons: [] as string[], // 在auto模式中，课后不置顶的课程名称列表
         timeOffset: 0, // 时间偏移量 单位：秒
         drawDynamicProbability: true, // 是否启用动态概率
         drawPreventDuplicate: true, // 是否阻止在同一轮中重复抽中某人
@@ -79,6 +83,9 @@ export const useScheduleStore = defineStore('schedule', () => {
             return temp
         }
         return scheduleThisWeek.value[today.value].lessons
+    })
+    let lessonNowIndex = ref(() => { // 当前课程在scheduleToday的索引，为-1表示没有活跃课程
+        return scheduleToday.value.findIndex((item) => (item.active ?? 0) > 0)
     })
     let lessonStatus = computed(() => {// true -> 正在上课 false -> 课间
         for (let i = 0; i < scheduleToday.value.length; i++) {
@@ -524,6 +531,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         patternsOption,
         scheduleIdOption,
         scheduleToday,
+        lessonNowIndex,
         lessonStatus,
         scheduleOverride,
         setting,
