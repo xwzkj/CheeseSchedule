@@ -127,7 +127,12 @@ export const useScheduleStore = defineStore('schedule', () => {
             }
         }
         if (data) {
-            data = JSON.parse(data)
+            try {
+                data = JSON.parse(data)
+            } catch (e) {
+                data = {}
+                window.$NMessageApi.error('解析配置文件失败：' + e)
+            }
             console.log("config-data:", data)
             async function loadV0(d: any) {
                 if (d?.patterns) {
@@ -203,11 +208,11 @@ export const useScheduleStore = defineStore('schedule', () => {
             } catch (e) {
                 console.log('自启动设置：', e)
             }
-        } else {
-            for (let i = 0; i < 7; i++) {
-                patterns.value.push({ name: `时间表${i + 1}`, data: [] })
-            }
         }
+        for (let i = patterns.value.length; i < 7; i++) { // 补全七个时间表
+            patterns.value.push({ name: `时间表${i + 1}`, data: [] })
+        }
+
         currentScheduleId.value = getCurrentScheduleId()
         __refreshActive()
         inited.value = true
