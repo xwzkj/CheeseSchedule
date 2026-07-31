@@ -511,7 +511,7 @@ export const useScheduleStore = defineStore('schedule', () => {
             }
 
         } catch (e) {
-            return { success: false, message: `导入失败：${JSON.stringify(e)}` }
+            return { success: false, message: `导入失败，请勿点击保存！：${JSON.stringify(e)}` }
         }
         return { success: true, message: `导入成功` }
     }
