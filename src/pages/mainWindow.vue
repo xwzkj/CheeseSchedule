@@ -258,7 +258,7 @@ async function playVoice(text: string) {
 onMounted(() => {
     initWindow();
     // 上下课提示
-    watch(() => scheduleStore.lessonStatus, tool.debounce(async () => {
+    watch(() => [scheduleStore.lessonStatus, scheduleStore.currentLessonIndex], tool.debounce(async () => {
         if (Date.now() - scheduleStore.initedTime > 1000) {
             if (!scheduleStore.lessonStatus) { // 下课状态
                 NMessage.success("下课了!")

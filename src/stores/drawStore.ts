@@ -35,7 +35,7 @@ export const useDrawStore = defineStore('draw', () => {
 
     // 处理课前自动开启新轮次的逻辑
     if (getCurrentWebviewWindow().label == 'draw') {
-        watch(() => scheduleStore.lessonStatus, async () => {
+        watch(() => [scheduleStore.lessonStatus, scheduleStore.currentLessonIndex], async () => {
             if (scheduleStore.lessonStatus && scheduleStore.setting.drawAutoNewRound) { // 当前是上课状态，且已开启自动新轮次
                 // 确保store处于稳定状态而不是刚读取配置时的不稳定状态
                 if (Date.now() - scheduleStore.initedTime > 1000) {
