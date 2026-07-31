@@ -48,7 +48,7 @@ function updateProgress() {
     let large = Math.max(props.param?.from?.value, props.param?.to?.value)
 
     let diff = dayjs().diff(dayjs(small), 'second')
-    let total = dayjs(large).diff(dayjs(small), 'second')
+    let total = Math.max(dayjs(large).diff(dayjs(small), 'second'), 1) // 避免除以0
 
     let progress = diff / total * 100
     let res = {
