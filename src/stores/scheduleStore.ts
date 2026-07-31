@@ -494,11 +494,11 @@ export const useScheduleStore = defineStore('schedule', () => {
                     patterns.value.push({ name: `时间表${patterns.value.length + 1}`, data: newPattern })
                     res.pattern = patterns.value.length - 1
                 }
-                if (lessons.weeks === 'all') {
+                if (lessons.weeks === 'all' || lessons.weeks === undefined) { // all或者未指定
                     for (let j = 0; j < schedule.value.length; j++) {
-                        schedule.value[j][weekday[lessons.enable_day - 1]] = res
+                        schedule.value[j][weekday[lessons.enable_day - 1]] = JSON.parse(JSON.stringify(res)) // 深拷贝
                     }
-                } else {
+                } else { // 单双周
                     schedule.value[lessons.weeks === 'even' ? 1 : 0][weekday[lessons.enable_day - 1]] = res
                 }
             }
