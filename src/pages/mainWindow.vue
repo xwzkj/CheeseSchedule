@@ -274,9 +274,11 @@ onMounted(() => {
     watchEffect(async () => {
         let shouldTop = false
         let currentLessonName = scheduleStore.scheduleToday?.[scheduleStore.currentLessonIndex]?.name || ""  // 当前/即将开始的课程
-        let lastLessonName = ""
+        let lastLessonName = "" // 刚结束的课程
         // 找上一节不是分割线的课程
-        for (let i = scheduleStore.currentLessonIndex - 1; i >= 0; i--) {
+        let i = scheduleStore.currentLessonIndex - 1
+        if (i === -2) i = scheduleStore.scheduleToday?.length - 1 // 没有活跃中课程代表已放学（最后一节课刚结束），上一节课是最后一节不是分割线的课程
+        for (i; i >= 0; i--) {
             if (scheduleStore.scheduleToday?.[i]?.isDivider === false) {
                 lastLessonName = scheduleStore.scheduleToday?.[i]?.name || ""
                 break
