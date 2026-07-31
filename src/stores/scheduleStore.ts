@@ -285,6 +285,7 @@ export const useScheduleStore = defineStore('schedule', () => {
     function setScheduleCount(count: number) {
         if (schedule.value.length >= count) { // 大于等于 删除多的
             schedule.value.splice(count)
+            currentScheduleId.value = getCurrentScheduleId() // 更新当前周id
         } else {// 小于 添加新的
             for (let i = schedule.value.length; i < count; i++) {
                 schedule.value.push({

@@ -57,7 +57,7 @@
                     <template #trigger>
                         <n-button type="primary" secondary>确定</n-button>
                     </template>
-                    若当前课程表数量小于设置值，此操作会删除额外的课程表，是否继续？
+                    若当前课程表数量大于设置值，此操作会删除额外的课程表，是否继续？
                 </n-popconfirm>
             </div>
         </setting-item>
