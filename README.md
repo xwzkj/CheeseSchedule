@@ -104,6 +104,8 @@
 2. [x] 使用postcss处理了UnoCSS presetWind4预设的颜色
 3. [ ] 使用win7支持的最新WebView2（109版本），无法支持透明背景
 
+由于以上条目没有进展，项目已于26.8.1 f8ec635 提交后不再使用Rust 1.77.2，v0.2.7版是目前唯一可以直接运行于windows7的版本
+
 相关讯息：
 
 1. tauri wry对windows7做了特殊处理：[相关拉取请求](https://github.com/tauri-apps/wry/pull/460)
