@@ -62,10 +62,5 @@
     "vite-plugin-vue-devtools": "^8.2.1",
     "vitepress": "2.0.0-alpha.17",
     "vue-tsc": "^2.1.10"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
   }
 }
