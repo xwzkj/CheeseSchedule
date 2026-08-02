@@ -28,7 +28,7 @@
                                 <n-checkbox v-model:checked="value.isDivider" class="w-10rem ml-0.5rem"
                                     label="是否为分割线" />
                                 <time-range-picker v-if="!value.isDivider" v-model="value.time" />
-                                <n-divider v-else class="!m-0" />
+                                <n-divider v-else class="m-0!" />
                             </div>
                         </template>
                     </n-dynamic-input>
@@ -49,10 +49,24 @@ let editingNum = ref(0);
 function handleSelect(key: number) {
     editingNum.value = key
 }
-function patternDefault() {
+function patternDefault(index: number) {
+    let lastTimeSlot: TimeSlot = { isDivider: false, time: "07:00-07:45" }
+    let lastTimeSlotEndTime = 7 * 60 + 45 // 上一节时间槽位距离零点过去的分钟数
+    for (let i = index - 1; i >= 0; i--) {
+        if (!scheduleStore.patterns[editingNum.value].data[i].isDivider) {
+            lastTimeSlot = scheduleStore.patterns[editingNum.value].data[i] // 这就是上一个不是分割线的槽位
+            break
+        }
+    }
+    let match = /^(\d{1,2})[：:](\d{1,2})[-~ ]+(\d{1,2})[：:](\d{1,2})$/.exec(lastTimeSlot.time || "07:00-07:45")
+    if (match && match.length === 5) {
+        lastTimeSlotEndTime = parseInt(match[3]) * 60 + parseInt(match[4])
+    }
+    let start = Math.min(lastTimeSlotEndTime + 10, 24 * 60 - 1)
+    let end = Math.min(start + 45, 24 * 60 - 1)
     return {
         isDivider: false,
-        time: ""
+        time: `${Math.floor(start / 60)}:${start % 60}-${Math.floor(end / 60)}:${end % 60}`
     }
 }
 

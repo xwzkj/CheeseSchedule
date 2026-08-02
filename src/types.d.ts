@@ -1,9 +1,10 @@
 type Pattern = {
     name: string,
-    data: {
-        isDivider: boolean,
-        time?: string
-    }[]
+    data: TimeSlot[]
+}
+type TimeSlot = {
+    isDivider: boolean,
+    time?: string
 }
 type Lesson = {
     name: string,
