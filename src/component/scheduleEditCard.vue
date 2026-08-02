@@ -2,7 +2,7 @@
     <div class="w-100% rounded-2">
         <!-- 上方的rounded2是为了搭配overrideEditor的背景用的 -->
         <n-divider v-if="props.data.isDivider" style="margin:3px 0;"></n-divider>
-        <div v-else class="p-1 rounded-2 border-#ddd border border-1 flex items-center flex-col cursor-pointer">
+        <div v-else class="p-1 rounded-2 border-#ddd border flex items-center flex-col cursor-pointer schedule-edit-card">
             <n-auto-complete v-model:value="props.data.name" :options="lessonsOption" :input-props="{
                 autocomplete: 'disabled'
             }" blur-after-select
@@ -25,7 +25,7 @@ const props = defineProps<{
 const lessonsOption = computed(() => {
     let l = [
         '语文', '数学', '英语', '物理', '化学',
-        '历史', '地理', '生物', '政治', '微机',
+        '生物', '历史', '地理', '政治', '微机',
         '劳动', '班会', '体育', '自习', '其他'
     ]
     return l.map(i => {
@@ -37,15 +37,15 @@ const lessonsOption = computed(() => {
 </script>
 
 <style>
-.n-auto-complete .n-input-wrapper {
+.schedule-edit-card .n-auto-complete .n-input-wrapper {
     padding: 0 !important;
 }
 
-.n-auto-complete .n-input__border {
+.schedule-edit-card .n-auto-complete .n-input__border {
     border: none !important;
 }
 
-.n-auto-complete .n-input-wrapper input {
+.schedule-edit-card .n-auto-complete .n-input-wrapper input {
     font-size: 1.2rem !important;
     text-align: center;
 }
