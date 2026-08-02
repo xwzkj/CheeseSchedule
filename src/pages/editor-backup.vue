@@ -63,6 +63,7 @@ import { useScheduleStore } from '../stores/scheduleStore';
 import { NTable, NButton, NPopconfirm } from 'naive-ui';
 import { BaseDirectory, copyFile, exists, readTextFile, remove, writeTextFile } from '@tauri-apps/plugin-fs';
 import Dayjs from 'dayjs';
+import { emit } from '@tauri-apps/api/event';
 const scheduleStore = useScheduleStore()
 const reasonMap = {
     'manual': '手动备份',
@@ -135,7 +136,8 @@ async function restoreBackup(fileName: string) {
         window.$NMessageApi.error(`备份${fileName}恢复失败`)
         return
     }
-    window.$NMessageApi.success(`已恢复备份，重启应用生效`)
+    await emit("updated");
+    window.$NMessageApi.success(`已恢复备份`)
 }
 async function removeBackup(fileName: string) {
     try {
