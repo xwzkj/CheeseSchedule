@@ -1,7 +1,7 @@
 [package]
 name = "cheese-schedule"
-version = "0.2.7"
-description = "A Tauri App"
+version = "0.2.8"
+description = "开源的教室大屏侧边课程表软件"
 authors = ["you"]
 edition = "2021"
 
