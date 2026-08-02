@@ -3,8 +3,7 @@
         <div class="flex flex-col justify-between bg-#f7f8f9">
             <n-menu class="w-12rem grow-0 shrink-0" :options="menuOptions" v-model:value="selectedNow" />
             <div class="flex gap-4 justify-center m-b-1rem">
-                <n-button @click="() => { scheduleStore.refreshPatternToDay(); scheduleStore.save() }" type="primary"
-                    secondary>保存</n-button>
+                <n-button @click="save" type="primary" secondary>保存</n-button>
                 <n-button @click="scheduleStore.init" secondary>重置</n-button>
             </div>
         </div>
@@ -128,6 +127,14 @@ async function checkKeyFile() {
         window.$NMessageApi.error(error);
         return;
     }
+}
+
+async function save() {
+    scheduleStore.refreshPatternToDay()
+    if(await scheduleStore.saveBackup()){
+        window.$NMessageApi.success('已备份旧配置')
+    }
+    await scheduleStore.save()
 }
 </script>
 

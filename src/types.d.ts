@@ -17,6 +17,15 @@ type Day = {
 }
 type Schedule = Record<Week, Day>
 type Week = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
+type BackupMetadata = {
+    version: number,
+    items: BackupMetadataItem[]
+}
+type BackupMetadataItem = {
+    fileName: string,
+    createdAt: number, // unix时间戳
+    sha256: string,
+}
 type UpdateInfo = {
     hasUpdate: boolean,
     latestVersion: string,

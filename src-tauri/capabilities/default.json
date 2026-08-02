@@ -26,6 +26,8 @@
     "fs:write-all",
     "fs:allow-appdata-read-recursive",
     "fs:allow-appdata-write-recursive",
+    "fs:allow-copy-file",
+    "fs:allow-remove",
     "opener:default",
     "process:default",
     "autostart:default",
