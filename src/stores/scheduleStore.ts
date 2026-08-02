@@ -19,6 +19,7 @@ dayjs.updateLocale('en', {
 export const useScheduleStore = defineStore('schedule', () => {
     let setting = ref({
         startup: true, // 是否开机自启
+        backupCountLimit: 50, // 备份文件数量上限
         zoom: 1, // 主窗口缩放比例
         heightFactor: 1, // 主窗口高度乘数
         avoidCoverTitleBar: false,// 是否避免主窗口遮挡窗口标题栏
@@ -302,7 +303,7 @@ export const useScheduleStore = defineStore('schedule', () => {
                 createdAt: Date.now(),
                 sha256: newSHA256,
             })
-            for (let i = metadata.items.length; i > 50; i--) { // 如果备份数量超过50个，删除最早的备份
+            for (let i = metadata.items.length; i > setting.value.backupCountLimit; i--) { // 如果备份数量超过上限，删除最早的备份
                 try {
                     await remove(`backup/${metadata.items[i - 1].fileName}`, { baseDir: BaseDirectory.AppData })
                 } catch (e) {

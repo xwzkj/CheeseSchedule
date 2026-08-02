@@ -2,6 +2,11 @@
     <div class="p-0.5rem">
         <n-divider title-placement="left" class="m-y-0.5rem!">配置文件</n-divider>
         <setting-item t1="打开配置文件所在位置" t2="可手动导入导出 / 若文件不存在会先保存再打开" :needInput="false" :actionOnClick="openConfigDir" />
+        <setting-item t1="配置备份数量上限" t2="软件会在手动保存时自动备份旧配置，上限默认50个">
+            <div class="w-8rem">
+                <n-slider v-model:value="scheduleStore.setting.backupCountLimit" :step="10" :min="10" :max="200" />
+            </div>
+        </setting-item>
         <setting-item t1="从通用课程表交换格式(CSES)文件导入" t2="实验性功能，将覆盖当前课程信息，请注意备份！" :needInput="false">
             <n-popconfirm @positive-click="importFromCSES">
                 <template #trigger>
