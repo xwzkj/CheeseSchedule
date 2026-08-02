@@ -52,13 +52,18 @@ const router = createRouter({
                     name: 'editor-password',
                     path: 'password',
                     component: () => import('../pages/editor-password.vue')
-                }
+                },
+                {
+                    name: 'editor-backup',
+                    path: 'backup',
+                    component: () => import('../pages/editor-backup.vue')
+                },
             ]
         },
         {
             name: 'draw',
             path: '/draw',
-            children:[
+            children: [
                 {
                     name: 'draw-home',
                     path: '',

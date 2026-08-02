@@ -131,7 +131,7 @@ async function checkKeyFile() {
 
 async function save() {
     scheduleStore.refreshPatternToDay()
-    if(await scheduleStore.saveBackup()){
+    if ((await scheduleStore.saveBackup('auto')).ok) {
         window.$NMessageApi.success('已备份旧配置')
     }
     await scheduleStore.save()

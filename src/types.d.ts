@@ -25,7 +25,9 @@ type BackupMetadataItem = {
     fileName: string,
     createdAt: number, // unix时间戳
     sha256: string,
+    reason: BackupReason,
 }
+type BackupReason = 'auto' | 'manual' | 'beforeRestore'
 type UpdateInfo = {
     hasUpdate: boolean,
     latestVersion: string,

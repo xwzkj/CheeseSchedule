@@ -262,62 +262,67 @@ export const useScheduleStore = defineStore('schedule', () => {
 
     /***
      * 保存备份
-     * @returns 是否创建了备份文件 false代表已存在相同文件
+     * @returns {Promise<{ ok: boolean, msg: string, canContinue: boolean }>} ok代表是否创建了备份文件，msg是文本消息，canContinue代表是否可以继续进行流程（不是报错返回true，是报错返回false）
      */
-    async function saveBackup(): Promise<boolean> {
-        if (!await exists("config.json", { baseDir: BaseDirectory.AppData })) {
-            return false
-        }
-        await mkdir("backup", { baseDir: BaseDirectory.AppData, recursive: true })
-        let newSHA256 = CryptoJS.SHA256(await readTextFile(`config.json`, { baseDir: BaseDirectory.AppData })).toString()
-        let newFileName = dayjs().format("YYYYMMDD-HHmmss-SSS") + ".json"
-        let metadata: BackupMetadata = {
-            version: 1,
-            items: [],
-        }
+    async function saveBackup(reason: 'auto' | 'manual' | 'beforeRestore'): Promise<{ ok: boolean, msg: string, canContinue: boolean }> {
         try {
-            metadata = JSON.parse(await readTextFile("backup/metadata.json", { baseDir: BaseDirectory.AppData }))
-        } catch (e) {
-            console.log('读取备份元数据失败：', e)
-        }
-        if (metadata.version === 1 && metadata.items.length > 0) {
-            if (metadata.items[0].sha256 == newSHA256) {
-                return false // 已存在相同文件
+            if (!await exists("config.json", { baseDir: BaseDirectory.AppData })) {
+                return { ok: false, msg: "当前配置文件不存在", canContinue: true }
             }
-        }
-
-        // 创建备份文件
-        try {
-            await copyFile("config.json", `backup/${newFileName}`, { fromPathBaseDir: BaseDirectory.AppData, toPathBaseDir: BaseDirectory.AppData })
-        } catch (e) {
-            window.$NMessageApi.error(`旧配置备份失败：${JSON.stringify(e)}`)
-            console.log('旧配置备份失败：', e)
-            return false
-        }
-        if (metadata.version === 1) {
-            if (metadata.items.findIndex((i) => i.fileName == newFileName) !== -1) { // 如果有这个文件 因为已被覆盖 就删除旧记录
-                metadata.items.splice(metadata.items.findIndex((i) => i.fileName == newFileName), 1)
+            await mkdir("backup", { baseDir: BaseDirectory.AppData, recursive: true })
+            let newSHA256 = CryptoJS.SHA256(await readTextFile(`config.json`, { baseDir: BaseDirectory.AppData })).toString()
+            let newFileName = dayjs().format("YYYYMMDD-HHmmss-SSS") + ".json"
+            let metadata: BackupMetadata = {
+                version: 1,
+                items: [],
             }
-            metadata.items.unshift({ // 在开头插入新记录
-                fileName: newFileName,
-                createdAt: Date.now(),
-                sha256: newSHA256,
-            })
-            for (let i = metadata.items.length; i > setting.value.backupCountLimit; i--) { // 如果备份数量超过上限，删除最早的备份
-                try {
-                    await remove(`backup/${metadata.items[i - 1].fileName}`, { baseDir: BaseDirectory.AppData })
-                } catch (e) {
-                    if (await exists(`backup/${metadata.items[i - 1].fileName}`, { baseDir: BaseDirectory.AppData })) { // 文件还存在
-                        window.$NMessageApi.error(`删除过期备份文件失败：${JSON.stringify(e)}`)
-                        console.log('删除过期备份文件失败：', e)
-                        continue
-                    }
+            try {
+                metadata = JSON.parse(await readTextFile("backup/metadata.json", { baseDir: BaseDirectory.AppData }))
+            } catch (e) {
+                console.log('读取备份元数据失败：', e)
+            }
+            if (metadata.version === 1 && metadata.items.length > 0) {
+                if (metadata.items[0].sha256 == newSHA256 && reason !== 'manual') { // 判断相同文件。如果是手动备份就不判断了
+                    return { ok: false, msg: "已存在相同文件", canContinue: true }
                 }
-                metadata.items.splice(i - 1, 1)
             }
+
+            // 创建备份文件
+            try {
+                await copyFile("config.json", `backup/${newFileName}`, { fromPathBaseDir: BaseDirectory.AppData, toPathBaseDir: BaseDirectory.AppData })
+            } catch (e) {
+                console.log('旧配置备份失败：', e)
+                return { ok: false, msg: "旧配置备份失败", canContinue: false }
+            }
+            if (metadata.version === 1) {
+                if (metadata.items.findIndex((i) => i.fileName == newFileName) !== -1) { // 如果有这个文件 因为已被覆盖 就删除旧记录
+                    metadata.items.splice(metadata.items.findIndex((i) => i.fileName == newFileName), 1)
+                }
+                metadata.items.unshift({ // 在开头插入新记录
+                    fileName: newFileName,
+                    createdAt: Date.now(),
+                    sha256: newSHA256,
+                    reason: reason,
+                })
+                for (let i = metadata.items.length; i > setting.value.backupCountLimit; i--) { // 如果备份数量超过上限，删除最早的备份
+                    try {
+                        await remove(`backup/${metadata.items[i - 1].fileName}`, { baseDir: BaseDirectory.AppData })
+                    } catch (e) {
+                        if (await exists(`backup/${metadata.items[i - 1].fileName}`, { baseDir: BaseDirectory.AppData })) { // 文件还存在
+                            window.$NMessageApi.error(`删除过期备份文件失败：${JSON.stringify(e)}`)
+                            console.log('删除过期备份文件失败：', e)
+                            continue
+                        }
+                    }
+                    metadata.items.splice(i - 1, 1)
+                }
+            }
+            await writeTextFile("backup/metadata.json", JSON.stringify(metadata, null, 2), { baseDir: BaseDirectory.AppData })
+            return { ok: true, msg: "备份成功", canContinue: true }
+        } catch (e) {
+            console.log('备份失败：', e)
+            return { ok: false, msg: "其他错误", canContinue: false }
         }
-        await writeTextFile("backup/metadata.json", JSON.stringify(metadata, null, 2), { baseDir: BaseDirectory.AppData })
-        return true
     }
 
     function __isActive(time: string, lastTime: string): 0 | 1 | 2 {

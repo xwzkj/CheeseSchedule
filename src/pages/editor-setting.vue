@@ -7,6 +7,8 @@
                 <n-slider v-model:value="scheduleStore.setting.backupCountLimit" :step="10" :min="10" :max="200" />
             </div>
         </setting-item>
+        <setting-item t1="备份管理" t2="手动创建、恢复和删除备份"
+            :actionOnClick="() => router.push({ name: 'editor-backup' })"></setting-item>
         <setting-item t1="从通用课程表交换格式(CSES)文件导入" t2="实验性功能，将覆盖当前课程信息，请注意备份！" :needInput="false">
             <n-popconfirm @positive-click="importFromCSES">
                 <template #trigger>

@@ -52,6 +52,7 @@ const routeDisplayNames = {
     'editor-setting': '设置',
     'editor-home': '主页',
     'editor-password': '密码设置',
+    'editor-backup': '备份管理',
 }
 async function setPassword() {
     if (password.value) {
