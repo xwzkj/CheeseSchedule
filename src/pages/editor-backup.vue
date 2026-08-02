@@ -24,6 +24,7 @@
                     <tr>
                         <th>文件名</th>
                         <th>备份时间</th>
+                        <th>来源</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -31,6 +32,7 @@
                     <tr v-for="item in metadata.items" :key="item.fileName">
                         <td>{{ item.fileName }}</td>
                         <td>{{ Dayjs(item.createdAt).format('YYYY-MM-DD HH:mm:ss') }}</td>
+                        <td>{{ reasonMap[item.reason] || item.reason }}</td>
                         <td>
                             <div class="flex gap-1">
                                 <n-popconfirm @positive-click="restoreBackup(item.fileName)">
@@ -62,6 +64,11 @@ import { NTable, NButton, NPopconfirm } from 'naive-ui';
 import { BaseDirectory, copyFile, exists, readTextFile, remove, writeTextFile } from '@tauri-apps/plugin-fs';
 import Dayjs from 'dayjs';
 const scheduleStore = useScheduleStore()
+const reasonMap = {
+    'manual': '手动备份',
+    'beforeRestore': '恢复前备份',
+    'auto': '自动备份',
+}
 let metadata = ref<BackupMetadata>({ version: 1, items: [] })
 onMounted(async () => {
     await loadBackupMetadata()
