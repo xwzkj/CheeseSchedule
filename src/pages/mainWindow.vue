@@ -271,7 +271,7 @@ onMounted(() => {
         }
     }, 500), { immediate: true })
     // 置顶切换
-    watchEffect(async () => {
+    watchEffect(tool.debounce(async () => {
         let shouldTop = false
         let currentLessonName = scheduleStore.scheduleToday?.[scheduleStore.currentLessonIndex]?.name || ""  // 当前/即将开始的课程
         let lastLessonName = "" // 刚结束的课程
@@ -302,7 +302,7 @@ onMounted(() => {
             }
         }
         await setTop(shouldTop)
-    })
+    },500))
     // 点击切换窗口置顶
     outerEle.value?.addEventListener("click", async () => {
         if (platform() === 'linux') {
