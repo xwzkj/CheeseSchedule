@@ -1,8 +1,10 @@
+<!-- markdownlint-disable MD033 -->
+
 # <img src="./src-tauri/icons/64x64.png" width="30" height="30" alt="图标"> 奶酪课程表
 
 > 该项目目前正在参加“齐齐哈尔市中俄青少年人工智能创新大赛”，以这条信息证明该项目确实完全由参赛者所开发，且版权属于该参赛者所有。如有疑问，可前往issue中联系开发者（参赛者）确认身份。
 
-![banner](./readme-assets/banner.png)
+<img src="./readme-assets/ai-programming-award.svg" width="250" alt="ai-programming-award" />
 
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/xwzkj/CheeseSchedule/total?label=下载量&logo=github)
 ![GitHub Repo stars](https://img.shields.io/github/stars/xwzkj/CheeseSchedule?style=flat&label=%E6%98%9F%E6%A0%87%E6%95%B0)
@@ -10,6 +12,8 @@
 [![Website](https://img.shields.io/badge/%E7%82%B9%E5%87%BB%E6%89%93%E5%BC%80-%E7%BD%91%E7%AB%99-yellow?logo=googlechrome&logoColor=white)](https://schedule.wanzii.cn/)
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/xwzkj/CheeseSchedule)
+
+![banner](./readme-assets/banner.png)
 
 奶酪课程表是一款简洁的教室大屏电子课表软件，基于tauri + vite + vue开发，相较同类软件，该软件简单易懂，资源占用轻量。
 
