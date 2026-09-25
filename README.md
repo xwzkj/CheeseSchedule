@@ -2,8 +2,6 @@
 
 # <img src="./src-tauri/icons/64x64.png" width="30" height="30" alt="图标"> 奶酪课程表
 
-> 该项目目前正在参加“齐齐哈尔市中俄青少年人工智能创新大赛”，以这条信息证明该项目确实完全由参赛者所开发，且版权属于该参赛者所有。如有疑问，可前往issue中联系开发者（参赛者）确认身份。
-
 <img src="./readme-assets/ai-programming-award.svg" width="350" alt="ai-programming-award" />
 
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/xwzkj/CheeseSchedule/total?label=下载量&logo=github)
